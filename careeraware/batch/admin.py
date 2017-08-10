@@ -36,25 +36,19 @@ class BatchAdmin(admin.ModelAdmin):
         self.process_baseline(request, obj, batch_name, batch_dir)
 
         # process self awareness csv
-        # update status
-        # obj.status = 3
-        # obj.save()
+        self.process_self_awareness(request, obj, batch_name, batch_dir)
 
         # process career awareness csv
-        # update status
-        # obj.status = 4
-        # obj.save()
+        self.process_career_awareness(request, obj, batch_name, batch_dir)
 
         # process career planning csv
-        # update status
-        # obj.status = 5
-        # obj.save()
+        self.process_career_planning(request, obj, batch_name, batch_dir)
 
     # method to handle baseline csv transformation
     def process_baseline(self, request, obj, batch_name, batch_dir):
         # return if baseline is processed
-        # if obj.status > 1:
-        #     return
+        if obj.status > 1:
+            return
 
         # fetch baseline csv file
         input_file  = obj.omr_baseline.path
@@ -99,6 +93,24 @@ class BatchAdmin(admin.ModelAdmin):
         # set the processed file path
         obj.proc_baseline = 'data/' + batch_name + '/baseline.csv'
 
+        obj.save()
+
+    # method to handle career planning csv transformation
+    def process_career_planning(self, request, obj, batch_name, batch_dir):
+        # update status
+        obj.status = 5
+        obj.save()
+
+    # method to handle career awareness csv transformation
+    def process_career_awareness(self, request, obj, batch_name, batch_dir):
+        # update status
+        obj.status = 4
+        obj.save()
+
+    # method to handle self awareness csv transformation
+    def process_self_awareness(self, request, obj, batch_name, batch_dir):
+        # update status
+        obj.status = 3
         obj.save()
 
 admin.site.register(Batch, BatchAdmin)
