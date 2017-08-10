@@ -95,22 +95,34 @@ class BatchAdmin(admin.ModelAdmin):
 
         obj.save()
 
-    # method to handle career planning csv transformation
-    def process_career_planning(self, request, obj, batch_name, batch_dir):
+    # method to handle self awareness csv transformation
+    def process_self_awareness(self, request, obj, batch_name, batch_dir):
+        # return if self awareness is processed
+        if obj.status > 2:
+            return
+
         # update status
-        obj.status = 5
+        obj.status = 3
         obj.save()
 
     # method to handle career awareness csv transformation
     def process_career_awareness(self, request, obj, batch_name, batch_dir):
+        # return if career awareness is processed
+        if obj.status > 3:
+            return
+
         # update status
         obj.status = 4
         obj.save()
 
-    # method to handle self awareness csv transformation
-    def process_self_awareness(self, request, obj, batch_name, batch_dir):
+    # method to handle career planning csv transformation
+    def process_career_planning(self, request, obj, batch_name, batch_dir):
+        # return if career planning is processed
+        if obj.status > 4:
+            return
+
         # update status
-        obj.status = 3
+        obj.status = 5
         obj.save()
 
 admin.site.register(Batch, BatchAdmin)
