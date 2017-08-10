@@ -17,29 +17,28 @@ class Batch(models.Model):
 
     batch_date = models.DateField('Date')
 
-
     omr_baseline = models.FileField(
         upload_to='uploads/%Y/%m/%d/',
         verbose_name='OMR - Baseline',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     omr_self_aware = models.FileField(
         upload_to='uploads/%Y/%m/%d/',
         verbose_name='OMR - Self Awareness',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     omr_career_aware = models.FileField(
         upload_to='uploads/%Y/%m/%d/',
         verbose_name='OMR - Career Awareness',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     omr_career_planning = models.FileField(
         upload_to='uploads/%Y/%m/%d/',
         verbose_name='OMR - Career Planning',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     comment = models.TextField(
@@ -52,7 +51,7 @@ class Batch(models.Model):
         verbose_name='Processed - Baseline',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     proc_self_aware = models.FileField(
@@ -60,7 +59,7 @@ class Batch(models.Model):
         verbose_name='Processed - Self Awareness',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     proc_career_aware = models.FileField(
@@ -68,7 +67,7 @@ class Batch(models.Model):
         verbose_name='Processed - Career Awareness',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     proc_career_planning = models.FileField(
@@ -76,7 +75,7 @@ class Batch(models.Model):
         verbose_name='Processed - Career Planning',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
-        validators=[FileExtensionValidator(['pdf'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
     status = models.IntegerField(
