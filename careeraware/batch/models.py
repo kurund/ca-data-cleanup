@@ -47,7 +47,7 @@ class Batch(models.Model):
     )
 
     proc_baseline = models.FileField(
-        upload_to='uploads/%Y/%m/%d/',
+        upload_to='data/',
         verbose_name='Baseline',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
@@ -55,7 +55,7 @@ class Batch(models.Model):
     )
 
     proc_self_aware = models.FileField(
-        upload_to='uploads/%Y/%m/%d/',
+        upload_to='data/',
         verbose_name='Self Awareness',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
@@ -63,7 +63,7 @@ class Batch(models.Model):
     )
 
     proc_career_aware = models.FileField(
-        upload_to='uploads/%Y/%m/%d/',
+        upload_to='data/',
         verbose_name='Career Awareness',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
@@ -71,7 +71,7 @@ class Batch(models.Model):
     )
 
     proc_career_planning = models.FileField(
-        upload_to='uploads/%Y/%m/%d/',
+        upload_to='data/',
         verbose_name='Career Planning',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
