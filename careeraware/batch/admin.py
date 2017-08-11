@@ -93,7 +93,7 @@ class BatchAdmin(admin.ModelAdmin):
                 # calculate date of birth
                 dob = ''
                 if row[19] and row[20] and row[21]:
-                    dob = row[19] + '/' + row[20] + '/' + row[21]
+                    dob = '/' .join([row[19],row[20],row[21]])
 
                 row_values.append(dob)
 
