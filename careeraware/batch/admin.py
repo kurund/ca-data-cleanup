@@ -88,7 +88,10 @@ class BatchAdmin(admin.ModelAdmin):
 
                 # process other baseline fields
                 for i in range(3,19):
-                    row_values.append(row[i])
+                    if i == 17 or i == 18:
+                        row_values.append(self.yesno_helper(row[i]))
+                    else:
+                        row_values.append(row[i])
 
                 # calculate date of birth
                 dob = ''
