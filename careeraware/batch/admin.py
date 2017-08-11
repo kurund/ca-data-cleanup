@@ -6,8 +6,10 @@ import csv, os
 from .models import Batch
 
 class BatchAdmin(admin.ModelAdmin):
+    # controls what's displayed in the batch listing
     list_display = ('name', 'batch_date', 'status')
 
+    # grouping of fields on the batch form
     fieldsets = (
         (None, {
             'fields': ('name', 'batch_date')
@@ -23,6 +25,7 @@ class BatchAdmin(admin.ModelAdmin):
         }),
     )
 
+    # overrite save model to perform additional data transformation
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
 
@@ -197,9 +200,41 @@ class BatchAdmin(admin.ModelAdmin):
         if obj.status > 3:
             return
 
+        # fetch career awareness csv file
+        input_file  = obj.omr_career_aware.path
+
+        # set output file
+        output_file = batch_dir + '/career_awareness.csv'
+
+        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+            csv_input = csv.reader(f_input)
+            csv_output = csv.writer(f_output)
+
+            # set custom header
+            csv_output.writerow(['BARCODE', 'Design', 'Performance Arts', 'Media & Communication', 'Beauty & Wellness',
+                                 'Education', 'Sports & Fitness', 'Finance', 'Hospitality & Tourism','Medical',
+                                 'Public Service', 'Engineering Technologies', 'Trades',
+                                 'Enviroment and Biological Science'])
+
+            # skip header as we set custom header
+            next(csv_input)
+
+            for row in csv_input:
+                row_values = [row[1]]
+                # process career awareness fields
+                for i in range(2,15):
+                    row_values.append(self.multivalue_formatter(row[i]))
+
+                # write to csv file
+                csv_output.writerow(row_values)
+
         # update status
         obj.status = 4 # 4 is 'Career Awareness Processed'
-        #obj.save()
+
+        # set the processed file path
+        obj.proc_career_aware = 'data/' + batch_name + '/career_awareness.csv'
+
+        obj.save()
 
     # method to handle career planning csv transformation
     def process_career_planning(self, request, obj, batch_name, batch_dir):
@@ -228,5 +263,12 @@ class BatchAdmin(admin.ModelAdmin):
         if value == 'AgreeDisagree':
             value = 'Disagree'
         return value
+
+    def multivalue_formatter(self, value):
+        options = list(value)
+        if len(options) > 1:
+            return ';'.join(options)
+        else:
+            return value
 
 admin.site.register(Batch, BatchAdmin)
