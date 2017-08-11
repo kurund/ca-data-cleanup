@@ -254,10 +254,56 @@ class BatchAdmin(admin.ModelAdmin):
         if obj.status > 4:
             return
 
+        # fetch career awareness csv file
+        input_file  = obj.omr_career_planning.path
+
+        # set output file
+        output_file = batch_dir + '/career_planning.csv'
+
+        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+            csv_input = csv.reader(f_input)
+            csv_output = csv.writer(f_output)
+
+            # set custom header
+            csv_output.writerow(['BARCODE', 'Possible Careers 1', 'Possible Careers 2', 'Possible Careers 3', 'CCP 1',
+                                 'CCP 2', 'CCP 3', 'Study till 18', 'Endline'])
+
+            # skip header as we set custom header
+            next(csv_input)
+
+            for row in csv_input:
+                row_values = [row[1]]
+
+                # process career planning fields
+                # get first, second and third preference
+                first_preference = second_preference = third_preference = ''
+                for i in range(2,73):
+                    if row[i] == '1' or row[i] == '123' or row[i] == '12' or row[i] == '13':
+                        first_preference = i - 1
+                    elif row[i] == '2' or row[i] == '23':
+                        second_preference = i - 1
+                    elif row[i] == '3':
+                        third_preference = i - 1
+
+                row_values.extend([first_preference, second_preference, third_preference, row[73], row[74],
+                                   self.multivalue_formatter(row[75]), self.yesno_helper(row[76])])
+
+                if row[78]:
+                    row_values.append(row[78])
+                else:
+                    row_values.append(row[77])
+
+                # write to csv file
+                csv_output.writerow(row_values)
+
         # update status
         #obj.status = 5 # 5 is 'Career Planning Processed'
         obj.status = 6 # 6 is 'Transformation Completed'
-        #obj.save()
+
+        # set the processed file path
+        obj.proc_career_planning = 'data/' + batch_name + '/career_planning.csv'
+
+        obj.save()
 
     def yesno_helper(self, value):
         if value == 'YesNo':
