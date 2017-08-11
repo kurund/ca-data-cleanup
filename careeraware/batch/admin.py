@@ -166,17 +166,22 @@ class BatchAdmin(admin.ModelAdmin):
                     row_values.append(self.yesno_helper(row[i]))
 
                 # process aptitude fields
-                # row 50 - 92
-                for j in range(50,93):
+                # row 50 - 91
+                for j in range(50,92):
                     row_values.append(self.singlevalue_helper(row[j]))
+
+                # process personality fields
+                # row 92 - 107
+                for j in range(92, 108):
+                    row_values.append(self.agreedisagree_helper(row[j]))
+
+                # process reality fields
+                # row 108 - 117 format using yesno_helper
+                for i in range(108,118):
+                    row_values.append(self.yesno_helper(row[i]))
 
                 # write to csv file
                 csv_output.writerow(row_values)
-
-                # csv_output.writerow([row[1],first_name,last_name,row[3],row[4],row[5],row[6],row[7],
-                #                      row[8],row[9],row[10],row[11],row[12],row[13],row[14],row[15],
-                #                      row[16],row[17],row[18],dob])
-
 
         # update status
         obj.status = 3  # 3 is 'Self Awareness Processed'
@@ -185,15 +190,6 @@ class BatchAdmin(admin.ModelAdmin):
         obj.proc_self_aware = 'data/' + batch_name + '/self_awareness.csv'
 
         obj.save()
-
-    def yesno_helper(self, value):
-        if value == 'YesNo':
-            value = 'No'
-        return value
-
-    def singlevalue_helper(self, value):
-
-        return value
 
     # method to handle career awareness csv transformation
     def process_career_awareness(self, request, obj, batch_name, batch_dir):
@@ -215,5 +211,22 @@ class BatchAdmin(admin.ModelAdmin):
         #obj.status = 5 # 5 is 'Career Planning Processed'
         obj.status = 6 # 6 is 'Transformation Completed'
         #obj.save()
+
+    def yesno_helper(self, value):
+        if value == 'YesNo':
+            value = 'No'
+        return value
+
+    def singlevalue_helper(self, value):
+        option = list(value)
+        if len(option) > 1:
+            return option[0]
+        else:
+            return value
+
+    def agreedisagree_helper(self, value):
+        if value == 'AgreeDisagree':
+            value = 'Disagree'
+        return value
 
 admin.site.register(Batch, BatchAdmin)
