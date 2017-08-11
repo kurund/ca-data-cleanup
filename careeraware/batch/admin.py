@@ -73,6 +73,8 @@ class BatchAdmin(admin.ModelAdmin):
             next(csv_input)
 
             for row in csv_input:
+                row_values = [row[1]]
+
                 # split name field into first name and last name
                 name = row[2].split()
                 first_name = last_name = ''
@@ -81,15 +83,22 @@ class BatchAdmin(admin.ModelAdmin):
                 if len(name) > 1:
                     last_name = name[1]
 
-                # set date of birth
+                row_values.append(first_name)
+                row_values.append(last_name)
+
+                # process other baseline fields
+                for i in range(3,19):
+                    row_values.append(row[i])
+
+                # calculate date of birth
                 dob = ''
                 if row[19] and row[20] and row[21]:
                     dob = row[19] + '/' + row[20] + '/' + row[21]
 
+                row_values.append(dob)
+
                 # write to csv file
-                csv_output.writerow([row[1],first_name,last_name,row[3],row[4],row[5],row[6],row[7],
-                                     row[8],row[9],row[10],row[11],row[12],row[13],row[14],row[15],
-                                     row[16],row[17],row[18],dob])
+                csv_output.writerow(row_values)
 
         # update status
         obj.status = 2 # 2 is 'Baseline Processed'
