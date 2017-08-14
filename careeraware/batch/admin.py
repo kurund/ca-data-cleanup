@@ -5,6 +5,9 @@ import csv, os
 # Register your models here.
 from .models import Batch
 
+admin.site.site_header = 'Career Aware: administration'
+admin.site.site_title = 'Career Aware: administration'
+
 class BatchAdmin(admin.ModelAdmin):
     # controls what's displayed in the batch listing
     list_display = ('name', 'batch_date', 'status')
