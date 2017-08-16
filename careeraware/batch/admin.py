@@ -70,7 +70,8 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output.writerow(['BARCODE', 'First Name', 'Last Name', 'Father Occupation', 'Mother Occupation',
                                  'Student Occupation', 'Current Aspiration', 'Age', 'Current Education',
                                  'Contact Number', 'Batch Code', 'Gender', 'Day-1', 'Day-2', 'Day-3', 'Day-4',
-                                 'Day-5', 'Computer Literate', 'Currently Working', 'DOB'])
+                                 'Day-5', 'Computer Literate', 'Currently Working', 'DOB', 'Contact Type',
+                                 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -101,7 +102,7 @@ class BatchAdmin(admin.ModelAdmin):
                 if row[19] and row[20] and row[21]:
                     dob = '/' .join([row[20],row[19],row[21]])
 
-                row_values.append(dob)
+                row_values.extend([dob, 'Student', 'Baseline Imported'])
 
                 # write to csv file
                 csv_output.writerow(row_values)
@@ -171,7 +172,8 @@ class BatchAdmin(admin.ModelAdmin):
                                  'Personality Test 16',
                                  'Reality Test (Self) 1', 'Reality Test (Self) 2', 'Reality Test (Self) 3',
                                  'Reality Test (Self) 4', 'Reality Test (Family) 1', 'Reality Test (Family) 2',
-                                 'Reality Test (Family) 3', 'Reality Test (Family) 4', 'Accelerator', 'Decelerator'])
+                                 'Reality Test (Family) 3', 'Reality Test (Family) 4', 'Accelerator', 'Decelerator',
+                                 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -197,6 +199,9 @@ class BatchAdmin(admin.ModelAdmin):
                 # row 108 - 117 format using yesno_helper
                 for i in range(108,118):
                     row_values.append(self.yesno_helper(row[i]))
+
+                # add the import status
+                row_values.append('Self Awareness Imported')
 
                 # write to csv file
                 csv_output.writerow(row_values)
@@ -229,7 +234,7 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output.writerow(['BARCODE', 'Design', 'Performance Arts', 'Media & Communication', 'Beauty & Wellness',
                                  'Education', 'Sports & Fitness', 'Finance', 'Hospitality & Tourism','Medical',
                                  'Public Service', 'Engineering Technologies', 'Trades',
-                                 'Enviroment and Biological Science'])
+                                 'Enviroment and Biological Science', 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -239,6 +244,9 @@ class BatchAdmin(admin.ModelAdmin):
                 # process career awareness fields
                 for i in range(2,15):
                     row_values.append(self.multivalue_formatter(row[i]))
+
+                # add the import status
+                row_values.append('Career Awareness Imported')
 
                 # write to csv file
                 csv_output.writerow(row_values)
@@ -269,7 +277,7 @@ class BatchAdmin(admin.ModelAdmin):
 
             # set custom header
             csv_output.writerow(['BARCODE', 'Possible Careers 1', 'Possible Careers 2', 'Possible Careers 3', 'CCP 1',
-                                 'CCP 2', 'CCP 3', 'Study till 18', 'Endline'])
+                                 'CCP 2', 'CCP 3', 'Study till 18', 'Endline', 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -295,6 +303,9 @@ class BatchAdmin(admin.ModelAdmin):
                     row_values.append(row[78])
                 else:
                     row_values.append(row[77])
+
+                # add the import status
+                row_values.append('Import Completed')
 
                 # write to csv file
                 csv_output.writerow(row_values)
