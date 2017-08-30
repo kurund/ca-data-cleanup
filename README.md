@@ -16,6 +16,7 @@
 4. Install required packages
    > pip install -r careeraware/requirements.txt
 5. Setup database
+   > cd careeraware
    > python manage.py migrate
 6. Run the server
    > python manage.py runserver
