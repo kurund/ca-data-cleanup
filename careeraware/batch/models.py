@@ -83,3 +83,6 @@ class Batch(models.Model):
         default=1,
         help_text='Do not change. This field will be auto updated.',
     )
+
+    def __str__(self):
+        return self.name
