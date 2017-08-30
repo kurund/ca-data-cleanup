@@ -311,8 +311,8 @@ class BatchAdmin(admin.ModelAdmin):
                 csv_output.writerow(row_values)
 
         # update status
-        #obj.status = 5 # 5 is 'Career Planning Processed'
-        obj.status = 6 # 6 is 'Transformation Completed'
+        obj.status = 5 # 5 is 'Career Planning Processed'
+        #obj.status = 6 # 6 is 'Transformation Completed'
 
         # set the processed file path
         obj.proc_career_planning = 'data/' + batch_name + '/career_planning.csv'
