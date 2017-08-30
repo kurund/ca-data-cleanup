@@ -127,11 +127,17 @@ USE_L10N = True
 
 USE_TZ = True
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static/')
 
 # data files path
-DATA_FILES = '/Users/kurund/src/git/ca-data-cleanup/careeraware/data/'
+DATA_FILES = os.path.join(PROJECT_ROOT, 'data/')
+
+# this used when Debug=True
+MEDIA_ROOT = PROJECT_ROOT
+MEDIA_URL = '/media/'
