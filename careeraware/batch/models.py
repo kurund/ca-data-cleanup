@@ -4,7 +4,7 @@ from django.core.validators import FileExtensionValidator
 # Create your models here.
 class Batch(models.Model):
 
-    STATUS = (
+    STATUSES = (
         (1, 'Not Processed'),
         (2, 'Baseline Processed'),
         (3, 'Self Awareness Processed'),
@@ -79,7 +79,7 @@ class Batch(models.Model):
     )
 
     status = models.IntegerField(
-        choices=STATUS,
+        choices=STATUSES,
         default=1,
         help_text='Do not change. This field will be auto updated.',
     )
