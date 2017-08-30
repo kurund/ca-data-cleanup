@@ -11,9 +11,10 @@
    > git clone https://github.com/kurund/ca-data-cleanup.git
 2. Install virtulenv (https://pypi.python.org/pypi/virtualenv)
 3. Create and activate virtualenv
-   > virtualenv -p python3 env
+   > virtualenv -p python3 env <br/>
+   > source env/bin/activate.fish
 4. Install required packages
-   > pip install -r requirements.txt
+   > pip install -r careeraware/requirements.txt
 5. Setup database
    > python manage.py migrate
 6. Run the server
