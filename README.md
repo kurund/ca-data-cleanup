@@ -24,4 +24,6 @@
    > http://127.0.0.1:8000/
 8. Create superuser for the admin backend
    > python manage.py createsuperuser
+9. Login as superuser
+   > http://127.0.0.1:8000/admin
    
