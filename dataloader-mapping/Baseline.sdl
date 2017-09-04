@@ -1,0 +1,24 @@
+#Mapping values
+#Wed Aug 16 13:34:19 IST 2017
+Gender=Gender__c
+DOB=Birthdate
+Currently\ Working=Currently_Working__c
+Contact\ Number=Phone
+Contact\ Type=Contact_Type__c
+Last\ Name=LastName
+Import\ Status=Import_Status__c
+Computer\ Literate=Computer_Literate__c
+Day-5=Day_5__c
+Current\ Education=Current_Education__c
+Day-4=Day_4__c
+Day-3=Day_3__c
+Day-2=Day_2__c
+Day-1=Day_1__c
+Mother\ Occupation=Mother_Occupation__c
+Current\ Aspiration=Current_Aspiration__c
+Student\ Occupation=Student_s_Occupation__c
+Age=Age__c
+First\ Name=FirstName
+BARCODE=Bar_Code__c
+Batch\ Code=Batch_Code__r\:Batch_Number__c
+Father\ Occupation=Father_Occupation__c
