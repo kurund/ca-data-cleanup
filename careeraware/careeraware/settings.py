@@ -139,6 +139,10 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static/')
 DATA_FOLDER = 'data'
 DATA_FILES_PATH = os.path.join(PROJECT_ROOT, DATA_FOLDER)
 
+# process folder path
+PROCESS_FOLDER = 'to-process'
+PROCESS_FILES_PATH = os.path.join(PROJECT_ROOT, PROCESS_FOLDER)
+
 # this used when Debug=True
 MEDIA_ROOT = PROJECT_ROOT
 MEDIA_URL = '/media/'
