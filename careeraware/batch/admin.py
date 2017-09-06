@@ -34,7 +34,7 @@ class BatchAdmin(admin.ModelAdmin):
 
         # check if batch directory exists, else create one
         batch_name = 'batch-' + str(obj.id)
-        batch_dir = settings.DATA_FILES_PATH + batch_name
+        batch_dir = settings.DATA_FILES_PATH + '/' + batch_name
         if not os.path.exists(batch_dir):
             os.makedirs(batch_dir)
 
