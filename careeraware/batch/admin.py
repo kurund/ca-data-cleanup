@@ -34,7 +34,7 @@ class BatchAdmin(admin.ModelAdmin):
 
         # check if batch directory exists, else create one
         batch_name = 'batch-' + str(obj.id)
-        batch_dir = settings.DATA_FILES + batch_name
+        batch_dir = settings.DATA_FILES_PATH + batch_name
         if not os.path.exists(batch_dir):
             os.makedirs(batch_dir)
 
@@ -111,7 +111,7 @@ class BatchAdmin(admin.ModelAdmin):
         obj.status = 2 # 2 is 'Baseline Processed'
 
         # set the processed file path
-        obj.proc_baseline = 'data/' + batch_name + '/baseline.csv'
+        obj.proc_baseline = settings.DATA_FOLDER + '/' + batch_name + '/baseline.csv'
 
         obj.save()
 
@@ -210,7 +210,7 @@ class BatchAdmin(admin.ModelAdmin):
         obj.status = 3  # 3 is 'Self Awareness Processed'
 
         # set the processed file path
-        obj.proc_self_aware = 'data/' + batch_name + '/self_awareness.csv'
+        obj.proc_self_aware = settings.DATA_FOLDER + '/' + batch_name + '/self_awareness.csv'
 
         obj.save()
 
@@ -255,7 +255,7 @@ class BatchAdmin(admin.ModelAdmin):
         obj.status = 4 # 4 is 'Career Awareness Processed'
 
         # set the processed file path
-        obj.proc_career_aware = 'data/' + batch_name + '/career_awareness.csv'
+        obj.proc_career_aware = settings.DATA_FOLDER + '/' + batch_name + '/career_awareness.csv'
 
         obj.save()
 
@@ -315,7 +315,7 @@ class BatchAdmin(admin.ModelAdmin):
         #obj.status = 6 # 6 is 'Transformation Completed'
 
         # set the processed file path
-        obj.proc_career_planning = 'data/' + batch_name + '/career_planning.csv'
+        obj.proc_career_planning = settings.DATA_FOLDER + '/' + batch_name + '/career_planning.csv'
 
         obj.save()
 
