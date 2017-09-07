@@ -1,5 +1,6 @@
 .idea
 env
+careeraware/careeraware/settings.py
 careeraware/uploads
 careeraware/data
 careeraware/static
