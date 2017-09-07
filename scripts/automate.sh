@@ -14,11 +14,50 @@
 
 # python script related actions
 source ../env/bin/activate
-echo 'Virtual environment activated.'
 cd ../careeraware/
-echo 'Run python script to identify batches to process.'
+echo 'Identify batches to process.'
 python manage.py shell < scripts/import_sf.py
-echo 'Batches are ready for processing.'
+
+DIR=to-process
+
+# check for batches to process
+if [ "$(ls -A $DIR)" ]; then
+     echo 'Batches are ready for processing.'
+else
+    echo "No batches to process."
+    exit
+fi
 
 # start processing of batches
+cd $DIR
 
+for d in */ ; do
+    # copy files to dataloader data folder for processing
+    echo ''
+    echo "-----------------------------------------------"
+    echo "Processing: $d"
+    cp -R $d*.csv ../../dataloader/data/
+
+    # call data loader to push data to SF
+    pushd ../../dataloader/ > /dev/null
+
+    bin/process.sh Baseline
+    echo "Baseline done."
+    bin/process.sh CareerAwareness
+    echo "Career Awareness done."
+    bin/process.sh CareerPlanning
+    echo "Career Planning done."
+    bin/process.sh SelfAwareness
+    echo "Self Awareness done."
+
+    popd > /dev/null
+
+    # delete processed files from data loader data folder
+    echo "Delete processed files from dataloader."
+    rm -rf ../../dataloader/data/*.csv
+
+    # delete processed files from to-process folder
+    echo "Delete batch from process queue."
+    rm -rf $d
+    echo "-----------------------------------------------"
+done
