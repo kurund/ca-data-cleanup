@@ -1,0 +1,17 @@
+#Mapping values
+#Wed Aug 16 14:06:09 IST 2017
+Design=Design__c
+Trades=Trades__c
+Enviroment\ and\ Biological\ Science=Enviomental_and_Biological_Sciences__c
+Education=Education__c
+Finance=Finance__c
+Public\ Service=Public_Services__c
+Import\ Status=Import_Status__c
+BARCODE=Bar_Code__c
+Engineering\ Technologies=Enginnering_technologies__c
+Beauty\ &\ Wellness=Beauty_Wellness__c
+Performance\ Arts=Performance_Arts__c
+Medical=Medical__c
+Sports\ &\ Fitness=Sports_Fitness__c
+Media\ &\ Communication=Media_Communication__c
+Hospitality\ &\ Tourism=Hospitality_Tourism__c
