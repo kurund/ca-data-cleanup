@@ -4,3 +4,5 @@ careeraware/uploads
 careeraware/data
 careeraware/static
 careeraware/to-process
+dataloader/conf/config.properties
+dataloader/conf/private.key
