@@ -1,8 +1,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-    <bean id="ContactBaselineInsert" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+    <bean id="Baseline" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
         <description>Push Baseline data to Salesforce.</description>
-        <property name="name" value="ContactBaselineInsert"/>
+        <property name="name" value="Baseline"/>
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
@@ -16,9 +16,9 @@
             </map>
         </property>
     </bean>
-    <bean id="ContactCareerAwarenessUpdate" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+    <bean id="CareerAwareness" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
         <description>Push Career Awareness data to Salesforce.</description>
-        <property name="name" value="ContactCareerAwarenessUpdate"/>
+        <property name="name" value="CareerAwareness"/>
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
@@ -32,9 +32,9 @@
             </map>
         </property>
     </bean>
-    <bean id="ContactCareerPlanningUpdate" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+    <bean id="CareerPlanning" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
         <description>Push Career Planning data to Salesforce.</description>
-        <property name="name" value="ContactCareerPlanningUpdate"/>
+        <property name="name" value="CareerPlanning"/>
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
@@ -48,9 +48,9 @@
             </map>
         </property>
     </bean>
-    <bean id="ContactSelfAwarenessUpdate" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+    <bean id="SelfAwareness" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
         <description>Push Self Awareness data to Salesforce.</description>
-        <property name="name" value="ContactSelfAwarenessUpdate"/>
+        <property name="name" value="SelfAwareness"/>
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
@@ -65,4 +65,3 @@
         </property>
     </bean>
 </beans>
-
