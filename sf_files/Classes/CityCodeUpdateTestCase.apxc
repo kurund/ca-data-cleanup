@@ -1,0 +1,20 @@
+@isTest
+public class CityCodeUpdateTestCase {
+ public static testMethod void test(){
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        TriggerCheck.setVariable(true);
+         
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan';
+        insert city;
+        
+     }
+}

@@ -1,0 +1,2356 @@
+@isTest
+public class OptimizeIARPRecommTestCase{
+    public static testMethod void test1(){
+       Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    
+    public static testMethod void test2() {
+		Test.StartTest();        
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp11 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Structured',Personality_8__c='Any',Name='Actor',Aptitude_1__c='Spatial',Aptitude_2__c='Numerical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp11;
+		/* aptitude is not mathch and aspiration is not given----  AR< 2*/
+        Contact contact2 =new Contact(FirstName='Kurund2',LastName='Jalmi2',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Spatial',Aptitude_2__c='Numerical',Personality_1__c='Extrovert',Personality_2__c='Any',
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact2;   
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+        
+    }
+    
+    
+ public static testMethod void test3(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Curriculum Developer',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Curriculum Developer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Nurse',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Nurse',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='No',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');         
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');         
+        insert iarp3;insert iarp4;insert iarp5;
+        Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP==2*/
+		Contact contact6 =new Contact(FirstName='Kurund6',LastName='Jalmi6',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Conventional',Interest_2__c='Investigative',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Thoughtful',
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact6;  
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    public static testMethod void test15(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Curriculum Developer',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Curriculum Developer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Nurse',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Nurse',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='No',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');         
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');         
+        insert iarp3;insert iarp4;insert iarp5;
+        Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP==2*/
+		Contact contact6 =new Contact(FirstName='Kurund6',LastName='Jalmi6',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Conventional',Interest_2__c='Investigative',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Thoughtful',
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact6;  
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+
+    
+    public static testMethod void test4(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+        
+        Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Graphic Designer';
+        recomm1.Recommendation__c='Graphic Designer';
+        recomm1.Location__c='Mumbai';
+        recomm1.Next_Steps__c='To be a Graphic Designer - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Graphic Designer(Marathi)';
+        insert recomm1;
+        
+        Recommendation__c recomm2=new Recommendation__c();
+        recomm2.Profession__c='Architect';
+        recomm2.Recommendation__c='Architect';
+        recomm2.Location__c='Mumbai';
+        recomm2.Next_Steps__c='To be a Graphic Designer - Students must complete graduation in any Commerce.';
+        recomm2.Next_Steps_Marathi__c='Graphic Designer(Marathi)';
+        insert recomm2;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and 2 aspiration is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Aspiration_1__c=iarp1.id,Aspiration_2__c=iarp2.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    
+    public static testMethod void test5(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Architect';
+        recomm.Recommendation__c='Architect';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and 2 aspiration is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Aspiration_1__c=iarp1.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    
+     public static testMethod void test6(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Fine Artist - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+		Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Graphic Designer';
+        recomm1.Recommendation__c='Graphic Designer';
+        recomm1.Location__c='Mumbai';
+        recomm1.Next_Steps__c='To be a Graphic Designer - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Graphic Designer(Marathi)';
+        insert recomm1;
+        
+        Recommendation__c recomm2=new Recommendation__c();
+        recomm2.Profession__c='Architect';
+        recomm2.Recommendation__c='Architect';
+        recomm2.Location__c='Mumbai';
+        recomm2.Next_Steps__c='To be a Graphic Designer - Students must complete graduation in any Commerce.';
+        recomm2.Next_Steps_Marathi__c='Graphic Designer(Marathi)';
+        insert recomm2;
+        
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and 2 aspiration is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Aspiration_1__c=iarp1.id,Aspiration_2__c=iarp2.id,Aspiration_3__c=iarp3.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    public static testMethod void test7(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Fine Artist - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Fine Artist(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and  aspiration 1,2,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Aspiration_3__c=iarp3.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    
+    public static testMethod void test8(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Architect';
+        recomm.Recommendation__c='Architect';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Architect - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+        Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Fine Artist';
+        recomm1.Recommendation__c='Fine Artist';
+        recomm1.Location__c='Mumbai';
+        recomm1.Next_Steps__c='To be a Fine Artist - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Fine Artist(Marathi)';
+        insert recomm1;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Aspiration_3__c=iarp3.id,Aspiration_1__c=iarp1.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+
+    public static testMethod void test9(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Aspiration_1__c=iarp1.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    public static testMethod void test10(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Architect';
+        recomm.Recommendation__c='Architect';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Aspiration_1__c=iarp1.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    public static testMethod void test11(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Architect';
+        recomm.Recommendation__c='Architect';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Architect(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp1.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+     public static testMethod void test12(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    
+    public static testMethod void test13(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp4;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp4.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    public static testMethod void test14(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Pune';
+        recomm.Next_Steps__c='To be a FA - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='FA(Marathi)';
+        insert recomm;
+        
+        Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Actor';
+        recomm1.Recommendation__c='Actor';
+        recomm1.Location__c='Pune';
+        recomm1.Next_Steps__c='To be a Actor - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Actor(Marathi)';
+        insert recomm1;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp4;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp4.id,Aspiration_2__c=iarp5.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Practical',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+
+
+    public static testMethod void test16(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Pune';
+        recomm.Next_Steps__c='To be a FA - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='FA(Marathi)';
+        insert recomm;
+        
+        Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Actor';
+        recomm1.Recommendation__c='Actor';
+        recomm1.Location__c='Pune';
+        recomm1.Next_Steps__c='To be a Actor - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Actor(Marathi)';
+        insert recomm1;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp4;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Spatial',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp4.id,Aspiration_2__c=iarp5.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Practical',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+     public static testMethod void test17(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Pune';
+        recomm.Next_Steps__c='To be a FA - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='FA(Marathi)';
+        insert recomm;
+        
+        Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Actor';
+        recomm1.Recommendation__c='Actor';
+        recomm1.Location__c='Pune';
+        recomm1.Next_Steps__c='To be a Actor - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Actor(Marathi)';
+        insert recomm1;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp4;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Spatial',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Extrovert',
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Practical',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    
+    public static testMethod void test18(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Pune';
+        recomm.Next_Steps__c='To be a FA - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='FA(Marathi)';
+        insert recomm;
+        
+        Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Actor';
+        recomm1.Recommendation__c='Actor';
+        recomm1.Location__c='Pune';
+        recomm1.Next_Steps__c='To be a Actor - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Actor(Marathi)';
+        insert recomm1;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Artistic',Interest_2__c='Conventional',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Spatial',Aptitude_2__c='Abstract',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp4;insert iarp5;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Spatial',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp1.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Practical',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='Yes',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    public static testMethod void test19(){
+         Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp1.id,Aspiration_2__c=iarp2.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Extrovert',Personality_4__c='Extrovert',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    public static testMethod void test20(){
+       Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp1.id,Aspiration_2__c=iarp2.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Extrovert',Personality_4__c='Extrovert',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+
+    public static testMethod void test21(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        IARP_Master__c iarp0 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Teacher',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Teacher',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes'); 
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='No',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Performance Arts',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Media & Communication',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp0;insert iarp1;insert iarp2;insert iarp3;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp0.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Extrovert',Personality_4__c='Extrovert',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    public static testMethod void test22(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        IARP_Master__c iarp0 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Teacher',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Any',Name='Teacher',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes'); 
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='No',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Performance Arts',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Media & Communication',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='Yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp0;
+        insert iarp1;
+        insert iarp2;
+        insert iarp3;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp0.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Extrovert',Personality_4__c='Extrovert',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    public static testMethod void test23(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        IARP_Master__c iarp0 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Teacher',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Any',Name='Teacher',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes'); 
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp0;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp0.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Extrovert',Personality_4__c='Extrovert',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    
+    
+	public static testMethod void test24() {
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        IARP_Master__c iarp0 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp0;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp0.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Extrovert',Personality_4__c='Extrovert',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    
+    public static testMethod void test25(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Accountant';
+        recomm.Recommendation__c='Accountant';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        IARP_Master__c iarp0 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp0;
+        
+		/* interest math and aptitude is  mathch and  aspiration is not given----  IAP > 2*/
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp0.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Extrovert',Personality_4__c='Extrovert',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact1;   
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+    }
+    
+    public static testMethod void test26(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Architect';
+        recomm.Recommendation__c='Architect';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Architect(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        IARP_Master__c iarp0 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Teacher',Interest_1__c='Artistic',Interest_2__c='Artistic',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Teacher',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='No');
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp0;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp0.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    public static testMethod void test27(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp5 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp6 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Practical',Personality_5__c='Practical',Personality_6__c='Practical',Personality_7__c='Practical',Personality_8__c='Practical',Name='Fine Artist',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp4;insert iarp6;
+        
+		/* aptitude is not mathch and  aspiration1,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Extrovert',Aspiration_1__c=iarp4.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Thoughtful',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Any',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+     public static testMethod void test28(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Architect';
+        recomm.Recommendation__c='Architect';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Accountant(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        insert iarp1;insert iarp2;insert iarp3;
+        
+		/* aptitude is not mathch and 2 aspiration is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Aspiration_3__c=iarp1.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+    
+     public static testMethod void test29(){
+        Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Fine Artist';
+        recomm.Recommendation__c='Fine Artist';
+        recomm.Location__c='Mumbai';
+        recomm.Next_Steps__c='To be a Fine Artist - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Fine Artist(Marathi)';
+        insert recomm;
+     
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Kalyan'; 
+        insert city;
+        
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        batch.School_Name__c=account.id;
+        
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;
+         insert contact;
+         
+         batch.Trainer_Name__c=contact.id;
+        
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         insert account1;
+        
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         insert batch;
+        
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Architect',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp2 = new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Graphic Designer',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp3 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');
+        IARP_Master__c iarp4 = new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Teacher',Interest_1__c='Social',Interest_2__c='Enterprising',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Teachert',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='Yes',Reality_8__c='No');
+        insert iarp1;insert iarp2;insert iarp3;insert iarp4;
+        
+		/* aptitude is not mathch and  aspiration 1,2,3 is  given----  AE==2*/
+        Contact contact5 =new Contact(FirstName='Kurund5',LastName='Jalmi5',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Aspiration_3__c=iarp4.id,
+        RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='Yes',Reality_5__c='Yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes',Import_Status__c='Import Completed');
+        insert contact5; 
+        IARPRecommendation irp=new IARPRecommendation();
+        OptimizeIARPRecomm.mainMethod();
+        Test.StopTest();
+	}
+    
+}

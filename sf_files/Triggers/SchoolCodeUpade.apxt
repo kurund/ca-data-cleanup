@@ -1,0 +1,8 @@
+trigger SchoolCodeUpade on Account (After insert,After update) {
+    if(TriggerCheck.runOnce()){
+      for(Account school:trigger.new){
+      TriggerCheck triggerCheck = New TriggerCheck();
+      triggerCheck.calculateSchoolCode(school.id);
+   }
+}
+}

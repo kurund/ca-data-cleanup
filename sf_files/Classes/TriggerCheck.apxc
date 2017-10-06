@@ -1,0 +1,190 @@
+global class TriggerCheck {
+    global static boolean run = true;
+    global static boolean schoolCheck = true;
+    global static boolean runOnce() {
+        System.debug('value' + run);
+        if (run) {
+            run = false;
+            return true;
+        } else {
+            return run;
+        }
+    }   
+    
+    public void createBatchNumber(Id id) {
+        String batchNumber = '';
+        
+        /* get school name from batch*/
+        List<Batch__c> batchData = [select School_Name__c,Batch_Number__c from Batch__c where Batch__c.id=: + id ];
+        Batch__c batch=batchData.get(0);
+        System.debug('Batch number '+ batch.Batch_Number__c);
+        
+        /* get School detail based on school name*/
+        List<Account> schoolData = [select State__c, City__c, Ward__c , District__c,School_Code__c from Account where Account.Id=: + batch.School_Name__c];
+        Account account=schoolData.get(0);
+        
+        /* get State Code based on State id*/
+        List<State_Govt_Body_Level__c> stateData = [select State_Code__c from State_Govt_Body_Level__c where State_Govt_Body_Level__c.Id=: + account.State__c];
+        State_Govt_Body_Level__c stateGOV = stateData.get(0); 
+        String state=stateGOV.State_Code__c;
+        String stateCode ='';
+        if (state.length() == 1) {
+            stateCode += '0'+ state;
+        } else if (state.length() == 2) {
+            stateCode += state;
+        }
+        
+        /* get District Code based on District id*/
+        List<District_Master__c> districtData = [select District_Code__c from District_Master__c where District_Master__c.Id=: + account.District__c];
+        District_Master__c districtMaster=districtData.get(0); 
+        String district=districtMaster.District_Code__c;
+        String districtCode='';
+        if (district.length() == 1) {
+            districtCode +='0'+ district;
+        } else if (district.length() == 2) {
+            districtCode += district;
+        }
+        
+        /* get City Code based on City id*/
+        List<City_Master__c> cityData = [select City_Code__c from City_Master__c where City_Master__c.Id=: + account.City__c];
+        City_Master__c cityMaster=cityData.get(0);
+        String city = cityMaster.City_Code__c;
+        String cityCode = '';
+        if (city.length() == 1) {
+            cityCode +='0'+ city;
+        } else if (city.length() == 2) {
+            cityCode += city;
+        }
+        
+        /* get Ward Code based on ward  id*/
+        List<Ward_Master__c> wardData = [select Ward_Code__c from Ward_Master__c where Ward_Master__c.Id=: + account.Ward__c];
+        Ward_Master__c wardMaster = wardData.get(0); 
+        String ward = wardMaster.Ward_Code__c;
+        String wardCode = '';
+        if (ward.length() == 1) {
+            wardCode += '0'+ ward;
+        } else if(ward.length() == 2) {
+            wardCode += ward;
+        }
+        
+        /* get School Code based school details*/
+        String school = account.School_Code__c;
+        String schoolCode ='';
+        if (school.length() == 1) {
+            schoolCode +='0'+school;
+        } else if(school.length() == 2) {
+            schoolCode += school;
+        } else {
+            schoolCode += school.substring(school.length()-2, school.length());
+        }      
+        
+        /* count of batch from Batch__c*/
+        List<Batch__c> batchList = [select School_Name__c from Batch__c Where School_Name__c =: batch.School_Name__c];
+        Integer batchCode = batchList.size();
+        String batcheString = String.valueOf(batchCode);
+        String batchCodeString ='';
+        if (batcheString.length() == 1){
+            batchCodeString += '0'+batcheString;
+        } else if(batcheString.length() == 2){
+            batchCodeString += batcheString;
+        } else{
+            batchCodeString += batcheString.substring(batcheString.length()-2, batcheString.length());
+        }
+        
+        /* create batch number based on state,district,city,ward and school code*/
+        if(batch.Batch_Number__c != null && schoolCheck == false){
+        batchNumber += stateCode + districtCode + cityCode + wardCode + schoolCode + batchCodeString;
+        batch.Batch_Number__c = batchNumber;
+       }else if(batch.Batch_Number__c == null)
+       {
+        batchNumber += stateCode + districtCode + cityCode + wardCode + schoolCode + batchCodeString;
+        batch.Batch_Number__c = batchNumber;
+           
+       }
+       
+        update batch;
+  }
+    
+    public  void calculateNumberOfBatches(Id id) {
+        /* get Donar name   */
+        List<Batch__c> batchData = [select Donor_Name__c from Batch__c where Batch__c.id=: + id];
+        if(batchData.size()<0)
+        {
+        Batch__c batch = batchData.get(0);
+        String donarName = batch.Donor_Name__c;
+        
+        /* get List of batches based on donar name*/
+        List<Batch__c> batchList = [select id from Batch__c where Batch__c.Donor_Name__c=: + batch.Donor_Name__c];
+        Integer count = batchList.size();
+        
+        /* get data of donar from account object*/
+        List<Account> donarData = [select id from Account where Account.id=: + donarName];
+        Account donar = donarData.get(0);
+        if (count == 0) {
+            donar.Number_of_batches_funded__c = 0;
+        } else {
+            donar.Number_of_batches_funded__c = count;
+        }
+        update donar;
+        }
+    }
+    
+    public void calculateDisrtictCode(Id id) {
+        /* get State code based from District_Master__c*/
+        LIST<District_Master__c> stateList = [select State__c from District_Master__c where District_Master__c.id=: +id];
+        District_Master__c state=stateList.get(0);
+        
+        /* get name of district which as same state code */
+        LIST<District_Master__c> districtList = [select name from District_Master__c where State__c=: state.State__c];
+        
+        /* upade District_Code__c and District_Master__c*/
+        state.District_Code__c = String.valueOf(districtList.size()); 
+        update state;
+    }
+    
+    public void calculateCityCode(Id id) {
+        /* get District code based from City_Master__c*/
+        LIST<City_Master__c> districtList = [select District__c from City_Master__c where City_Master__c.id=: +id];
+        City_Master__c city = districtList.get(0);
+        
+        /* get name of City which as same District code */
+        LIST<City_Master__c> cityList = [select name from City_Master__c where District__c=: city.District__c];
+        
+        /* upade City_Code__c and City_Master__c*/
+        city.City_Code__c = String.valueOf(cityList.size());  
+        System.debug('City_Code__c '+city.City_Code__c);
+        update city;
+    }
+    
+    public void calculateWardCode(Id id) {
+        /* get City code based from Ward_Master__c*/
+        LIST<Ward_Master__c> cityList = [select City__c from Ward_Master__c where Ward_Master__c.id=: +id];
+        
+        Ward_Master__c ward = cityList.get(0);
+        
+        /* get name of City which as same District code */
+        LIST<Ward_Master__c> wardList = [select name from Ward_Master__c where city__c=: ward.city__c];
+        
+        /* upade Ward_Code__c and Ward_Master__c*/
+        ward.Ward_Code__c = String.valueOf(wardList.size());
+        update ward;
+    }
+    
+    public void calculateSchoolCode(Id id) {
+        /* get State,District,City,ward  based from Account*/
+        List<Account> schoolData = [select State__c, City__c, Ward__c , District__c from Account where Account.Id=: + id];
+        
+        Account school = schoolData.get(0);
+        
+        /* get name of City which as same District code */
+        LIST<Account> schoolList = [select name from Account where State__c=: school.State__c and District__c=: school.District__c and City__c=:school.City__c and Ward__c=:school.Ward__c];
+        
+        /* upade Ward_Code__c and Ward_Master__c*/
+        school.School_Code__c = String.valueOf(schoolList.size());
+        update school;
+    }
+    
+    public static void setVariable(Boolean s) {
+        run = s;
+    }
+}

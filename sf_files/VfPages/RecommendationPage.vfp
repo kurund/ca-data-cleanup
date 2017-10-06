@@ -1,0 +1,102 @@
+<apex:page standardController="Contact" extensions="RecommendationController" renderAs="{!pdf}">
+    <body style="font-family:sans-serif,Arial,Unicode MS;">
+       <apex:form >
+       <center><img src="{!URLFOR($Resource.Antarang, 'antarang.png')}"  width="466" height="493"/></center><br/><br/>
+         <p style="text-align:right;">Antarang Foundation<br/><br/>
+          231/C, Tawripada Compound, Next to Hilla Apartments,<br/><br/>
+          Dr. S.S. RaoMarg, Lalbaug, Parel, Mumbai 400012<br/><br/>
+              Office: 022-40050164/022-40050943</p>
+     
+
+      <apex:pageBlock id="RecommendationController" mode="maindetail">
+          <div style="border-width:2px;border-style:solid;border-color:Black; padding: 5px;">
+          <h3>Student Information:</h3>
+          <p> Name:&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+          <apex:outputField value="{!contact.Name}"/><br/>
+           Age:&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
+          <apex:outputField value="{!contact.Age__c}"/><br/>
+           Class:&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;<apex:outputText value="{!grade}"/><br/>
+           School:&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+          <apex:outputtext value="{!schoolName}"/><br/>
+           Batch code:&nbsp; &nbsp; &nbsp;&nbsp;
+          <apex:outputtext value="{!batchNumber}"/><br/>
+           Trainer name:&nbsp; &nbsp; 
+              <apex:outputtext value="{!trainerName}"/><br/></p>
+           </div>
+       </apex:pageBlock>
+        <br/>
+      
+       <apex:pageBlock mode="maindetail">
+          <p> At the start of the program &nbsp;<b><apex:outputField value="{!contact.Name}"/></b>&nbsp; aspired to be a <b><apex:outputField value="{!contact.Current_Aspiration__c}"/></b>&nbsp;.
+           </p></apex:pageBlock>
+        
+        
+           <p><b>INTEREST </b><br/><br/>
+        From the interest mapping exercise the student’s interest codes are  <b><apex:outputField value="{!contact.Interest_1__c}"/></b>,&nbsp;<b><apex:outputField value="{!contact.Interest_2__c}"/></b>.
+        <br/> <br/>
+               <b><apex:outputField value="{!contact.Interest_1__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!interest1}"/>
+        <br/><br/>
+               <b><apex:outputField value="{!contact.Interest_2__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!interest2}"/>
+            <br/><br/></p>
+        
+        <p><b>APTITUDE</b><br/><br/>
+        Student shows a well-developed aptitude in <b><apex:outputField value="{!contact.Aptitude_1__c}"/></b>&nbsp; Ability and <b><apex:outputField value="{!contact.Aptitude_2__c}"/></b>&nbsp;Ability.
+        <br/><br/>
+            <b><apex:outputField value="{!contact.Aptitude_1__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!aptitude1}"/>
+        <br/><br/>
+            <b> <apex:outputField value="{!contact.Aptitude_2__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!aptitude2}"/>
+           <br/><br/></p>
+        
+        <p><b>PERSONALITY TYPES</b><br/><br/>  
+         Based on the Personality test, it is shown that the student has the following personality types. People with these personality types tend to be:<br/><br/>
+            <b><apex:outputField value="{!contact.Personality_1__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality1}"/>
+         <br/><br/>
+            <b><apex:outputField value="{!contact.Personality_2__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality2}"/>
+         <br/><br/>
+            <b><apex:outputField value="{!contact.Personality_3__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality3}"/>
+         <br/><br/>
+            <b><apex:outputField value="{!contact.Personality_4__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality4}"/>
+         <br/><br/>
+            <b><apex:outputField value="{!contact.Personality_5__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality5}"/>
+         <br/><br/>
+            <b><apex:outputField value="{!contact.Personality_6__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality6}"/>
+         <br/><br/>
+            <b><apex:outputField value="{!contact.Personality_7__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality7}"/>
+         <br/><br/>
+            <b><apex:outputField value="{!contact.Personality_8__c}"/></b>&nbsp;:&nbsp;<apex:outputText value="{!personality8}"/>
+         <br/><br/>
+       </p>
+        <p><b>REALITITES:</b><br/><br/> 
+            <b> Reality 1 :</b> &nbsp;<apex:outputText value="{!reality1}"/>
+         <br/><br/>
+            <b>Reality 2 :</b> &nbsp;<apex:outputText value="{!reality2}"/>
+         <br/><br/>
+            <b>Reality 3 : </b>&nbsp;<apex:outputText value="{!reality3}"/>
+         <br/><br/>
+            <b>Reality 4 :</b> &nbsp;<apex:outputText value="{!reality4}"/>
+         <br/><br/>
+            <b>Reality 5 : </b>&nbsp;<apex:outputText value="{!reality5}"/>
+         <br/><br/>
+            <b>Reality 6 : </b>&nbsp;<apex:outputText value="{!reality6}"/>
+         <br/><br/>
+            <b>Reality 7 : </b>&nbsp;<apex:outputText value="{!reality7}"/>
+         <br/><br/>
+            <b>Reality 8: </b>&nbsp;<apex:outputText value="{!reality8}"/>
+         <br/><br/>
+       </p>
+        <p><b>RECOMMENDATION</b><br/><br/>
+            <b>Aptitude :</b>&nbsp;<apex:outputField value="{!contact.Aptitude_1__c}"/>,<apex:outputField value="{!contact.Aptitude_2__c}"/><br/><br/>
+            <b> Personality :</b>&nbsp;<apex:outputField value="{!contact.Personality_1__c}"/>,<apex:outputField value="{!contact.Personality_2__c}"/>,<apex:outputField value="{!contact.Personality_3__c}"/>,<apex:outputField value="{!contact.Personality_4__c}"/>,<apex:outputField value="{!contact.Personality_5__c}"/>,<apex:outputField value="{!contact.Personality_6__c}"/>,<apex:outputField value="{!contact.Personality_7__c}"/>,<apex:outputField value="{!contact.Personality_8__c}"/><br/><br/>
+            <b>Interest Code :</b>&nbsp;<apex:outputField value="{!contact.Interest_1__c}"/>,<apex:outputField value="{!contact.Interest_2__c}"/><br/><br/>
+       Based on the student’s personal profile the possible career options are:&nbsp; <b><apex:outputField value="{!contact.Profession_1_Recommendation__c}"/></b>,<b><apex:outputField value="{!contact.Profession_2_Recommendation__c}"/></b><br/><br/><br/>
+       </p>
+        <p><b>NEXT STEPS</b><br/><br/>
+            <b>Profession 1</b>&nbsp;:&nbsp;<apex:outputField value="{!contact.Profession_1_Next_steps__c}"/><br/>
+            <b>Profession 2</b>&nbsp;:&nbsp;<apex:outputField value="{!contact.Profession_2_Next_steps__c}"/><br/><br/></p>
+     
+         <p><b>__________________________BEST OF LUCK!____________________________</b><br/><br/>
+             <b><apex:commandbutton value="Download" action="{!redirect}"/></b>
+             <b><apex:commandbutton value="Print" onclick="window.print();"/></b></p>
+      </apex:form>
+    </body>
+</apex:page>

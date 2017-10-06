@@ -1,0 +1,15 @@
+trigger BatchNumberUpdate on Batch__c (after insert,after update) {
+    if (TriggerCheck.runOnce()) {
+        if(trigger.old != null){
+         if(trigger.new[0].School_Name__c != trigger.old[0].School_Name__c)
+        {
+           TriggerCheck.schoolCheck= false;
+        }
+        }
+        for (Batch__c batch:trigger.new) {
+            TriggerCheck triggerCheck = new TriggerCheck();
+            triggerCheck.createBatchNumber(batch.id);
+            triggerCheck.calculateNumberOfBatches(batch.id);
+        }
+    }
+}

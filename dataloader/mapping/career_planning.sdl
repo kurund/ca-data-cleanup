@@ -1,8 +1,8 @@
 #Mapping values
-#Wed Aug 16 15:01:59 IST 2017
-Possible\ Careers\ 3=Possible_Careers_3__c
-Possible\ Careers\ 2=Possible_Careers_2__c
-Possible\ Careers\ 1=Possible_Careers_1__c
+#Mon Sep 04 11:09:44 IST 2017
+Possible\ Careers\ 3=Possible_Careers_3__r\:Profession_Code__c
+Possible\ Careers\ 2=Possible_Careers_2__r\:Profession_Code__c
+Possible\ Careers\ 1=Possible_Careers_1__r\:Profession_Code__c
 Import\ Status=Import_Status__c
 Endline=EndLine__c
 Study\ till\ 18=Study_till_18__c

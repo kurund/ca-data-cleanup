@@ -1,0 +1,170 @@
+public class RecommendationController {
+  public List<Contact> contactList{set;get;}
+    public List<Batch__c> batchList{set;get;}
+    public List<Account> schoolList{set;get;}
+    public List<Contact> trainerList{set;get;}
+    public List<Explanations__c> explanationList{set;get;}
+    public String pdf{set;get;}
+    public String grade{set;get;}
+    public String batchNumber{set;get;}
+    public String schoolName{set;get;}
+    public String trainerName{set;get;}
+    public String interest1{set;get;}
+    public String interest2{set;get;}
+    public String aptitude1{set;get;}
+    public String aptitude2{set;get;}
+    public String personality1{set;get;}
+    public String personality2{set;get;}
+    public String personality3{set;get;}
+    public String personality4{set;get;}
+    public String personality5{set;get;}
+    public String personality6{set;get;}
+    public String personality7{set;get;}
+    public String personality8{set;get;}
+    public String reality1{set;get;}
+    public String reality2{set;get;}
+    public String reality3{set;get;}
+    public String reality4{set;get;}
+    public String reality5{set;get;}
+    public String reality6{set;get;}
+    public String reality7{set;get;}
+    public String reality8{set;get;}
+    Contact con;
+    Contact contact;
+    public RecommendationController(ApexPages.StandardController controller){
+    this.con=(Contact)controller.getRecord();
+    contactList = [select id,name,Current_Aspiration__c,Age__c,Batch_Code__c,Interest_1__c,Interest_2__c,Aptitude_1__c,Aptitude_2__c,Personality_1__c,Personality_2__c,Personality_3__c,Personality_4__c,Personality_5__c,Personality_6__c,Personality_7__c,Personality_8__c,Reality_1__c,Reality_2__c,Reality_3__c,Reality_4__c,Reality_5__c,Reality_6__c,Reality_7__c,Reality_8__c,Profession_1__c,Profession_1_Next_steps__c,Profession_1_Recommendation__c,Profession_2__c,Profession_2_Next_steps__c,Profession_2_Recommendation__c from Contact where Contact.id=: + con.id];
+   
+     if(contactList.get(0).Profession_1__c == null && contactList.get(0).Profession_2__c == null){
+      ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO,'Data is Processing'));
+    }else {
+     contact=contactList.get(0);
+     System.debug('Batch name '+contact.Batch_Code__c + contact);
+        
+     /* get batch name based on batch id */
+     batchList =[select Batch_Number__c,School_Name__c,Trainer_Name__c,Grade__c from Batch__c where id=: + contact.Batch_Code__c];
+     batchNumber=batchList.get(0).Batch_Number__c;
+     grade =batchList.get(0).Grade__c;
+     
+     /* get trainer name based on trainer id   */
+     trainerList =[select name from contact where id=: + batchList.get(0).Trainer_Name__c];  
+     trainerName=trainerList.get(0).Name;
+      
+     /* get school name based on school id  */
+     schoolList =[select Name from Account where id=: + batchList.get(0).School_Name__c];
+     schoolName=schoolList.get(0).Name;
+     
+     /* get explanation  */
+    
+     explanationList  =[select Name,Particulars__c,Realities__c,Code__c from Explanations__c];
+     
+     for(Explanations__c ex: explanationList){
+         /* Explanation of interest */
+         String interestCheck1=contact.Interest_1__c;
+         interestCheck1+=' '+'-'+' '+interestCheck1.substring(0,1);
+         String interestCheck2=contact.Interest_2__c;
+         interestCheck2+=' '+'-'+' '+interestCheck2.substring(0,1);
+         
+         if(ex.Name =='Interest' && ex.Code__c == interestCheck1){
+             interest1=ex.Particulars__c;
+         }
+         if(ex.Name =='Interest' && ex.Code__c == interestCheck2){
+             interest2=ex.Particulars__c;
+         }
+         
+         /* Explanation of Aptitude */
+         
+         String aptitudeCheck1=contact.Aptitude_1__c;
+         aptitudeCheck1+=' '+'Ability';
+         
+         String aptitudeCheck2=contact.Aptitude_2__c;
+         aptitudeCheck2+=' '+'Ability';
+         
+         if(ex.Name =='Aptitude' && ex.Code__c == aptitudeCheck1) {
+            aptitude1 =ex.Particulars__c;
+         }
+         
+         if(ex.Name =='Aptitude' && ex.Code__c == aptitudeCheck2) {
+             aptitude2=ex.Particulars__c;
+         }
+         
+         /* Explanation of Personality */
+         
+         if(ex.Name =='Personality' && ex.Code__c == contact.Personality_1__c){
+             personality1=ex.Particulars__c;
+         }
+         if(ex.Name =='Personality' && ex.Code__c == contact.Personality_2__c){
+             personality2=ex.Particulars__c;
+         }
+         if(ex.Name =='Personality' && ex.Code__c == contact.Personality_3__c){
+             personality3=ex.Particulars__c;
+         }
+         if(ex.Name =='Personality' && ex.Code__c == contact.Personality_4__c){
+             personality4=ex.Particulars__c;
+         }
+          if(ex.Name =='Personality' && ex.Code__c == contact.Personality_5__c){
+             personality5=ex.Particulars__c;
+         }
+         if(ex.Name =='Personality' && ex.Code__c == contact.Personality_6__c){
+             personality6=ex.Particulars__c;
+         }
+          if(ex.Name =='Personality' && ex.Code__c == contact.Personality_7__c) {
+            personality7=ex.Particulars__c;
+         }
+          if(ex.Name =='Personality' && ex.Code__c == contact.Personality_8__c){
+             personality8=ex.Particulars__c;
+         }
+      }
+        explanationList.clear();
+     
+      /* logic for reality */
+      
+     explanationList=[Select Name,Particulars__c,Realities__c,Code__c from Explanations__c where Name=: 'Realities'];
+    
+    if(contact.Reality_1__c=='Yes'){
+     reality1=explanationList.get(0).Particulars__c;}
+    else{ 
+     reality1=explanationList.get(1).Particulars__c;}
+        
+    if(contact.Reality_2__c=='Yes'){
+     reality2=explanationList.get(2).Particulars__c;}
+    else{ 
+     reality2=explanationList.get(3).Particulars__c;}
+      
+    if(contact.Reality_3__c=='Yes'){
+    reality3=explanationList.get(4).Particulars__c;}
+    else{ 
+    reality3=explanationList.get(5).Particulars__c;}
+        
+    if(contact.Reality_4__c=='Yes'){
+    reality4=explanationList.get(6).Particulars__c;}
+    else{ 
+    reality4=explanationList.get(7).Particulars__c;}
+    
+    if(contact.Reality_5__c=='Yes'){
+    reality5=explanationList.get(8).Particulars__c;}
+    else{ 
+    reality5=explanationList.get(9).Particulars__c;}
+    
+    if(contact.Reality_6__c=='Yes'){
+    reality6=explanationList.get(10).Particulars__c;}
+    else{ 
+    reality6=explanationList.get(11).Particulars__c;}
+        
+    if(contact.Reality_7__c=='Yes'){
+    reality7=explanationList.get(12).Particulars__c;}
+    else{ 
+    reality7=explanationList.get(13).Particulars__c;}
+        
+    if(contact.Reality_8__c=='Yes'){
+    reality8=explanationList.get(14).Particulars__c;}
+    else{ 
+    reality8=explanationList.get(15).Particulars__c;}
+    }
+    
+ }
+    public PageReference redirect(){
+    pdf='pdf';
+    return null;
+}
+}

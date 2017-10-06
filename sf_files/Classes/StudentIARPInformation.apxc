@@ -1,0 +1,408 @@
+Public class StudentIARPInformation implements Schedulable{
+     Public void execute(SchedulableContext SC){
+        insertData();
+        }
+
+     public void insertData() {
+            integer count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, count = 0, value = 0;
+            String aspiration1, aspiration2, aspiration3,PossibleCareers1,PossibleCareers2,PossibleCareers3;
+            Map<Integer, String> mp = new Map<Integer, String>();
+            List<String> getInterest1 = new List<String>();
+            List<String> getInterest2 = new List<String>();
+            List<String> getInterest3 = new List<String>();
+            List<String> getInterest4 = new List<String>();
+            List<String> getInterest5 = new List<String>();
+            List<String> getInterest6 = new List<String>();
+            List<String> ans = new List<String>();
+            Map<String, Integer> aptitute = new Map<String, Integer>();
+
+            /*getting data of student from contact object based on bar code */
+            FetchAllData fetchData=new FetchAllData();
+            List<Contact> conData = fetchData.getAllData('Contact');
+            for(Integer i = 0; i < conData.size(); i++) {
+            Contact con = conData.get(i);
+
+            //for  Interest 1 and Interest 2 logic
+            getInterest1.add(con.I_like_to_repair_mobiles__c);
+            getInterest1.add(con.I_like_to_build_things_like_shoe_racks__c);
+            getInterest1.add(con.I_like_to_take_care_of_animals__c);
+            getInterest1.add(con.I_like_to_cook__c);
+            getInterest1.add(con.I_am_a_practical_person__c);
+            getInterest1.add(con.I_like_working_outside__c);
+            getInterest1.add(con.I_like_to_heal_or_cure_people__c);
+            getInterest1.add(con.I_like_to_grow_plants__c);
+            getInterest2.add(con.I_like_to_do_puzzles_like_sudoku__c);
+            getInterest2.add(con.My_favourite_subject_in_school_college_i__c);
+            getInterest2.add(con.I_enjoy_trying_to_gure_out_how_things__c);
+            getInterest2.add(con.I_can_never_make_a_mistake_while_countin__c);
+            getInterest2.add(con.I_am_good_at_calculating_how_much_to_pay__c);
+            getInterest2.add(con.I_like_to_analyze_things_problems_and_s__c);
+            getInterest2.add(con.I_like_working_with_numbers__c);
+            getInterest2.add(con.I_am_good_at_math__c);
+            getInterest3.add(con.I_am_good_at_working_by_myself__c);
+            getInterest3.add(con.I_like_to_read_about_art_and_music__c);
+            getInterest3.add(con.I_like_writing_stories_plays_and_poems__c);
+            getInterest3.add(con.I_am_creative_person_I_like_to_make_gre__c);
+            getInterest3.add(con.I_like_to_play_instruments_or_sing_and_d__c);
+            getInterest3.add(con.I_like_acting_in_plays__c);
+            getInterest3.add(con.I_like_to_draw_and_paint__c);
+            getInterest3.add(con.My_friends_take_my_advice_on_what_to_wea__c);
+            getInterest4.add(con.I_like_to_work_in_teams__c);
+            getInterest4.add(con.I_like_to_teach_and_train_people__c);
+            getInterest4.add(con.I_like_to_help_people_solve_their_proble__c);
+            getInterest4.add(con.I_like_learning_about_where_people_come__c);
+            getInterest4.add(con.I_like_to_listen_to_the_news_read_newspa__c);
+            getInterest4.add(con.I_like_to_organise_and_put_things_in__c);
+            getInterest4.add(con.I_like_helping_the_elderly__c);
+            getInterest5.add(con.I_am_ambitious_and_set_goals_for_myself__c);
+            getInterest5.add(con.I_like_selling_things_and_convincing_peo__c);
+            getInterest5.add(con.I_am_quick_to_take_on_new_responsibiliti__c);
+            getInterest5.add(con.I_am_quick_to_take_on_new_responsibiliti__c);
+            getInterest5.add(con.I_would_like_to_start_my_own_business__c);
+            getInterest5.add(con.I_like_to_lead_and_motivate_people__c);
+            getInterest5.add(con.I_like_to_give_speeches_talk_to_a_lot_o__c);
+            getInterest5.add(con.I_like_to_teach_my_friends_or_siblings__c);
+            getInterest5.add(con.I_like_to_take_on_responsibilities__c);
+            getInterest6.add(con.I_like_to_organise_and_put_things_in__c);
+            getInterest6.add(con.I_like_to_have_clear_instructions_to_f__c);
+            getInterest6.add(con.I_wouldn_t_mind_working_8hrs_per_day__c);
+            getInterest6.add(con.I_pay_attention_to_detail_and_I_am_good__c);
+            getInterest6.add(con.I_like_to_do_filling_and_typing__c);
+            getInterest6.add(con.I_pay_attention_to_detail_and_I_am_good__c);
+            getInterest6.add(con.I_like_to_do_filling_and_typing__c);
+            getInterest6.add(con.I_like_putting_things_together_and_ass__c);
+            getInterest6.add(con.I_am_good_with_keeping_records_of_my_w__c);
+            getInterest6.add(con.I_like_working_in_an_office__c);
+
+            for (Integer j = 0; j < getInterest1.size(); j++) {
+                if (getInterest1.get(j) != null) {
+                    if (getInterest1.get(j) == 'Yes'
+                    )
+               			 count1++;
+                }
+            }
+            mp.put(count1,'Realist');  
+               
+               for (Integer j = 0; j < getInterest2.size() - 1; j++) {
+                if (getInterest2.get(j) != null) {
+                    if (getInterest2.get(j) == 'Yes')
+               			  count2++;
+                }
+            }
+            mp.put(count2,'Investigative');
+            for (Integer j = 0; j < getInterest3.size() - 1; j++) {
+                if (getInterest3.get(j) != null) {
+                    if (getInterest3.get(j) == 'Yes')
+               count3++;
+                }
+            }
+            mp.put(count3,'Artistic');
+            for (Integer j = 0; j < getInterest4.size() - 1; j++) {
+                if (getInterest4.get(j) != null) {
+                    if (getInterest4.get(j) == 'Yes')
+               count4++;
+                }
+             }
+           mp.put(count4,'Social');
+           for (Integer j = 0; j < getInterest5.size() - 1; j++) {
+                if (getInterest5.get(j) != null) {
+                    if (getInterest5.get(j) == 'Yes')
+               count5++;
+                }
+            }
+          
+            mp.put(count5,'Enterprising');
+           for (Integer j = 0; j < getInterest6.size() - 1; j++) {
+                if (getInterest6.get(j) != null) {
+                    if (getInterest6.get(j) == 'Yes')
+               count6++;
+                }
+            }
+        
+            mp.put(count6,'Conventional');
+            List<Integer> interest = new List<Integer>();
+            interest.add(count1);
+            interest.add(count2);
+            interest.add(count3);
+            interest.add(count4);
+            interest.add(count5);
+            interest.add(count6);
+            interest.sort();
+            
+            //for  Aptitude  1 and Aptitude  2 logic
+            /* aptitute 'Spatial' */
+            List<Question_Bank__c> correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Spatial'];
+            ans.add(con.S__c);
+            ans.add(con.Spatial_Ability_Q_2__c);
+            ans.add(con.Spatial_Ability_Q_3__c);
+            ans.add(con.Spatial_Ability_Q_4__c);
+            ans.add(con.Spatial_Ability_Q_5__c);
+            ans.add(con.Spatial_Ability_Q_6__c);
+            ans.add(con.Spatial_Ability_Q_7__c);
+            ans.add(con.Spatial_Ability_Q_8__c);
+               System.debug('correctAns' +correctAns);
+               System.debug('ans' +ans);
+            for (Integer j = 0; j < ans.size(); j++) {
+                if (correctAns.get(j).Category__c == ans.get(j)) {
+                    count++;
+                }
+            }
+            aptitute.put('Spatial', count);
+            ans.clear();
+            System.debug('Hi'+ count);
+
+            /* aptitute 'Numerical'  */
+            correctAns =[select Category__c,Name from Question_Bank__c where Category1__c ='Numerical' order by Name];
+            ans.add(con.X21_46__c);
+            ans.add(con.X32_19__c);
+            ans.add(con.X141_90__c);
+            ans.add(con.X53_13__c);
+            ans.add(con.X96_37__c);
+            ans.add(con.X329_183__c);
+            ans.add(con.X25_16_4__c);
+            ans.add(con.X125_58_16__c);
+            count = 0;
+       
+            for (Integer j = 0; j < ans.size(); j++) {
+               
+                if (correctAns.get(j).Category__c == ans.get(j)) {
+                    
+                    count++;
+                }
+            }
+            aptitute.put('Numerical', count);
+            correctAns.clear();
+            ans.clear();
+
+            /* aptitute 'Abstract Reasoning'  */
+            correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Abstract'];
+            ans.add(con.Abstract_Reasoning__c);
+            ans.add(con.Abstract_Reasoning_Q_2__c);
+            ans.add(con.Abstract_Reasoning_Q_3__c);
+            ans.add(con.Abstract_Reasoning_Q_4__c);
+            ans.add(con.Abstract_Reasoning_Q_5__c);
+            ans.add(con.Abstract_Reasoning_Q_6__c);
+            ans.add(con.Abstract_Reasoning_Q_7__c);
+            ans.add(con.Abstract_Reasoning_Q_8__c);
+            count = 0;
+            for (Integer j = 0; j < ans.size(); j++) {
+                if (correctAns.get(j).Category__c == ans.get(j)) {
+                    count++;
+                }
+            }
+            aptitute.put('Abstract', count);
+            correctAns.clear();
+            ans.clear();
+
+            /* aptitute 'Creative Ability'  */
+            correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Creative'];
+            ans.add(con.Creative1__c);
+            ans.add(con.Creative2__c);
+            count = 0;
+            for (Integer j = 0; j < ans.size(); j++) {
+                if (correctAns.get(j).Category__c == 'C' || correctAns.get(j).Category__c == 'D') {
+                    count=count+4;
+                }
+            }
+            aptitute.put('Creative', count);
+            correctAns.clear();
+            ans.clear();
+
+            /* aptitute 'Mechanical Ability'  */
+            correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Mechanical'];
+            ans.add(con.Mech1__c);
+            ans.add(con.Mech2__c);
+            ans.add(con.Mech3__c);
+            ans.add(con.Mech4__c);
+            ans.add(con.Mech5__c);
+            ans.add(con.Mech6__c);
+            ans.add(con.Mech7__c);
+            ans.add(con.Mech8__c);
+            count = 0;
+            for (Integer j = 0; j < ans.size(); j++) {
+                if (correctAns.get(j).Category__c == ans.get(j)) {
+                    count++;
+                }
+            }
+            aptitute.put('Mechanical', count);
+            correctAns.clear();
+            ans.clear();
+
+            /* aptitute 'VERBAL Ability'  */
+            correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Verbal'];
+            ans.add(con.Verbal1__c);
+            ans.add(con.Verbal2__c);
+            ans.add(con.Verbal3__c);
+            ans.add(con.Verbal4__c);
+            ans.add(con.Verbal5__c);
+            ans.add(con.Verbal6__c);
+            ans.add(con.Verbal7__c);
+            ans.add(con.Verbal8__c);
+            count = 0;
+            for (Integer j = 0; j < ans.size(); j++) {
+                if (correctAns.get(j).Category__c == ans.get(j)) {
+                    count++;
+                }
+            }
+            aptitute.put('Verbal', count);
+               
+          
+            correctAns.clear();
+            ans.clear();
+            List<String> highestApti = new List<String>();
+            for (Integer k = 0; k < 2; k++) {
+                String maxKey = aptitute.isEmpty() ? null : new List<String>(aptitute.keyset())[0];
+                for (String s1 : aptitute.keySet()) {
+                    maxKey = aptitute.get(s1) > aptitute.get(maxKey) ? s1 : maxKey;
+                }
+                highestApti.add(maxKey);
+                aptitute.remove(maxKey);
+            }
+
+            /* logic for Personality   */
+            LIST<String> personalityList = new LIST<String>();
+            personalityList.add(con.Personality1__c);
+            personalityList.add(con.Personality2__c);
+            personalityList.add(con.Personality3__c);
+            personalityList.add(con.Personality4__c);
+            personalityList.add(con.Personality5__c);
+            personalityList.add(con.Personality6__c);
+            personalityList.add(con.Personality7__c);
+            personalityList.add(con.Personality8__c);
+            personalityList.add(con.Personality9__c);
+            personalityList.add(con.Personality10__c);
+            personalityList.add(con.Personality11__c);
+            personalityList.add(con.Personality12__c);
+            personalityList.add(con.Personality13__c);
+            personalityList.add(con.Personality14__c);
+            personalityList.add(con.Personality15__c);
+            personalityList.add(con.Personality16__c);
+
+            Contact student = new Contact();
+
+            //for Personality 1 logic
+            if (personalityList.get(0).equals('Agree') && personalityList.get(8).equals('Agree')){
+              student.Personality_1__c = 'Any';           
+            }else if (personalityList.get(0).equals('Disagree') && personalityList.get(8).equals('Disagree')){
+             student.Personality_1__c = 'Any';  
+            }else if (personalityList.get(0).equals('Agree') && personalityList.get(8).equals('Disagree')){
+             student.Personality_1__c = 'Introvert';  
+            }else if (personalityList.get(0).equals('Disagree') && personalityList.get(8).equals('Agree')){
+             student.Personality_1__c = 'Extrovert';
+            }
+        
+             //for Personality 2 logic
+            if (personalityList.get(1).equals('Agree') && personalityList.get(9).equals('Agree')){
+              student.Personality_2__c = 'Any';           
+            }else if (personalityList.get(1).equals('Disagree') && personalityList.get(9).equals('Disagree' )){
+             student.Personality_2__c = 'Any';  
+            }else if (personalityList.get(1).equals('Agree' ) && personalityList.get(9).equals('Disagree')){
+             student.Personality_2__c = 'Structured';  
+            }else if (personalityList.get(1).equals('Disagree' ) && personalityList.get(9).equals('Agree')){
+             student.Personality_2__c = 'Creative';
+            }
+        
+            //for Personality 3 logic
+            if (personalityList.get(2).equals('Agree') && personalityList.get(4).equals('Agree')){
+              student.Personality_3__c = 'Idealist';           
+            }else if (personalityList.get(2).equals('Disagree') && personalityList.get(4).equals('Disagree')){
+             student.Personality_3__c = 'Practical';  
+            }else if (personalityList.get(2).equals('Agree') && personalityList.get(4).equals('Disagree')){
+             student.Personality_3__c = 'Any' ;  
+            }else if (personalityList.get(2).equals('Disagree') && personalityList.get(4).equals('Agree')){
+             student.Personality_3__c = 'Any';
+            }
+        
+            //for Personality 4 logic
+            if (personalityList.get(3).equals('Agree') && personalityList.get(15).equals('Agree' )){
+              student.Personality_4__c = 'Dreamer';           
+            }else if (personalityList.get(3).equals('Disagree') && personalityList.get(15).equals('Disagree')){
+             student.Personality_4__c = 'Realist';  
+            }else if (personalityList.get(3).equals('Agree') && personalityList.get(15).equals('Disagree')){
+             student.Personality_4__c = 'Any';  
+            }else if (personalityList.get(3).equals('Disagree' ) && personalityList.get(15).equals('Agree')){
+             student.Personality_4__c = 'Any';
+            }
+        
+            //for Personality 5 logic
+            if (personalityList.get(5).equals('Agree') && personalityList.get(14).equals('Agree')){
+              student.Personality_5__c = 'Impulsive';          
+           }else if (personalityList.get(5).equals('Disagree') && personalityList.get(14).equals('Disagree')){
+             student.Personality_5__c = 'Thoughtful';  
+           }else if (personalityList.get(5).equals('Agree') && personalityList.get(14).equals('Disagree')){
+             student.Personality_5__c = 'Any';  
+           }else if (personalityList.get(5).equals('Disagree') && personalityList.get(14).equals('Agree')){
+             student.Personality_5__c = 'Any';
+           }
+        
+           //for Personality 6 logic
+           if (personalityList.get(6).equals('Agree') && personalityList.get(7).equals('Agree')){
+              student.Personality_6__c = 'Adventurous';          
+           }else if (personalityList.get(6).equals('Disagree') && personalityList.get(7).equals('Disagree')){
+             student.Personality_6__c = 'Conservative';  
+           }else if (personalityList.get(6).equals('Agree') && personalityList.get(7).equals('Disagree')){
+             student.Personality_6__c = 'Any';  
+           }else if (personalityList.get(6).equals('Disagree' ) && personalityList.get(7).equals('Agree')){
+             student.Personality_6__c = 'Any';
+           }
+        
+            //for Personality 7 logic
+           if(personalityList.get(10).equals('Agree') && personalityList.get(7).equals('Agree')){
+              student.Personality_7__c = 'Any';          
+           }else if (personalityList.get(10).equals('Disagree') && personalityList.get(7).equals('Disagree')){
+             student.Personality_7__c = 'Any';  
+           }else if (personalityList.get(10).equals('Agree') && personalityList.get(7).equals('Disagree')){
+             student.Personality_7__c = 'Quiet';  
+           }else if (personalityList.get(10).equals('Disagree' ) && personalityList.get(7).equals('Agree')){
+             student.Personality_7__c = 'Talkative';
+           }
+        
+           //for Personality 8 logic
+          if (personalityList.get(11).equals('Agree' ) && personalityList.get(13).equals('Agree')){
+              student.Personality_8__c = 'Any';          
+          }else if (personalityList.get(11).equals('Disagree') && personalityList.get(13).equals('Disagree')){
+             student.Personality_8__c = 'Any';  
+          }else if (personalityList.get(11).equals('Agree') && personalityList.get(13).equals('Disagree')){
+             student.Personality_8__c = 'Bold';  
+          }else if (personalityList.get(11).equals('Disagree') && personalityList.get(13).equals('Agree')){
+             student.Personality_8__c = 'Shy';
+          }
+               
+          /*logic for Aspiration  1 and Aspiration  2*/
+          PossibleCareers1=con.Possible_Careers_1__c;
+          PossibleCareers2=con.Possible_Careers_2__c;
+          PossibleCareers3=con.Possible_Careers_3__c;
+               
+         
+          /*  logic for Reality   */
+               
+          /*Only responses need to be recorded*/
+         
+          System.debug('con.Possible_Careers_1__c' +con.Possible_Careers_1__c);
+          con.Interest_1__c= mp.get(interest.get(5));
+          con.Interest_2__c = mp.get(interest.get(4));
+          con.Aptitude_1__c = highestApti.get(0);
+          con.Aptitude_2__c = highestApti.get(1);
+          con.Personality_1__c = student.Personality_1__c;
+          con.Personality_2__c = student.Personality_2__c;
+          con.Personality_3__c = student.Personality_3__c;
+          con.Personality_4__c = student.Personality_4__c;
+          con.Personality_5__c = student.Personality_5__c;
+          con.Personality_6__c = student.Personality_6__c;
+          con.Personality_7__c = student.Personality_7__c;
+          con.Personality_8__c = student.Personality_8__c;
+          con.Aspiration_1__c = PossibleCareers1;
+          con.Aspiration_2__c = PossibleCareers2;
+          con.Aspiration_3__c = PossibleCareers3;
+          con.Reality_1__c = con.Reality1Self__c;
+          con.Reality_2__c = con.Reality2Self__c;
+          con.Reality_3__c = con.Reality3Self__c;
+          con.Reality_4__c = con.Reality4Self__c;
+          con.Reality_5__c = con.Reality1Family__c;
+          con.Reality_6__c = con.Reality2Family__c;
+          con.Reality_7__c = con.Reality3Family__c;
+          con.Reality_8__c = con.Reality4Family__c;
+          upsert con;
+           }
+        }
+}
