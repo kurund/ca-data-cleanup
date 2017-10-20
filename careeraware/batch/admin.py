@@ -43,16 +43,18 @@ class BatchAdmin(admin.ModelAdmin):
             os.makedirs(batch_dir)
 
         #process baseline csv
-        self.process_baseline(request, obj, batch_name, batch_dir)
+        student_barcodes = self.process_baseline(request, obj, batch_name, batch_dir)
+
+        print(student_barcodes);
 
         # process self awareness csv
-        self.process_self_awareness(request, obj, batch_name, batch_dir)
+        self.process_self_awareness(request, obj, batch_name, batch_dir, student_barcodes)
 
         # process career awareness csv
-        self.process_career_awareness(request, obj, batch_name, batch_dir)
+        self.process_career_awareness(request, obj, batch_name, batch_dir, student_barcodes)
 
         # process career planning csv
-        self.process_career_planning(request, obj, batch_name, batch_dir)
+        self.process_career_planning(request, obj, batch_name, batch_dir, student_barcodes)
 
     # method to handle baseline csv transformation
     def process_baseline(self, request, obj, batch_name, batch_dir):
@@ -66,6 +68,7 @@ class BatchAdmin(admin.ModelAdmin):
         # set output file
         output_file = batch_dir + '/baseline.csv'
 
+        student_barcodes = []
         with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
@@ -81,6 +84,9 @@ class BatchAdmin(admin.ModelAdmin):
             next(csv_input)
 
             for row in csv_input:
+                # build student barcode array
+                student_barcodes.append(row[1])
+
                 row_values = [row[1]]
 
                 # split name field into first name and last name
@@ -119,8 +125,10 @@ class BatchAdmin(admin.ModelAdmin):
 
         obj.save()
 
+        return student_barcodes;
+
     # method to handle self awareness csv transformation
-    def process_self_awareness(self, request, obj, batch_name, batch_dir):
+    def process_self_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if self awareness is processed
         if obj.status > 2:
             return
@@ -219,7 +227,7 @@ class BatchAdmin(admin.ModelAdmin):
         obj.save()
 
     # method to handle career awareness csv transformation
-    def process_career_awareness(self, request, obj, batch_name, batch_dir):
+    def process_career_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if career awareness is processed
         if obj.status > 3:
             return
@@ -264,7 +272,7 @@ class BatchAdmin(admin.ModelAdmin):
         obj.save()
 
     # method to handle career planning csv transformation
-    def process_career_planning(self, request, obj, batch_name, batch_dir):
+    def process_career_planning(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if career planning is processed
         if obj.status > 4:
             return
@@ -281,7 +289,7 @@ class BatchAdmin(admin.ModelAdmin):
 
             # set custom header
             csv_output.writerow(['BARCODE', 'Possible Careers 1', 'Possible Careers 2', 'Possible Careers 3', 'CCP 1',
-                                 'CCP 2', 'CCP 3', 'Study till 18', 'Endline', 'Import Status'])
+                                 'CCP 2', 'CCP 3', 'Endline', 'Study till 18', 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -301,12 +309,14 @@ class BatchAdmin(admin.ModelAdmin):
                         third_preference = i - 1
 
                 row_values.extend([first_preference, second_preference, third_preference, row[73], row[74],
-                                   self.multivalue_formatter(row[75]), self.yesno_helper(row[76])])
+                                   self.multivalue_formatter(row[75])])
 
-                if row[78]:
-                    row_values.append(row[78])
-                else:
+                if row[77]:
                     row_values.append(row[77])
+                else:
+                    row_values.append(row[76])
+
+                row_values.append(self.yesno_helper(row[78]))
 
                 # add the import status
                 row_values.append('Import Completed')
