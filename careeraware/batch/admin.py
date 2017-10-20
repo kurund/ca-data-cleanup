@@ -26,6 +26,10 @@ class BatchAdmin(admin.ModelAdmin):
             'fields': ('proc_baseline', 'proc_self_aware', 'proc_career_aware',
                        'proc_career_planning', 'status'),
         }),
+        ('Errors', {
+            'classes': ('collapse',),
+            'fields': ('error_log',),
+        }),
     )
 
     # overrite save model to perform additional data transformation

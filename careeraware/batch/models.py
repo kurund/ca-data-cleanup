@@ -41,6 +41,14 @@ class Batch(models.Model):
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )
 
+    error_log = models.FileField(
+        upload_to='uploads/%Y/%m/%d/',
+        verbose_name='Error Log',
+        blank=True,
+        help_text='Do not upload. This field will be auto updated.',
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+    )
+
     comment = models.TextField(
         max_length=200,
         blank=True,
