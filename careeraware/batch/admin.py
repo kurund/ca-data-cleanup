@@ -191,6 +191,10 @@ class BatchAdmin(admin.ModelAdmin):
             next(csv_input)
 
             for row in csv_input:
+                # skip the record if student is missing in baseline
+                if row[1] not in student_barcodes:
+                    continue
+
                 row_values = [row[1]]
                 # process interest fields
                 # row 2 - 49 format using yesno_helper
