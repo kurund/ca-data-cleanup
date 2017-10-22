@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 import csv, os
+import logging
 
 # Register your models here.
 from .models import Batch
@@ -42,10 +43,12 @@ class BatchAdmin(admin.ModelAdmin):
         if not os.path.exists(batch_dir):
             os.makedirs(batch_dir)
 
+        # set log file
+        log_file = batch_dir + '/errors.log'
+        logging.basicConfig(filename=log_file, level=logging.DEBUG)
+
         #process baseline csv
         student_barcodes = self.process_baseline(request, obj, batch_name, batch_dir)
-
-        print(student_barcodes);
 
         # process self awareness csv
         self.process_self_awareness(request, obj, batch_name, batch_dir, student_barcodes)
@@ -193,6 +196,7 @@ class BatchAdmin(admin.ModelAdmin):
             for row in csv_input:
                 # skip the record if student is missing in baseline
                 if row[1] not in student_barcodes:
+                    logging.debug('Missing from Baseline: Barcode "' + row[1] + '" is skipped from self awareness CSV.')
                     continue
 
                 row_values = [row[1]]
@@ -258,6 +262,8 @@ class BatchAdmin(admin.ModelAdmin):
             for row in csv_input:
                 # skip the record if student is missing in baseline
                 if row[1] not in student_barcodes:
+                    logging.debug( 'Missing from Baseline: Barcode "' + row[1]
+                                   + '" is skipped from career awareness CSV.')
                     continue
 
                 row_values = [row[1]]
@@ -305,6 +311,7 @@ class BatchAdmin(admin.ModelAdmin):
             for row in csv_input:
                 # skip the record if student is missing in baseline
                 if row[1] not in student_barcodes:
+                    logging.debug('Missing from Baseline: Barcode "' + row[1] + '" is skipped from career planning CSV.')
                     continue
 
                 row_values = [row[1]]
