@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 import csv, os
-import logging
+import logging, datetime
 
 # Register your models here.
 from .models import Batch
@@ -118,6 +118,12 @@ class BatchAdmin(admin.ModelAdmin):
                 dob = ''
                 if row[19] and row[20] and row[21]:
                     dob = '/' .join([row[20],row[19],row[21]])
+
+                # set blank value to dob for invalid date
+                try:
+                    datetime.datetime(int(row[21]), int(row[20]), int(row[19]))
+                except ValueError:
+                    dob = ''
 
                 row_values.extend([dob, 'Student', 'Baseline Imported'])
 
