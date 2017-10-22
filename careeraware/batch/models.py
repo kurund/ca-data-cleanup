@@ -46,7 +46,7 @@ class Batch(models.Model):
         verbose_name='Error Log',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
-        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+        validators=[FileExtensionValidator(['log'], 'Please upload valid log file')],
     )
 
     comment = models.TextField(
