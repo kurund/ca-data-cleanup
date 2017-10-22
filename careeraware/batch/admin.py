@@ -256,6 +256,10 @@ class BatchAdmin(admin.ModelAdmin):
             next(csv_input)
 
             for row in csv_input:
+                # skip the record if student is missing in baseline
+                if row[1] not in student_barcodes:
+                    continue
+
                 row_values = [row[1]]
                 # process career awareness fields
                 for i in range(2,15):
@@ -299,6 +303,10 @@ class BatchAdmin(admin.ModelAdmin):
             next(csv_input)
 
             for row in csv_input:
+                # skip the record if student is missing in baseline
+                if row[1] not in student_barcodes:
+                    continue
+
                 row_values = [row[1]]
 
                 # process career planning fields
