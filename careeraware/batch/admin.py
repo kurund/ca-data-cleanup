@@ -59,6 +59,10 @@ class BatchAdmin(admin.ModelAdmin):
         # process career planning csv
         self.process_career_planning(request, obj, batch_name, batch_dir, student_barcodes)
 
+        # save error log file
+        obj.error_log = settings.DATA_FOLDER + '/' + batch_name + '/errors.log'
+        obj.save()
+
     # method to handle baseline csv transformation
     def process_baseline(self, request, obj, batch_name, batch_dir):
         # return if baseline is processed
