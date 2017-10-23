@@ -91,6 +91,11 @@ class BatchAdmin(admin.ModelAdmin):
             next(csv_input)
 
             for row in csv_input:
+                # skip the record if student is missing in baseline
+                if row[1] in student_barcodes:
+                    logging.debug('Duplicate record skipped in Baseline CSV: Barcode "' + row[1] + '"')
+                    continue
+
                 # build student barcode array
                 student_barcodes.append(row[1])
 
