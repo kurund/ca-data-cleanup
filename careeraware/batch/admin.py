@@ -19,13 +19,13 @@ class BatchAdmin(admin.ModelAdmin):
             'fields': ('name', 'batch_date')
         }),
         ('OMR data', {
-            'fields': ('omr_baseline', 'omr_self_aware', 'omr_career_aware',
-                       'omr_career_planning', 'comment')
+            'fields': ('omr_baseline', 'omr_career_aware', 'omr_career_planning',
+                        'omr_self_aware','comment')
         }),
         ('Transformed data', {
             'classes': ('collapse',),
-            'fields': ('proc_baseline', 'proc_self_aware', 'proc_career_aware',
-                       'proc_career_planning', 'status'),
+            'fields': ('proc_baseline', 'proc_career_aware', 'proc_career_planning',
+                        'proc_self_aware', 'status'),
         }),
         ('Errors', {
             'classes': ('collapse',),
