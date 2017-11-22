@@ -7,9 +7,9 @@ class Batch(models.Model):
     STATUSES = (
         (1, 'Not Processed'),
         (2, 'Baseline Processed'),
-        (3, 'Self Awareness Processed'),
-        (4, 'Career Awareness Processed'),
-        (5, 'Career Planning Processed'),
+        (3, 'Career Awareness Processed'),
+        (4, 'Career Planning Processed'),
+        (5, 'Self Awareness Processed'),
         (6, 'Transformation Completed'),
     )
 

@@ -50,14 +50,14 @@ class BatchAdmin(admin.ModelAdmin):
         #process baseline csv
         student_barcodes = self.process_baseline(request, obj, batch_name, batch_dir)
 
-        # process self awareness csv
-        self.process_self_awareness(request, obj, batch_name, batch_dir, student_barcodes)
-
         # process career awareness csv
         self.process_career_awareness(request, obj, batch_name, batch_dir, student_barcodes)
 
         # process career planning csv
         self.process_career_planning(request, obj, batch_name, batch_dir, student_barcodes)
+
+        # process self awareness csv
+        self.process_self_awareness(request, obj, batch_name, batch_dir, student_barcodes)
 
         # save error log file
         obj.error_log = settings.DATA_FOLDER + '/' + batch_name + '/errors.log'
@@ -145,10 +145,128 @@ class BatchAdmin(admin.ModelAdmin):
 
         return student_barcodes;
 
+    # method to handle career awareness csv transformation
+    def process_career_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
+        # return if career awareness is processed
+        if obj.status > 2:
+            return
+
+        # fetch career awareness csv file
+        input_file  = obj.omr_career_aware.path
+
+        # set output file
+        output_file = batch_dir + '/career_awareness.csv'
+
+        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+            csv_input = csv.reader(f_input)
+            csv_output = csv.writer(f_output)
+
+            # set custom header
+            csv_output.writerow(['BARCODE', 'Design', 'Performance Arts', 'Media & Communication', 'Beauty & Wellness',
+                                 'Education', 'Sports & Fitness', 'Finance', 'Hospitality & Tourism','Medical',
+                                 'Public Service', 'Engineering Technologies', 'Trades',
+                                 'Enviroment and Biological Science', 'Import Status'])
+
+            # skip header as we set custom header
+            next(csv_input)
+
+            for row in csv_input:
+                # skip the record if student is missing in baseline
+                if row[1] not in student_barcodes:
+                    logging.debug( 'Missing from Baseline: Barcode "' + row[1]
+                                   + '" is skipped from career awareness CSV.')
+                    continue
+
+                row_values = [row[1]]
+                # process career awareness fields
+                for i in range(2,15):
+                    row_values.append(self.multivalue_formatter(row[i]))
+
+                # add the import status
+                row_values.append('Career Awareness Imported')
+
+                # write to csv file
+                csv_output.writerow(row_values)
+
+        # update status
+        obj.status = 3 # 3 is 'Career Awareness Processed'
+
+        # set the processed file path
+        obj.proc_career_aware = settings.DATA_FOLDER + '/' + batch_name + '/career_awareness.csv'
+
+        obj.save()
+
+    # method to handle career planning csv transformation
+    def process_career_planning(self, request, obj, batch_name, batch_dir, student_barcodes):
+        # return if career planning is processed
+        if obj.status > 3:
+            return
+
+        # fetch career awareness csv file
+        input_file  = obj.omr_career_planning.path
+
+        # set output file
+        output_file = batch_dir + '/career_planning.csv'
+
+        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+            csv_input = csv.reader(f_input)
+            csv_output = csv.writer(f_output)
+
+            # set custom header
+            csv_output.writerow(['BARCODE', 'Possible Careers 1', 'Possible Careers 2', 'Possible Careers 3', 'CCP 1',
+                                 'CCP 2', 'CCP 3', 'Endline', 'Study till 18', 'Import Status'])
+
+            # skip header as we set custom header
+            next(csv_input)
+
+            for row in csv_input:
+                # skip the record if student is missing in baseline
+                if row[1] not in student_barcodes:
+                    logging.debug('Missing from Baseline: Barcode "' + row[1] + '" is skipped from career planning CSV.')
+                    continue
+
+                row_values = [row[1]]
+
+                # process career planning fields
+                # get first, second and third preference
+                first_preference = second_preference = third_preference = ''
+                for i in range(2,73):
+                    if row[i] == '1' or row[i] == '123' or row[i] == '12' or row[i] == '13':
+                        first_preference = i - 1
+                    elif row[i] == '2' or row[i] == '23':
+                        second_preference = i - 1
+                    elif row[i] == '3':
+                        third_preference = i - 1
+
+                row_values.extend([first_preference, second_preference, third_preference, row[73], row[74],
+                                   self.multivalue_formatter(row[75])])
+
+                if row[77]:
+                    row_values.append(row[77])
+                else:
+                    row_values.append(row[76])
+
+                row_values.append(self.yesno_helper(row[78]))
+
+                # add the import status
+                row_values.append('Career Planning Imported')
+
+                # write to csv file
+                csv_output.writerow(row_values)
+
+        # update status
+        obj.status = 4 # 4 is 'Career Planning Processed'
+
+        # set the processed file path
+        obj.proc_career_planning = settings.DATA_FOLDER + '/' + batch_name + '/career_planning.csv'
+
+        obj.save()
+
+
     # method to handle self awareness csv transformation
     def process_self_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if self awareness is processed
-        if obj.status > 2:
+        if obj.status > 4:
             return
 
         # fetch self awareness csv file
@@ -236,136 +354,20 @@ class BatchAdmin(admin.ModelAdmin):
                     row_values.append(self.yesno_helper(row[i]))
 
                 # add the import status
-                row_values.append('Self Awareness Imported')
-
-                # write to csv file
-                csv_output.writerow(row_values)
-
-        # update status
-        obj.status = 3  # 3 is 'Self Awareness Processed'
-
-        # set the processed file path
-        obj.proc_self_aware = settings.DATA_FOLDER + '/' + batch_name + '/self_awareness.csv'
-
-        obj.save()
-
-    # method to handle career awareness csv transformation
-    def process_career_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
-        # return if career awareness is processed
-        if obj.status > 3:
-            return
-
-        # fetch career awareness csv file
-        input_file  = obj.omr_career_aware.path
-
-        # set output file
-        output_file = batch_dir + '/career_awareness.csv'
-
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
-            csv_input = csv.reader(f_input)
-            csv_output = csv.writer(f_output)
-
-            # set custom header
-            csv_output.writerow(['BARCODE', 'Design', 'Performance Arts', 'Media & Communication', 'Beauty & Wellness',
-                                 'Education', 'Sports & Fitness', 'Finance', 'Hospitality & Tourism','Medical',
-                                 'Public Service', 'Engineering Technologies', 'Trades',
-                                 'Enviroment and Biological Science', 'Import Status'])
-
-            # skip header as we set custom header
-            next(csv_input)
-
-            for row in csv_input:
-                # skip the record if student is missing in baseline
-                if row[1] not in student_barcodes:
-                    logging.debug( 'Missing from Baseline: Barcode "' + row[1]
-                                   + '" is skipped from career awareness CSV.')
-                    continue
-
-                row_values = [row[1]]
-                # process career awareness fields
-                for i in range(2,15):
-                    row_values.append(self.multivalue_formatter(row[i]))
-
-                # add the import status
-                row_values.append('Career Awareness Imported')
-
-                # write to csv file
-                csv_output.writerow(row_values)
-
-        # update status
-        obj.status = 4 # 4 is 'Career Awareness Processed'
-
-        # set the processed file path
-        obj.proc_career_aware = settings.DATA_FOLDER + '/' + batch_name + '/career_awareness.csv'
-
-        obj.save()
-
-    # method to handle career planning csv transformation
-    def process_career_planning(self, request, obj, batch_name, batch_dir, student_barcodes):
-        # return if career planning is processed
-        if obj.status > 4:
-            return
-
-        # fetch career awareness csv file
-        input_file  = obj.omr_career_planning.path
-
-        # set output file
-        output_file = batch_dir + '/career_planning.csv'
-
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
-            csv_input = csv.reader(f_input)
-            csv_output = csv.writer(f_output)
-
-            # set custom header
-            csv_output.writerow(['BARCODE', 'Possible Careers 1', 'Possible Careers 2', 'Possible Careers 3', 'CCP 1',
-                                 'CCP 2', 'CCP 3', 'Endline', 'Study till 18', 'Import Status'])
-
-            # skip header as we set custom header
-            next(csv_input)
-
-            for row in csv_input:
-                # skip the record if student is missing in baseline
-                if row[1] not in student_barcodes:
-                    logging.debug('Missing from Baseline: Barcode "' + row[1] + '" is skipped from career planning CSV.')
-                    continue
-
-                row_values = [row[1]]
-
-                # process career planning fields
-                # get first, second and third preference
-                first_preference = second_preference = third_preference = ''
-                for i in range(2,73):
-                    if row[i] == '1' or row[i] == '123' or row[i] == '12' or row[i] == '13':
-                        first_preference = i - 1
-                    elif row[i] == '2' or row[i] == '23':
-                        second_preference = i - 1
-                    elif row[i] == '3':
-                        third_preference = i - 1
-
-                row_values.extend([first_preference, second_preference, third_preference, row[73], row[74],
-                                   self.multivalue_formatter(row[75])])
-
-                if row[77]:
-                    row_values.append(row[77])
-                else:
-                    row_values.append(row[76])
-
-                row_values.append(self.yesno_helper(row[78]))
-
-                # add the import status
                 row_values.append('Import Completed')
 
                 # write to csv file
                 csv_output.writerow(row_values)
 
         # update status
-        obj.status = 5 # 5 is 'Career Planning Processed'
-        #obj.status = 6 # 6 is 'Transformation Completed'
+        obj.status = 5  # 5 is 'Self Awareness Processed'
+        # obj.status = 6 # 6 is 'Transformation Completed'
 
         # set the processed file path
-        obj.proc_career_planning = settings.DATA_FOLDER + '/' + batch_name + '/career_planning.csv'
+        obj.proc_self_aware = settings.DATA_FOLDER + '/' + batch_name + '/self_awareness.csv'
 
         obj.save()
+
 
     def yesno_helper(self, value):
         if value == 'YesNo':
