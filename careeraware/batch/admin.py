@@ -383,7 +383,7 @@ class BatchAdmin(admin.ModelAdmin):
 
     def agreedisagree_helper(self, value):
         if value == 'AgreeDisagree':
-            value = 'Disagree'
+            value = ''
         return value
 
     def multivalue_formatter(self, value):
