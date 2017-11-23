@@ -108,6 +108,8 @@ class BatchAdmin(admin.ModelAdmin):
                     first_name = name[0]
                 if len(name) > 1:
                     last_name = name[1]
+                else:
+                    last_name = 'Last Name'
 
                 row_values.append(first_name)
                 row_values.append(last_name)
