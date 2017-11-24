@@ -123,6 +123,10 @@ class BatchAdmin(admin.ModelAdmin):
 
                 # calculate date of birth
                 dob = ''
+                # make sure date has more than 4 digits
+                if len(row[21]) < 4:
+                    row[21] = ''
+
                 if row[19] and row[20] and row[21]:
                     dob = '/' .join([row[20],row[19],row[21]])
 
