@@ -1,8 +1,7 @@
-trigger CityCodeUpdate on City_Master__c (After insert,After update) {
+trigger CityCodeUpdate on City_Master__c (After insert) {
     if(TriggerCheck.runOnce()){
      for(City_Master__c city:trigger.new){
       TriggerCheck triggerCheck = New TriggerCheck();
       triggerCheck.calculateCityCode(city.id);
-   }
-}
+   }}
 }

@@ -1,8 +1,7 @@
-trigger DisrtictCodeUpdate on District_Master__c (After insert,After update) {
+trigger DisrtictCodeUpdate on District_Master__c (After insert) {
     if(TriggerCheck.runOnce()){
       for(District_Master__c district:trigger.new){
       TriggerCheck triggerCheck = New TriggerCheck();
       triggerCheck.calculateDisrtictCode(district.id);
-   }
-}
+   }}
 }

@@ -1,8 +1,16 @@
-trigger SchoolCodeUpade on Account (After insert,After update) {
+trigger SchoolCodeUpade on Account (After insert) {//
     if(TriggerCheck.runOnce()){
-      for(Account school:trigger.new){
-      TriggerCheck triggerCheck = New TriggerCheck();
-      triggerCheck.calculateSchoolCode(school.id);
-   }
-}
+    for(Account school:trigger.new){
+     Id RecordTypeIdSchool = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+     if (school.RecordTypeId == RecordTypeIdSchool) {
+        TriggerCheck triggerCheck = New TriggerCheck();
+        triggerCheck.calculateSchoolCode(school.id);
+    }
+        
+    Id RecordTypeIdDonor = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();   
+    if (school.RecordTypeId == RecordTypeIdDonor){
+       TriggerCheck triggerCheck = New TriggerCheck();
+       triggerCheck.updateDonor(school.id);
+    }}   
+  }
 }

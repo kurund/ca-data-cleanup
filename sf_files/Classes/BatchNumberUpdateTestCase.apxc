@@ -1,6 +1,7 @@
-@isTest
+@isTest(seealldata=false)
 public class BatchNumberUpdateTestCase {
     public static testMethod void test() {
+        TriggerCheck triggerCheck=new TriggerCheck();
         Batch__c batch = new Batch__c();
         batch.Preferred_Language__c='Hindi';
         State_Govt_Body_Level__c state = new State_Govt_Body_Level__c();
@@ -11,21 +12,21 @@ public class BatchNumberUpdateTestCase {
         distict.State__c = state.id;
         distict.Name = 'Pune';
         insert distict;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         City_Master__c city = new City_Master__c();
         city.District__c = distict.id;
         city.Name = 'Kalyan'; 
         city.City_Code__c = '2';
         insert city;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         Ward_Master__c ward = new Ward_Master__c();
         ward.City__c = city.id;
         ward.Name = 'West';
         ward.Ward_Code__c = '1';
         insert ward;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         Account account = new Account();
         account.Name = 'Shreeram School';
@@ -37,7 +38,7 @@ public class BatchNumberUpdateTestCase {
         Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
         account.RecordTypeId = RecordTypeIdAccount;
         insert account;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         batch.School_Name__c = account.id;
         
@@ -45,15 +46,21 @@ public class BatchNumberUpdateTestCase {
         account1.Name = 'VPM Donor';
         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
         account1.RecordTypeId = RecordTypeIdAccount1;
+        account1.Number_of_batches_funded__c=100;
+        account1.Number_of_batches_allocated__c=50;
+        account1.Number_of_batches_pending__c=1.0;
         insert account1;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         batch.Donor_Name__c = account1.id;
         batch.Name = 'Batch Test';
         insert batch;
+        Batch__c batchData=[select name,Batch_Number__c from Batch__c];
+        System.assert(batchData.Batch_Number__c != null);
     } 
     
     public static testMethod void test1() {
+        TriggerCheck triggerCheck=new TriggerCheck();
         Batch__c batch = new Batch__c();
         batch.Preferred_Language__c='Hindi';
         State_Govt_Body_Level__c state = new State_Govt_Body_Level__c();
@@ -64,21 +71,21 @@ public class BatchNumberUpdateTestCase {
         distict.State__c = state.id;
         distict.Name = 'Pune';
         insert distict;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         City_Master__c city = new City_Master__c();
         city.District__c = distict.id;
         city.Name = 'Kalyan'; 
         city.City_Code__c = '2';
         insert city;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         Ward_Master__c ward = new Ward_Master__c();
         ward.City__c = city.id;
         ward.Name = 'West';
         ward.Ward_Code__c = '1';
         insert ward;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         Account account = new Account();
         account.Name = 'Shreeram School';
@@ -90,7 +97,7 @@ public class BatchNumberUpdateTestCase {
         Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
         account.RecordTypeId = RecordTypeIdAccount;
         insert account;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         batch.School_Name__c = account.id;
         
@@ -98,65 +105,108 @@ public class BatchNumberUpdateTestCase {
         account1.Name = 'VPM Donor';
         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
         account1.RecordTypeId = RecordTypeIdAccount1;
+        account1.Number_of_batches_funded__c=100;
+        account1.Number_of_batches_allocated__c=50;
+        account1.Number_of_batches_pending__c=1.0;
         insert account1;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
         batch.Donor_Name__c = account1.id;
         batch.Name = 'Batch Test';
         insert batch;
-        
-        
-        Batch__c batch1 = new Batch__c();
-        batch1.Preferred_Language__c='Hindi';
-        batch1.Id=batch.id;
-        
-        State_Govt_Body_Level__c state1 = new State_Govt_Body_Level__c();
-        state1.Name = 'SSC';
-        insert state1;
-        
-        District_Master__c distict1 = new District_Master__c();
-        distict1.State__c = state1.id;
-        distict1.Name = 'Thane';
-        insert distict1;
-        TriggerCheck.setVariable(true);
-        
-        City_Master__c city1 = new City_Master__c();
-        city1.District__c = distict.id;
-        city1.Name = 'Andheri'; 
-        city1.City_Code__c = '2';
-        insert city1;
-        TriggerCheck.setVariable(true);
-        
-        Ward_Master__c ward1 = new Ward_Master__c();
-        ward1.City__c = city.id;
-        ward1.Name = 'Chandivali';
-        ward1.Ward_Code__c = '1';
-        insert ward1;
-        TriggerCheck.setVariable(true);
+      
+        batch.Name = 'Batch Test';
         
         Account account3 = new Account();
-        account3.Name = 'Shreeram School';
-        account3.School_Code__c = '1';
+        account3.Name = 'Web School';
+        account3.School_Code__c = '2';
         account3.State__c = state.id;
         account3.Ward__c = ward.id;
         account3.City__c = city.id;
         account3.District__c = distict.id;
         Id RecordTypeIdAccount3 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
-        account1.RecordTypeId = RecordTypeIdAccount3;
+        account3.RecordTypeId = RecordTypeIdAccount3;
         insert account3;
-        TriggerCheck.setVariable(true);
         
-        batch1.School_Name__c = account.id;
+        triggerCheck.setVariable(true);
         
+        batch.School_Name__c = account3.id;
+   
+        update batch;
+        
+        Batch__c batchData=[select name,School_Name__c from Batch__c];
+        System.assert(batchData.School_Name__c == account3.id);
+    } 
+    
+     public static testMethod void test2() {
+        TriggerCheck triggerCheck=new TriggerCheck();
+        Batch__c batch = new Batch__c();
+        batch.Preferred_Language__c='Hindi';
+        State_Govt_Body_Level__c state = new State_Govt_Body_Level__c();
+        state.Name = 'SSC';
+        insert state;
+        
+        District_Master__c distict = new District_Master__c();
+        distict.State__c = state.id;
+        distict.Name = 'Pune';
+        insert distict;
+        triggerCheck.setVariable(true);
+        
+        City_Master__c city = new City_Master__c();
+        city.District__c = distict.id;
+        city.Name = 'Kalyan'; 
+        city.City_Code__c = '2';
+        insert city;
+        triggerCheck.setVariable(true);
+        
+        Ward_Master__c ward = new Ward_Master__c();
+        ward.City__c = city.id;
+        ward.Name = 'West';
+        ward.Ward_Code__c = '1';
+        insert ward;
+        triggerCheck.setVariable(true);
+        
+        Account account = new Account();
+        account.Name = 'Shreeram School';
+        account.School_Code__c = '1';
+        account.State__c = state.id;
+        account.Ward__c = ward.id;
+        account.City__c = city.id;
+        account.District__c = distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId = RecordTypeIdAccount;
+        insert account;
+        triggerCheck.setVariable(true);
+        
+        batch.School_Name__c = account.id;
+        
+        Account account1 = new Account();
+        account1.Name = 'VPM Donor';
+        Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+        account1.RecordTypeId = RecordTypeIdAccount1;
+        account1.Number_of_batches_funded__c=100;
+        account1.Number_of_batches_allocated__c=50;
+        account1.Number_of_batches_pending__c=1.0;
+        insert account1;
+        triggerCheck.setVariable(true);
+        
+        batch.Donor_Name__c = account1.id;
+        batch.Name = 'Batch Test';
+        insert batch;
+         
         Account account2 = new Account();
-        account2.Name = 'VPM Donor1';
+        account2.Name = 'BPM Donor2';
         Id RecordTypeIdAccount2 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
-        account2.RecordTypeId = RecordTypeIdAccount2;
+        account2.RecordTypeId = RecordTypeIdAccount2;account1.Number_of_batches_funded__c=100;
+        account2.Number_of_batches_allocated__c=50;
+        account2.Number_of_batches_pending__c=1.0;
         insert account2;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
         
-        batch1.Donor_Name__c = account2.id;
-        batch1.Name = 'Batch Test1';
-        update batch1;
+        batch.Donor_Name__c = account2.id;
+        update batch;
+         
+        Batch__c batchData=[select name,Donor_Name__c from Batch__c];
+        System.assert(batchData.Donor_Name__c == account2.id);
     } 
 }

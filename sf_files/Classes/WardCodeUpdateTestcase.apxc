@@ -1,6 +1,7 @@
 @isTest
 public class WardCodeUpdateTestcase {
- public static testMethod void test(){
+ public static testMethod void test()
+ {
         State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
         state.Name='SSC';
         insert state;
