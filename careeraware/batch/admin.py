@@ -246,14 +246,30 @@ class BatchAdmin(admin.ModelAdmin):
                 first_preference = second_preference = third_preference = ''
                 for i in range(2,73):
                     if row[i] == '1' or row[i] == '123' or row[i] == '12' or row[i] == '13':
-                        first_preference = i - 1
+                        if first_preference == '':
+                            first_preference = i - 1
+                        elif second_preference == '':
+                            second_preference = i - 1
+                        elif third_preference == '':
+                            third_preference  = i - 1
                     elif row[i] == '2' or row[i] == '23':
-                        second_preference = i - 1
+                        if second_preference == '':
+                            second_preference = i - 1
+                        elif first_preference == '':
+                            first_preference = i - 1
+                        elif third_preference == '':
+                            third_preference = i - 1
                     elif row[i] == '3':
-                        third_preference = i - 1
+                        if third_preference == '':
+                            third_preference = i - 1
+                        elif first_preference == '':
+                            first_preference = i - 1
+                        elif second_preference == '':
+                            second_preference = i - 1
 
-                row_values.extend([first_preference, second_preference, third_preference, row[73], row[74],
-                                   self.multivalue_formatter(row[75])])
+                row_values.extend([first_preference, second_preference, third_preference,
+                                   self.singlevalueonly_helper(row[73]), self.singlevalueonly_helper(row[74]),
+                                   self.singlevalueonly_helper(row[75])])
 
                 if row[77]:
                     row_values.append(row[77])
@@ -409,6 +425,13 @@ class BatchAdmin(admin.ModelAdmin):
         options = list(value)
         if len(options) > 1:
             return ';'.join(options)
+        else:
+            return value
+
+    def singlevalueonly_helper(self, value):
+        option = list(value)
+        if len(option) > 1:
+            return ''
         else:
             return value
 
