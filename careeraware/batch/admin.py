@@ -132,15 +132,16 @@ class BatchAdmin(admin.ModelAdmin):
                 # calculate date of birth
                 dob = ''
                 # make sure date has more than 4 digits
-                if len(row[21]) < 4 or int(row[21]) < 1900:
-                    row[21] = ''
+                year = row[21]
+                if len(year) < 4 or int(year.replace(" ", "")) < 1900:
+                    year = ''
 
-                if row[19] and row[20] and row[21]:
-                    dob = '/' .join([row[20],row[19],row[21]])
+                if row[19] and row[20] and year:
+                    dob = '/' .join([row[20],row[19],year])
 
                 # set blank value to dob for invalid date
                 try:
-                    datetime.datetime(int(row[21]), int(row[20]), int(row[19]))
+                    datetime.datetime(int(year), int(row[20]), int(row[19]))
                 except ValueError:
                     dob = ''
 
