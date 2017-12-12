@@ -111,6 +111,10 @@ class BatchAdmin(admin.ModelAdmin):
                 else:
                     last_name = 'Last Name'
 
+                # restrict the characters for first name and last name
+                first_name = first_name[:40]
+                last_name = last_name[:80]
+
                 row_values.append(first_name)
                 row_values.append(last_name)
 
@@ -118,6 +122,10 @@ class BatchAdmin(admin.ModelAdmin):
                 for i in range(3,19):
                     if i == 17 or i == 18:
                         row_values.append(self.yesno_helper(row[i]))
+                    elif i == 12 or i == 13 or i == 14 or i == 15 or i == 16:
+                        # process attendance fields
+                        # row 12 - 16 format using absentpresent_
+                        row_values.append(self.absentpresent_helper(row[i]))
                     else:
                         row_values.append(row[i])
 
@@ -374,6 +382,11 @@ class BatchAdmin(admin.ModelAdmin):
 
         obj.save()
 
+
+    def absentpresent_helper(self, value):
+        if value == 'AbsentPresent':
+            value = 'Present'
+        return value
 
     def yesno_helper(self, value):
         if value == 'YesNo':
