@@ -157,7 +157,7 @@ class BatchAdmin(admin.ModelAdmin):
 
         obj.save()
 
-        return student_barcodes;
+        return student_barcodes
 
     # method to handle career awareness csv transformation
     def process_career_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
