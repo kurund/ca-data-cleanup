@@ -17,6 +17,6 @@ if batches_to_process.exists():
             call(["cp", '-R', batch_dir, settings.PROCESS_FILES_PATH])
 
         # update the batch status to 6 [6 is 'Transformation Completed']
-        #batch.status = 6
+        batch.status = 6
         batch.save()
 
