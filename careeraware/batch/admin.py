@@ -126,6 +126,10 @@ class BatchAdmin(admin.ModelAdmin):
                         # process attendance fields
                         # row 12 - 16 format using absentpresent_
                         row_values.append(self.absentpresent_helper(row[i]))
+                    elif i == 11:
+                        row_values.append(self.gender_helper(row[i]))
+                    elif i == 8:
+                        row_values.append(self.currenteducation_helper(row[i]))
                     else:
                         row_values.append(row[i])
 
@@ -435,5 +439,16 @@ class BatchAdmin(admin.ModelAdmin):
             return ''
         else:
             return value
+
+    def gender_helper(self, value):
+        if value == 'Male' or value == 'Female' or value == 'Other':
+            return value
+        return ''
+
+    def currenteducation_helper(self, value):
+        if value == '8 TH' or value == '9 TH' or value == '10 TH' or value == '11 TH' \
+                or value == '12 TH' or value == 'OTHER':
+            return value
+        return ''
 
 admin.site.register(Batch, BatchAdmin)
