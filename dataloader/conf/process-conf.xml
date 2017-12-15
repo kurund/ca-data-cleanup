@@ -6,7 +6,9 @@
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
-                <entry key="sfdc.loadBatchSize" value="200"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
                 <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
                 <entry key="sfdc.entity" value="Contact"/>
                 <entry key="process.operation" value="upsert"/>
@@ -22,7 +24,9 @@
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
-                <entry key="sfdc.loadBatchSize" value="200"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
                 <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
                 <entry key="sfdc.entity" value="Contact"/>
                 <entry key="process.operation" value="upsert"/>
@@ -38,7 +42,9 @@
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
-                <entry key="sfdc.loadBatchSize" value="200"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
                 <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
                 <entry key="sfdc.entity" value="Contact"/>
                 <entry key="process.operation" value="upsert"/>
@@ -54,7 +60,9 @@
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
-                <entry key="sfdc.loadBatchSize" value="200"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
                 <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
                 <entry key="sfdc.entity" value="Contact"/>
                 <entry key="process.operation" value="upsert"/>
