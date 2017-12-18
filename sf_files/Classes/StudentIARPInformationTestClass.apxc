@@ -1,3 +1,4 @@
+/* Getting the code coverage for StudentIARPInformation Class  */
 @isTest(seealldata=false)
 public class StudentIARPInformationTestClass {
      public static testMethod void test(){
@@ -100,7 +101,7 @@ public class StudentIARPInformationTestClass {
             contact.I_am_good_at_calculating_how_much_to_pay__c  = 'Yes';
             contact.I_like_to_analyze_things_problems_and_s__c  = 'Yes';
             contact.I_like_working_with_numbers__c   = 'Yes';
-            contact.I_am_good_at_math__c  = 'No';
+			contact.I_am_good_at_math__c  = 'No';
             contact.I_am_good_at_working_by_myself__c  = 'No';
             contact.I_like_to_read_about_art_and_music__c  = 'No';
             contact.I_like_writing_stories_plays_and_poems__c  = 'Yes';
@@ -364,7 +365,7 @@ public class StudentIARPInformationTestClass {
             contact.I_am_good_at_calculating_how_much_to_pay__c  = 'Yes';
             contact.I_like_to_analyze_things_problems_and_s__c  = 'Yes';
             contact.I_like_working_with_numbers__c   = 'Yes';
-	    contact.I_am_good_at_math__c  = 'No';
+			contact.I_am_good_at_math__c  = 'No';
             contact.I_am_good_at_working_by_myself__c  = 'No';
             contact.I_like_to_read_about_art_and_music__c  = 'No';
             contact.I_like_writing_stories_plays_and_poems__c  = 'Yes';
@@ -632,7 +633,7 @@ public class StudentIARPInformationTestClass {
             contact.I_am_good_at_calculating_how_much_to_pay__c  = 'Yes';
             contact.I_like_to_analyze_things_problems_and_s__c  = 'Yes';
             contact.I_like_working_with_numbers__c   = 'Yes';
-            contact.I_am_good_at_math__c  = 'No';
+			contact.I_am_good_at_math__c  = 'No';
             contact.I_am_good_at_working_by_myself__c  = 'No';
             contact.I_like_to_read_about_art_and_music__c  = 'No';
             contact.I_like_writing_stories_plays_and_poems__c  = 'Yes';
@@ -900,7 +901,7 @@ public class StudentIARPInformationTestClass {
             contact.I_am_good_at_calculating_how_much_to_pay__c  = 'Yes';
             contact.I_like_to_analyze_things_problems_and_s__c  = 'Yes';
             contact.I_like_working_with_numbers__c   = 'Yes';
-	    contact.I_am_good_at_math__c  = 'No';
+			contact.I_am_good_at_math__c  = 'No';
             contact.I_am_good_at_working_by_myself__c  = 'No';
             contact.I_like_to_read_about_art_and_music__c  = 'No';
             contact.I_like_writing_stories_plays_and_poems__c  = 'Yes';
@@ -1168,7 +1169,7 @@ public class StudentIARPInformationTestClass {
             contact.I_am_good_at_calculating_how_much_to_pay__c  = 'Yes';
             contact.I_like_to_analyze_things_problems_and_s__c  = 'Yes';
             contact.I_like_working_with_numbers__c   = 'Yes';
-	    contact.I_am_good_at_math__c  = 'No';
+			contact.I_am_good_at_math__c  = 'No';
             contact.I_am_good_at_working_by_myself__c  = 'No';
             contact.I_like_to_read_about_art_and_music__c  = 'No';
             contact.I_like_writing_stories_plays_and_poems__c  = 'Yes';
@@ -1336,7 +1337,7 @@ public class StudentIARPInformationTestClass {
         
             StudentIARPInformation studentInfo1=new StudentIARPInformation();
             studentInfo1.insertData();
-            SchedulableContext sc;
+        SchedulableContext sc;
             studentInfo1.execute(SC);
           
         

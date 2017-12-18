@@ -1,3 +1,4 @@
+/* Getting the code coverage for CareerAware Class  */
 @isTest(seealldata=false)
 public class CareerAwareTestCase {
      public static testMethod void test() {
@@ -67,27 +68,27 @@ public class CareerAwareTestCase {
         insert batch;
         triggerCheck.setVariable(true);
          
-        Contact contact=new Contact();
-        contact.FirstName='Kurund';
-        contact.LastName='Jalmi';
-        contact.Import_Status__c='Import Completed';
-        contact.Status__c='Not Processed';
+         Contact contact=new Contact();
+         contact.FirstName='Kurund';
+         contact.LastName='Jalmi';
+         contact.Import_Status__c='Import Completed';
+         contact.Status__c='Not Processed';
          //contact.Recommedation_Status__c='Not Processed';
-        contact.Batch_Code__c=batch.id;
-        contact.Design__c='A;B;C;D;E';
-        contact.Performance_Arts__c='B';
-        contact.Media_Communication__c='C';
-        contact.Beauty_Wellness__c='A';
-        contact.Education__c='C';
-        contact.Sports_Fitness__c='C';
-        contact.Finance__c='C';
-        contact.Hospitality_Tourism__c='A';
-        contact.Medical__c='C';
-        contact.Public_Services__c='C';
-        contact.Enginnering_technologies__c='A';
-        contact.Trades__c='C';
-        contact.Enviomental_and_Biological_Sciences__c='C';
-        insert contact;
+         contact.Batch_Code__c=batch.id;
+         contact.Design__c='A;B;C;D;E';
+         contact.Performance_Arts__c='B';
+         contact.Media_Communication__c='C';
+         contact.Beauty_Wellness__c='A';
+         contact.Education__c='C';
+         contact.Sports_Fitness__c='C';
+         contact.Finance__c='C';
+         contact.Hospitality_Tourism__c='A';
+         contact.Medical__c='C';
+         contact.Public_Services__c='C';
+         contact.Enginnering_technologies__c='A';
+         contact.Trades__c='C';
+         contact.Enviomental_and_Biological_Sciences__c='C';
+         insert contact;
          
          Question_Bank__c questionBank=new Question_Bank__c();
          questionBank.Category1__c='Design';
@@ -154,10 +155,12 @@ public class CareerAwareTestCase {
          questionBank12.Category__c='C'; 
          insert questionBank12;
          
-        CareerAware careerAware=new CareerAware();
-        careerAware.getCareerData(contact);
+         CareerAware careerAware=new CareerAware();
+         careerAware.getCareerData(contact);
          
         Contact conData=[select Career_Tracks__c from Contact];
         System.assert(conData.Career_Tracks__c != null);
- }
+        
+         
+     }
 }

@@ -1,7 +1,8 @@
-@isTest
+/* Getting the code coverage for WardCodeUpdate trigger  */
+@isTest(seealldata=false)
 public class WardCodeUpdateTestcase {
- public static testMethod void test()
- {
+    public static testMethod void test(){
+        TriggerCheck triggerCheck =new TriggerCheck();
         State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
         state.Name='SSC';
         insert state;
@@ -10,18 +11,21 @@ public class WardCodeUpdateTestcase {
         distict.State__c=state.id;
         distict.Name='Pune';
         insert distict;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
      
         City_Master__c city =new City_Master__c();
         city.District__c=distict.id;
         city.Name='Kalyan'; 
         insert city;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
      
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
         ward.Name='West Kalyan';
         insert ward;
-        TriggerCheck.setVariable(true);
+        triggerCheck.setVariable(true);
+     
+        Ward_Master__c wardData=[select Ward_Code__c from Ward_Master__c];
+        System.assert(wardData.Ward_Code__c != null);
  }
 }

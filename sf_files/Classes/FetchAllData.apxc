@@ -1,12 +1,12 @@
+/*get all student data which have all csv files are imported and IARP calculation is not done*/
 public class FetchAllData {
-    // get all student data which have all csv files are imported and IARP calculation not processed
-   public List<sObject> getAllData(String name){
+  public List<sObject> getAllData(String name){
         integer count=0;
         SObjectType t  = Schema.getGlobalDescribe().get(name);
         Map<String,Schema.SObjectField> fieldMap = t.getDescribe().fields.getMap();
-	String field = '';
+		String field = '';
     	for (String fieldName : fieldMap.keySet()){
-	     field += ''+fieldName+', ';
+			 field += ''+fieldName+', ';
        }
         count=field.lastIndexOf(',');
         field=field.substring(0, count);

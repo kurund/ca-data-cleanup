@@ -1,12 +1,13 @@
+/*Inserting and Updating number of student field in batch*/
 trigger NumberOfStudentUpdate on Contact (after insert,after update) {
     if (TriggerCheck.runOnceContact()) {
          if(trigger.old != null){
-       if(trigger.new[0].Batch_Code__c != trigger.old[0].Batch_Code__c){
+            if(trigger.new[0].Batch_Code__c != trigger.old[0].Batch_Code__c){
             TriggerCheck.batchCheck= false;
             for (Contact con:trigger.new) {
             TriggerCheck triggerCheck = new TriggerCheck();
             triggerCheck.updateNumberOfStudentFacilitated(con.id,trigger.old[0].Batch_Code__c);}}
-        } 
+         } 
            for (Contact con:trigger.new) {
            TriggerCheck triggerCheck = new TriggerCheck();
            triggerCheck.updateNumberOfStudentFacilitated(con.id);

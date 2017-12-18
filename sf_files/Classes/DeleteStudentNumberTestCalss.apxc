@@ -1,3 +1,4 @@
+/* Getting the code coverage for DeleteStudentNumber trigger  */
 @isTest(seealldata=false)
 public class DeleteStudentNumberTestCalss {
    public static testMethod void test(){      
@@ -78,7 +79,8 @@ public class DeleteStudentNumberTestCalss {
         con.LastName='Check';
         con.AccountId=account.id;
         con.Batch_Code__c=batch.id;
- 	insert con;
+ 		//con.Recommedation_Status__c='Not Processed';
+ 		insert con;
        
         delete account;
     

@@ -1,3 +1,4 @@
+/* Getting details related to recommendation of the student for creating the recommendation pdf*/
 public class RecommendationController {
     public List<Contact> contactList{set;get;}
     public List<Batch__c> batchList{set;get;}
@@ -222,7 +223,6 @@ public class RecommendationController {
   
     /* get profession name  */
      iarpName=[Select Name from IARP_Master__c  where IARP_Master__c.id =: contact.Profession_1__c];
-        System.debug('iarpName' +iarpName);
         if(iarpName.size() > 0){
              profession1=iarpName.get(0).Name;
              professionshowContent1=true;

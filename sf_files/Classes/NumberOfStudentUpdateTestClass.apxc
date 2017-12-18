@@ -1,3 +1,4 @@
+/* Getting the code coverage for NumberOfStudentUpdate trigger  */
 @isTest(seealldata=false)
 public class NumberOfStudentUpdateTestClass {
    public static testMethod void test(){
@@ -69,6 +70,7 @@ public class NumberOfStudentUpdateTestClass {
         con.FirstName='Web';
         con.LastName='Check';
         con.Batch_Code__c=batch.id;
+        //con.Recommedation_Status__c='Not Processed';
         insert con;
         
         Contact condata=[select Batch_Code__c from Contact];

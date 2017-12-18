@@ -1,3 +1,4 @@
+/* Getting the code coverage for FetchAllData Class  */
 @isTest(seealldata=false)
 Private class FetchAllDataTestCase {
      @isTest static void test(){

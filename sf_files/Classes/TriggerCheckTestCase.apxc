@@ -1,3 +1,4 @@
+/* Getting the code coverage for TriggerCheck class  */
 @isTest
 public class TriggerCheckTestCase {
   public static testMethod void test(){
@@ -284,7 +285,7 @@ public class TriggerCheckTestCase {
         insert city;
        
         triggerCheck.setVariable(true);
-       
+        //triggerCheck.calculateCityCode(city.id);
       
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
@@ -293,7 +294,7 @@ public class TriggerCheckTestCase {
         insert ward;
        
         triggerCheck.setVariable(true);
-      
+       // triggerCheck.calculateWardCode(ward.id);
        
         Account account=new Account();
         account.Name='Shreeram School';
@@ -308,7 +309,7 @@ public class TriggerCheckTestCase {
         insert account;
          
         triggerCheck.setVariable(true);
-    
+     //   triggerCheck.calculateSchoolCode(account.id);
         
         batch.School_Name__c=account.id;
         
@@ -434,17 +435,20 @@ public class TriggerCheckTestCase {
          con.LastName='Test Check';
          con.Bar_Code__c='103';
          con.Batch_Code__c=batch.id;
-         
+         //con.Recommedation_Status__c='Not Processed';
          insert con;
          
          triggerCheck.setVariable(true);
          
-          triggerCheck.updateNumberOfStudentFacilitated(con.id,null);
+         //triggerCheck.updateNumberOfStudentFacilitated(con.id);
+          triggerCheck.setVariable(true);
+         
+         triggerCheck.updateNumberOfStudentFacilitated(con.id,null);
          triggerCheck.setVariable(true);
          
          triggerCheck.setVariableCon(true);
          
-         triggerCheck.deleteNumberOfStudent(con.id);
+         triggerCheck.updateNumberOfStudent(con.id);
          triggerCheck.calculateNumberOfStudent(account.Id, account.id);
                   
          Batch__c batchData=[select Number_of_students_facilitated__c from Batch__c];

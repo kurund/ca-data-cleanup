@@ -1,6 +1,5 @@
-global class CareerAware 
-{
- /* for calculating the logic for career track*/
+/* for calculating the count of career track based on 'CareerAwarences' csv file data*/
+global class CareerAware{ 
     global  void getCareerData(Contact a){ 
       String checkString='';
       Integer count=0;
@@ -18,10 +17,7 @@ global class CareerAware
       List<Question_Bank__c> conEngg=[select Category__c from Question_Bank__c where Category1__c =:'Engineering'];
       List<Question_Bank__c> conTrade=[select Category__c from Question_Bank__c where Category1__c =:'Trades'];
       List<Question_Bank__c> conEnv=[select Category__c from Question_Bank__c where Category1__c =:'Environmental and biological'];
-      //List<Contact> con = [Select Design__c,Performance_Arts__c,Media_Communication__c,Beauty_Wellness__c,Education__c,Sports_Fitness__c,Finance__c,Hospitality_Tourism__c,Medical__c,Public_Services__c,Enginnering_technologies__c,Trades__c,Enviomental_and_Biological_Sciences__c from Contact where Bar_Code__c =:'1812'];
-        FetchAllData fetchData=new FetchAllData();
-        //List<Contact> con = fetchData.getAllData('Contact');
-       // for (Contact a : con) {
+      FetchAllData fetchData=new FetchAllData();
             Integer careerTracks1=0;
             Map<String,Integer> mp = new Map<String,Integer>();
             String choices = a.Design__c;
@@ -40,7 +36,6 @@ global class CareerAware
             if(choices !=null){
             String[] stringCharacters1 = choices.split('');
             ans = conPerform.get(0).Category__c;
-            System.debug('stringCharacters1.size() '+stringCharacters1.size() + ans);
             for(Integer j=0;j<=stringCharacters1.size()-1;j++){
           		if(ans.contains(stringCharacters1[j]) && stringCharacters1[j]!=','){
              	 count++;
@@ -179,13 +174,10 @@ global class CareerAware
           		}
             }}
             mp.put('Enviroment and Biological Science',count);
-             System.debug(mp);
             for (String s1 : mp.keySet()) {
-                System.debug('Key Set ' +s1 + mp.get(s1));
                if(mp.get(s1)>=5){
                   careerTracks1=careerTracks1+1; 
                }}            
-            System.debug('careerTracks1' + careerTracks1);
             a.Career_Tracks__c=careerTracks1;
             a.Status__c='Processed';
             update a;

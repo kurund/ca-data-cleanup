@@ -1,23 +1,26 @@
+/* Created and updated batch number,created code for city,state,district and school.
+   Calculating number of students pending counselling, calculating the number of students in school.
+   Calculating number of students facilitated for every batch*/
 global class TriggerCheck {
-    global static boolean run = true;
-     global static boolean contactRun = true;
-    global static boolean schoolCheck = true;
-     global static boolean batchCheck = true;
-    global static boolean runOnce() {
-       if (run) {
-            run = false;
-            return true;
-        } else {
+          global static boolean run = true;
+          global static boolean contactRun = true;
+          global static boolean schoolCheck = true;
+          global static boolean batchCheck = true;
+   global static boolean runOnce() {
+         if (run) {
+           run = false;
+           return true;
+         }else {
             return run;}
-    } 
+         } 
     global static boolean runOnceContact() {
-      if (contactRun) {
+         if (contactRun) {
             contactRun = false;
             run = true;
             return true;
-        } else {
+           } else {
             return contactRun; }
-    }
+         }
     
     public void createBatchNumber(Id id) {
         String batchNumber = '';
@@ -160,7 +163,6 @@ global class TriggerCheck {
         if(donarName!=null){
         List<Account> donarData = [select id,Number_of_batches_allocated__c from Account where Account.id=: + donarName];
         Account donar = donarData.get(0);
-     
         if (count == 0) {
             donar.Number_of_batches_funded__c = 0;
         } else {
@@ -176,7 +178,6 @@ global class TriggerCheck {
           if(trainerName!=null){
           List<Contact> trainerData = [select id,Number_Of_Batches__c from Contact where Contact.id=: + trainerName];
           Contact trainer = trainerData.get(0);
-        
         if (countTrainer == 0) {
             trainer.Number_Of_Batches__c = 0;
         } else {
@@ -257,8 +258,7 @@ global class TriggerCheck {
         
         /* upade City_Code__c and City_Master__c*/
         city.City_Code__c = String.valueOf(cityList.size());  
-       
-        update city;
+         update city;
     }
     
     public void calculateWardCode(Id id) {
@@ -334,7 +334,6 @@ global class TriggerCheck {
      public void calculateNumberOfStudent(Id id,Id schoolId) {
         List<Account> schoolData1 = [select name, Number_of_students__c  from Account where Account.Id=: schoolId];
         Account school1=schoolData1.get(0);
-     
         List<Batch__c> batchListNew = [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  schoolId];
         Integer numberOfStudents = 0;
         for(Integer i=0;i < batchListNew.size();i++) {   
@@ -351,8 +350,7 @@ global class TriggerCheck {
          
         List<Account> schoolDataNew = [select name, Number_of_students__c  from Account where Account.Id=: id];
         Account schoolNew=schoolDataNew.get(0);
-        
-        List<Batch__c> batchListNew1 = [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  id];
+         List<Batch__c> batchListNew1 = [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  id];
         Integer numberOfStudentsNew = 0;
         for(Integer i=0;i < batchListNew1.size();i++){   
             Batch__c batchNew1= batchListNew1.get(i);
@@ -371,7 +369,7 @@ global class TriggerCheck {
 
     }
     
-    public void deleteNumberOfStudent(Id id) {
+    public void updateNumberOfStudent(Id id) {
        List<Contact> studentList = [select name,Batch_Code__c from Contact where Contact.Id=: + id];
           Contact student=studentList.get(0);
           List<Contact> batchList = [select Batch_Code__c from Contact where Contact.Batch_Code__c=: student.Batch_Code__c];

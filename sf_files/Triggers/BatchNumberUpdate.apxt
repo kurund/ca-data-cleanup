@@ -1,3 +1,4 @@
+/* Created for creating and updating batch number, also calculating the number of student belongs to the batch */
 trigger BatchNumberUpdate on Batch__c (after insert,after update) {
     if (TriggerCheck.runOnce()) {
         if(trigger.old != null){

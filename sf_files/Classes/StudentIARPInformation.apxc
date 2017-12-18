@@ -1,10 +1,12 @@
+/*For calculating the student IARP information based on csv data.
+ This class is included in the job which is run after every 5 mins.*/
 Public class StudentIARPInformation implements Schedulable{
      Public void execute(SchedulableContext SC){
         insertData();
         }
-    /* For calculating the student IARP information based on csv data*/
     public void insertData() {
-         integer count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, count = 0, value = 0;
+        
+            integer count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0, count6 = 0, count = 0, value = 0;
             String aspiration1, aspiration2, aspiration3,PossibleCareers1,PossibleCareers2,PossibleCareers3;
             Map<String, Integer> mp = new Map<String, Integer>();
             List<String> getInterest1 = new List<String>();
@@ -14,15 +16,37 @@ Public class StudentIARPInformation implements Schedulable{
             List<String> getInterest5 = new List<String>();
             List<String> getInterest6 = new List<String>();
             List<String> ans = new List<String>();
+            List<Contact> conData =new List<Contact>();
             Map<String, Integer> aptitute = new Map<String, Integer>();
 
             /*getting data of student from contact object based on bar code */
             FetchAllData fetchData=new FetchAllData();
-            List<Contact> conData = fetchData.getAllData('Contact');
+            conData = fetchData.getAllData('Contact');
         
+           /* System.debug('conData' +conData.size());
+            List<Contact> TempData=new List<Contact>();
+            for(Integer j = 0; j < conData.size(); j++) {   
+                if(conData.get(j).Bar_Code__c=='170002333')
+                {
+                    System.debug('in IARp');
+                    TempData.add(conData.get(j));
+                }
+              }*/
             for(Integer i = 0; i < conData.size(); i++) {//TempData
+            System.debug('Hi');
+            System.debug('Con data' + conData.get(i).Bar_Code__c);
+            List<Integer> interest = new List<Integer>(); 
+            List<String> highestInterest = new List<String>();
+            List<Question_Bank__c> correctAns = new List<Question_Bank__c>();
+            LIST<String> personalityList = new LIST<String>();
+            List<String> careerOptions = new List<String>();
+            String careerStepUns = 'No';
+            List<String> studentSelectUns = new List<String>();
+            List<String> unsList = new List<String>();
+            integer countOptions = 0;
+            
+         
             Contact con = conData.get(i);
-            System.debug('Bar code '+ con.Bar_Code__c);
             getInterest1.clear();getInterest2.clear();getInterest3.clear();getInterest4.clear();getInterest5.Clear();getInterest6.clear();
             count1 = 0; count2 = 0; count3 = 0; count4 = 0; count5 = 0; count6 = 0; count = 0; value = 0;mp.clear();
             
@@ -118,7 +142,7 @@ Public class StudentIARPInformation implements Schedulable{
             }
             if(count5>0)
             mp.put('Enterprising',count5);
-           for (Integer j = 0; j < getInterest6.size(); j++) {
+            for (Integer j = 0; j < getInterest6.size(); j++) {
                 if (getInterest6.get(j) != null) {
                     if (getInterest6.get(j) == 'Yes')
                  count6++; }
@@ -126,14 +150,14 @@ Public class StudentIARPInformation implements Schedulable{
                 
             if(count6>0)
             mp.put('Conventional',count6);
-            List<Integer> interest = new List<Integer>();
+           
             interest.add(count1);
             interest.add(count2);
             interest.add(count3);
             interest.add(count4);
             interest.add(count5);
             interest.add(count6);
-            List<String> highestInterest = new List<String>();
+           
             for (Integer k = 0; k < 2; k++) {
                 String maxKey = mp.isEmpty() ? null : new List<String>(mp.keyset())[0];
                 for (String s1 : mp.keySet()) {
@@ -144,9 +168,9 @@ Public class StudentIARPInformation implements Schedulable{
                 
                 
             //for  Aptitude  1 and Aptitude  2 logic
-            //
+        
             /* aptitute 'Spatial' */
-            List<Question_Bank__c> correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Spatial'];
+            correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Spatial'];
             ans.add(con.S__c);
             ans.add(con.Spatial_Ability_Q_2__c);
             ans.add(con.Spatial_Ability_Q_3__c);
@@ -163,8 +187,8 @@ Public class StudentIARPInformation implements Schedulable{
                 }
             }
             aptitute.put('Spatial', count);
+            correctAns.clear();
             ans.clear();
-           
 
             /* aptitute 'Numerical'  */
             correctAns =[select Category__c,Name from Question_Bank__c where Category1__c ='Numerical' order by Name];
@@ -206,7 +230,6 @@ Public class StudentIARPInformation implements Schedulable{
                 }}
             }
             aptitute.put('Abstract', count);
-               
             correctAns.clear();
             ans.clear();
          
@@ -243,13 +266,11 @@ Public class StudentIARPInformation implements Schedulable{
                     count++;
                 }}
             }
-            aptitute.put('Mechanical', count);
-                
-            correctAns.clear();
-                
-            ans.clear();
-			System.debug('Mechanical'+ count);
-            /* aptitute 'VERBAL Ability'  */
+             aptitute.put('Mechanical', count);
+             correctAns.clear();
+             ans.clear();
+              
+			 /* aptitute 'VERBAL Ability'  */
             correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Verbal'];
             ans.add(con.Verbal1__c);
             ans.add(con.Verbal2__c);
@@ -267,8 +288,6 @@ Public class StudentIARPInformation implements Schedulable{
                 }}
             }
             aptitute.put('Verbal', count);
-               
-          
             correctAns.clear();
             ans.clear();
             List<String> highestApti = new List<String>();
@@ -282,7 +301,7 @@ Public class StudentIARPInformation implements Schedulable{
             }
 
              /* logic for Personality   */
-            LIST<String> personalityList = new LIST<String>();
+          
             personalityList.add(con.Personality1__c);
             personalityList.add(con.Personality2__c);
             personalityList.add(con.Personality3__c);
@@ -406,6 +425,7 @@ Public class StudentIARPInformation implements Schedulable{
           PossibleCareers1=con.Possible_Careers_1__c;
           PossibleCareers2=con.Possible_Careers_2__c;
           PossibleCareers3=con.Possible_Careers_3__c;
+                
           /*  logic for Reality   */
           /*Only responses need to be recorded*/
          
@@ -436,11 +456,11 @@ Public class StudentIARPInformation implements Schedulable{
           
                 
           /*calculation  possible career   */    
-         List<String> careerOptions = new List<String>();
+       
          careerOptions.add(PossibleCareers1);
          careerOptions.add(PossibleCareers2);
          careerOptions.add(PossibleCareers3);
-         integer countOptions = 0;
+         
          for(integer k=0; k< careerOptions.size(); k++){
               if(careerOptions.get(k) != null){
                   countOptions= countOptions + 1 ; }
@@ -448,31 +468,28 @@ Public class StudentIARPInformation implements Schedulable{
          
          con.possible_career_report__c = countOptions;
 
-                
-          /*calculation  students with correct answers    */       
-            
-              String careerStepUns = 'No';
-              List<String> studentSelectUns = new List<String>();
-              List<String> unsList = new List<String>();
+          /*calculation  students with correct answers    */  
+              correctAns.clear();
+              ans.clear();
               studentSelectUns.add(con.CCP_1__c);
               studentSelectUns.add(con.CCP_2__c);
               studentSelectUns.add(con.CCP_3__c);
-              List<Question_Bank__c> questionBankUns=[select Category__c from Question_Bank__c where Category1__c =:'Clarity' order by name Limit 3];
-              unsList.add(questionBankUns.get(0).Category__c);
-              unsList.add(questionBankUns.get(1).Category__c);
-              unsList.add(questionBankUns.get(2).Category__c);
-               System.debug('CCp '+ con.CCP_1__c +' '+con.CCP_2__c+' '+con.CCP_3__c);
-                if(studentSelectUns.get(0) == unsList.get(0) && studentSelectUns.get(1) == unsList.get(1)){
-                    if(studentSelectUns.get(2)!=null){
-                        if(unsList.get(2).contains(studentSelectUns.get(2))){
-                          careerStepUns = 'Yes';
-                     }}
-                }
-                if(con.CCP_1__c == null && con.CCP_2__c== null && con.CCP_3__c == null){
+                
+              correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Clarity' order by name Limit 3];
+              unsList.add(correctAns.get(0).Category__c);
+              unsList.add(correctAns.get(1).Category__c);
+              unsList.add(correctAns.get(2).Category__c);
+                
+              if(studentSelectUns.get(0)!=null && studentSelectUns.get(1)!=null && studentSelectUns.get(2)!=null)
+              {
+                  if(unsList.get(0).contains(studentSelectUns.get(0)) && unsList.get(1).contains(studentSelectUns.get(1)) && unsList.get(2).contains(studentSelectUns.get(2))){
+                      careerStepUns = 'Yes';
+                  }
+              }
+              if(con.CCP_1__c == null && con.CCP_2__c== null && con.CCP_3__c == null){
                     careerStepUns = 'Data is not available';
                 }
                 con.Clarity_Report__c = careerStepUns;
-                upsert con;
                 
                 /* student attendance calculation */
                 String absentStudent = 'Students who Dropped-out';
@@ -485,7 +502,7 @@ Public class StudentIARPInformation implements Schedulable{
                 con.Student_Attendance__c = absentStudent ; 
                 
                 upsert con;  
-                System.debug('con '+con);
+                
                 CareerAware cr=new CareerAware();
                 cr.getCareerData(con);
                 

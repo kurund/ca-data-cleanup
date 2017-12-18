@@ -1,3 +1,4 @@
+/* Getting the code coverage for RecommendationController Class  */
 @isTest(seealldata=false)
 public class RecommendationControllerTestCase {
     public static testMethod void test(){
@@ -42,34 +43,35 @@ public class RecommendationControllerTestCase {
         batch.School_Name__c=account.id;
         batch.Preferred_Language__c='Hindi';
         
-        Account account1=new Account();
-        account1.Name='Shreeram School Donor';
-        Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
-        account1.RecordTypeId=RecordTypeIdAccount1;
-        account1.Number_of_batches_pending__c=1.0;
-        account1.Number_of_batches_allocated__c=2.0;
-        account1.Number_of_batches_funded__c=1.0;
-        insert account1;
-        triggerCheck.setVariable(true);
+         Account account1=new Account();
+         account1.Name='Shreeram School Donor';
+         Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         account1.Number_of_batches_pending__c=1.0;
+         account1.Number_of_batches_allocated__c=2.0;
+         account1.Number_of_batches_funded__c=1.0;
+         insert account1;
+         triggerCheck.setVariable(true);
         
-        Contact contact=new Contact();
-        contact.FirstName='Kurund12';
-        contact.LastName='Jalmi';
-        Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
-        contact.RecordTypeId=RecordTypeIdContact;
-        insert contact;
+         Contact contact=new Contact();
+         contact.FirstName='Kurund12';
+         contact.LastName='Jalmi';
+         Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+         contact.RecordTypeId=RecordTypeIdContact;//contact.Recommedation_Status__c='Not Processed';
+        // contact.Batch_Code__c=batch.id;
+         insert contact;
          
-        batch.Trainer_Name__c=contact.id;
+         batch.Trainer_Name__c=contact.id;
         
-        triggerCheck.setVariable(true);
-        batch.Donor_Name__c=account1.id;
-        batch.Name='Batch 7';
-        batch.Grade__c='12th';
-        batch.Number_of_students_facilitated__c=1.0;
-        insert batch;
+         triggerCheck.setVariable(true);
+         batch.Donor_Name__c=account1.id;
+         batch.Name='Batch 7';
+         batch.Grade__c='12th';
+         batch.Number_of_students_facilitated__c=1.0;
+         insert batch;
         
-        contact.Batch_Code__c=batch.id;
-        update contact;
+         contact.Batch_Code__c=batch.id;
+         update contact;
         
         triggerCheck.setVariable(true);
         
@@ -148,6 +150,7 @@ public class RecommendationControllerTestCase {
          contact1.Profession_2_Next_steps__c='';
          contact1.Profession_2_Recommendation__c='Fitness Instructor';
          contact1.Batch_Code__c=batch.id;
+         //contact1.Recommedation_Status__c='Not Processed';
          insert contact1;
         
         
@@ -163,7 +166,7 @@ public class RecommendationControllerTestCase {
         
     }
     
-   public static testMethod void test1(){
+public static testMethod void test1(){
         TriggerCheck triggerCheck=new TriggerCheck();
         Batch__c batch=new Batch__c();
         State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
@@ -219,7 +222,8 @@ public class RecommendationControllerTestCase {
          contact.FirstName='Kurund12';
          contact.LastName='Jalmi';
          Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
-         contact.RecordTypeId=RecordTypeIdContact;
+         contact.RecordTypeId=RecordTypeIdContact;//contact.Recommedation_Status__c='Not Processed';
+        // contact.Batch_Code__c=batch.id;
          insert contact;
          
          batch.Trainer_Name__c=contact.id;
@@ -277,41 +281,41 @@ public class RecommendationControllerTestCase {
         insert iarp1;
         
         
-        Contact contact1=new Contact();
-        contact1.FirstName='Kurund123';
-        contact1.LastName='Jalmi12';
-        Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
-        contact1.RecordTypeId=RecordTypeIdStudent;
-        contact1.Batch_Code__c=batch.id;
-        contact1.Current_Aspiration__c='SELF EMPLOYED';
-        contact1.Age__c=25;
-        contact1.Interest_1__c='Social';
-        contact1.Interest_2__c='Enterprising';
-		contact1.Aptitude_1__c='Verbal';
-        contact1.Aptitude_2__c='Mechanical';
-        contact1.Personality_1__c='Extrovert';
-        contact1.Personality_2__c='Extrovert';
-        contact1.Personality_3__c='Practical';
-        contact1.Personality_4__c='Practical';
-        contact1.Personality_5__c='Thoughtful';
-        contact1.Personality_6__c='Conservative';
-        contact1.Personality_7__c='Talkative';
-        contact1.Personality_8__c='Bold';
-        contact1.Reality_1__c='No';
-        contact1.Reality_2__c='No';
-        contact1.Reality_3__c='No';
-        contact1.Reality_4__c='No';
-        contact1.Reality_5__c='No';
-        contact1.Reality_6__c='No';
-        contact1.Reality_7__c='No';
-        contact1.Reality_8__c='No';
-        contact1.Profession_1__c=iarp.id;
-        contact1.Profession_1_Next_steps__c='To be a school teacher - Students must complete 12th grade in any stream';
-        contact1.Profession_1_Recommendation__c='Teacher';
-        contact1.Profession_2__c=iarp1.id;
-        contact1.Profession_2_Next_steps__c='';
-        contact1.Profession_2_Recommendation__c='Fitness Instructor';
-        contact1.Batch_Code__c=batch.id;//contact1.Recommedation_Status__c='Processed';
+         Contact contact1=new Contact();
+         contact1.FirstName='Kurund123';
+         contact1.LastName='Jalmi12';
+         Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+         contact1.RecordTypeId=RecordTypeIdStudent;
+         contact1.Batch_Code__c=batch.id;
+         contact1.Current_Aspiration__c='SELF EMPLOYED';
+         contact1.Age__c=25;
+         contact1.Interest_1__c='Social';
+         contact1.Interest_2__c='Enterprising';
+		 contact1.Aptitude_1__c='Verbal';
+         contact1.Aptitude_2__c='Mechanical';
+         contact1.Personality_1__c='Extrovert';
+         contact1.Personality_2__c='Extrovert';
+         contact1.Personality_3__c='Practical';
+         contact1.Personality_4__c='Practical';
+         contact1.Personality_5__c='Thoughtful';
+         contact1.Personality_6__c='Conservative';
+         contact1.Personality_7__c='Talkative';
+         contact1.Personality_8__c='Bold';
+         contact1.Reality_1__c='No';
+         contact1.Reality_2__c='No';
+         contact1.Reality_3__c='No';
+         contact1.Reality_4__c='No';
+         contact1.Reality_5__c='No';
+         contact1.Reality_6__c='No';
+         contact1.Reality_7__c='No';
+         contact1.Reality_8__c='No';
+         contact1.Profession_1__c=iarp.id;
+         contact1.Profession_1_Next_steps__c='To be a school teacher - Students must complete 12th grade in any stream';
+         contact1.Profession_1_Recommendation__c='Teacher';
+         contact1.Profession_2__c=iarp1.id;
+         contact1.Profession_2_Next_steps__c='';
+         contact1.Profession_2_Recommendation__c='Fitness Instructor';
+         contact1.Batch_Code__c=batch.id;//contact1.Recommedation_Status__c='Processed';
          insert contact1;
         
         PageReference pageRef = Page.RecommendationPage;
@@ -382,7 +386,8 @@ public class RecommendationControllerTestCase {
          contact.FirstName='Kurund12';
          contact.LastName='Jalmi';
          Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
-         contact.RecordTypeId=RecordTypeIdContact;
+         contact.RecordTypeId=RecordTypeIdContact;//contact.Recommedation_Status__c='Not Processed';
+        // contact.Batch_Code__c=batch.id;
          insert contact;
          
          batch.Trainer_Name__c=contact.id;
@@ -474,7 +479,7 @@ public class RecommendationControllerTestCase {
          contact1.Profession_2__c=null;
          contact1.Profession_2_Next_steps__c='';
          contact1.Profession_2_Recommendation__c='Fitness Instructor';
-         contact1.Batch_Code__c=batch.id;
+         contact1.Batch_Code__c=batch.id;//contact1.Recommedation_Status__c='Processed';
          insert contact1;
         
         PageReference pageRef = Page.RecommendationPage;
