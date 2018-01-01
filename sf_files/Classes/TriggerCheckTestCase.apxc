@@ -19,27 +19,23 @@ public class TriggerCheckTestCase {
       
         triggerCheck.setVariable(true);
       
-        distict.District_Code__c='11';
-        update  distict;     
+       update  distict;     
         City_Master__c city=new City_Master__c();
         city.District__c=distict.id;
         city.Name='Kalyan'; 
-        city.City_Code__c='2';
-        insert city;
+       insert city;
        
         triggerCheck.setVariable(true);
        
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
         ward.Name='West';
-        ward.Ward_Code__c='1';
         insert ward;
        
         triggerCheck.setVariable(true);
        
         Account account=new Account();
         account.Name='Shreeram School';
-        account.School_Code__c='1';
         account.State__c=state.id;
         account.Ward__c=ward.id;
         account.City__c=city.id;
@@ -68,7 +64,7 @@ public class TriggerCheckTestCase {
         batch.Number_of_students_facilitated__c=0.0;
         insert batch;
         triggerCheck.setVariable(true);
-       
+    
         Batch__c batchData=[select name,Batch_Number__c from Batch__c];
         System.assert(batchData.Batch_Number__c != null);
      }
@@ -99,7 +95,7 @@ public class TriggerCheckTestCase {
         City_Master__c city=new City_Master__c();
         city.District__c=distict.id;
         city.Name='Kalyan'; 
-        city.City_Code__c='2';
+      //  city.City_Code__c='2';
         insert city;
        
         triggerCheck.setVariable(true);
@@ -108,7 +104,7 @@ public class TriggerCheckTestCase {
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
         ward.Name='West';
-        ward.Ward_Code__c='1';
+      //  ward.Ward_Code__c='1';
         insert ward;
        
         triggerCheck.setVariable(true);
@@ -116,7 +112,7 @@ public class TriggerCheckTestCase {
        
         Account account=new Account();
         account.Name='Shreeram School';
-        account.School_Code__c='1';
+       // account.School_Code__c='1';
         account.State__c=state.id;
         account.Ward__c=ward.id;
         account.City__c=city.id;
@@ -194,7 +190,7 @@ public class TriggerCheckTestCase {
         City_Master__c city=new City_Master__c();
         city.District__c=distict.id;
         city.Name='Kalyan'; 
-        city.City_Code__c='2';
+      //  city.City_Code__c='2';
         insert city;
        
         triggerCheck.setVariable(true);
@@ -203,7 +199,7 @@ public class TriggerCheckTestCase {
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
         ward.Name='West';
-        ward.Ward_Code__c='1';
+     //   ward.Ward_Code__c='1';
         insert ward;
        
         triggerCheck.setVariable(true);
@@ -211,7 +207,7 @@ public class TriggerCheckTestCase {
        
         Account account=new Account();
         account.Name='Shreeram School';
-        account.School_Code__c='1';
+       // account.School_Code__c='1';
         account.State__c=state.id;
         account.Ward__c=ward.id;
         account.City__c=city.id;
@@ -281,7 +277,7 @@ public class TriggerCheckTestCase {
         City_Master__c city=new City_Master__c();
         city.District__c=distict.id;
         city.Name='Kalyan'; 
-        city.City_Code__c='2';
+       // city.City_Code__c='2';
         insert city;
        
         triggerCheck.setVariable(true);
@@ -290,7 +286,7 @@ public class TriggerCheckTestCase {
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
         ward.Name='West';
-        ward.Ward_Code__c='1';
+       // ward.Ward_Code__c='1';
         insert ward;
        
         triggerCheck.setVariable(true);
@@ -298,7 +294,7 @@ public class TriggerCheckTestCase {
        
         Account account=new Account();
         account.Name='Shreeram School';
-        account.School_Code__c='1';
+      //  account.School_Code__c='1';
         account.State__c=state.id;
         account.Ward__c=ward.id;
         account.City__c=city.id;
@@ -327,7 +323,7 @@ public class TriggerCheckTestCase {
          
         Account account2=new Account();
         account2.Name='Shreeram School124';
-        account2.School_Code__c='1';
+       // account2.School_Code__c='1';
         account2.State__c=state.id;
         account2.Ward__c=ward.id;
         account2.City__c=city.id;
@@ -379,7 +375,7 @@ public class TriggerCheckTestCase {
         City_Master__c city=new City_Master__c();
         city.District__c=distict.id;
         city.Name='Kalyan'; 
-        city.City_Code__c='2';
+      //  city.City_Code__c='2';
         insert city;
        
         triggerCheck.setVariable(true);
@@ -388,7 +384,7 @@ public class TriggerCheckTestCase {
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
         ward.Name='West';
-        ward.Ward_Code__c='1';
+      //  ward.Ward_Code__c='1';
         insert ward;
        
         triggerCheck.setVariable(true);
@@ -396,7 +392,7 @@ public class TriggerCheckTestCase {
        
         Account account=new Account();
         account.Name='Shreeram School';
-        account.School_Code__c='1';
+     // account.School_Code__c='1';
         account.State__c=state.id;
         account.Ward__c=ward.id;
         account.City__c=city.id;

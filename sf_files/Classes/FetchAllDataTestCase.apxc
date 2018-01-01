@@ -1,14 +1,13 @@
-/* Getting the code coverage for FetchAllData Class  */
 @isTest(seealldata=false)
 Private class FetchAllDataTestCase {
      @isTest static void test(){
-        FetchAllData fetchData=new FetchAllData();
-        Contact contact=new Contact();
-        contact.FirstName='Kurund';
-        contact.LastName='Jalmi';
-        contact.Import_Status__c ='Import Completed';
-        contact.Status__c ='Not Processed';
-        insert contact;
+         FetchAllData fetchData=new FetchAllData();
+         Contact contact=new Contact();
+         contact.FirstName='Kurund';
+         contact.LastName='Jalmi';
+         contact.Import_Status__c ='Import Completed';
+         contact.Status__c ='Not Processed';
+         insert contact;
          
         TriggerCheck triggerCheck =new TriggerCheck();
         State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
@@ -43,8 +42,8 @@ Private class FetchAllDataTestCase {
         account.RecordTypeId=RecordTypeIdAccount;
         insert account;
          
-        List<Contact> con= fetchData.getAllData('Contact');
-        System.assertEquals(con.size(), 1);
+         List<Contact> con= fetchData.getAllData('Contact');
+         System.assertEquals(con.size(), 1);
          
      }
 }

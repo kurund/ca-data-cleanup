@@ -18,24 +18,24 @@ public class CareerAwareTestCase {
         City_Master__c city=new City_Master__c();
         city.District__c=distict.id;
         city.Name='Kalyan'; 
-        city.City_Code__c='2';
+       // city.City_Code__c='2';
         insert city;
        
         triggerCheck.setVariable(true);
-        triggerCheck.calculateCityCode(city.id);
+        //triggerCheck.calculateCityCode(city.id);
       
         Ward_Master__c ward=new Ward_Master__c();
         ward.City__c=city.id;
         ward.Name='West';
-        ward.Ward_Code__c='1';
+       // ward.Ward_Code__c='1';
         insert ward;
        
         triggerCheck.setVariable(true);
-        triggerCheck.calculateWardCode(ward.id);
+      //  triggerCheck.calculateWardCode(ward.id);
        
         Account account=new Account();
         account.Name='Shreeram School';
-        account.School_Code__c='1';
+      //  account.School_Code__c='1';
         account.State__c=state.id;
         account.Ward__c=ward.id;
         account.City__c=city.id;
@@ -45,7 +45,7 @@ public class CareerAwareTestCase {
         insert account;
        
         triggerCheck.setVariable(true);
-        triggerCheck.calculateSchoolCode(account.id);
+       // triggerCheck.calculateSchoolCode(account.id);
         
         batch.School_Name__c=account.id;
         

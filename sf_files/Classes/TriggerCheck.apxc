@@ -1,395 +1,369 @@
 /* Created and updated batch number,created code for city,state,district and school.
-   Calculating number of students pending counselling, calculating the number of students in school.
-   Calculating number of students facilitated for every batch*/
+Calculating number of students pending counselling, calculating the number of students in school.
+Calculating number of students facilitated for every batch*/
 global class TriggerCheck {
-          global static boolean run = true;
-          global static boolean contactRun = true;
-          global static boolean schoolCheck = true;
-          global static boolean batchCheck = true;
-   global static boolean runOnce() {
-         if (run) {
-           run = false;
-           return true;
-         }else {
-            return run;}
-         } 
+    global static boolean run = true;
+    global static boolean contactRun = true;
+    global static boolean schoolCheck = true;
+    global static boolean batchCheck = true;
+    global static boolean runOnce() {
+        if (run) {
+            run = false;
+            return true;
+        } 
+        else {
+            return run;
+        }
+    }  
     global static boolean runOnceContact() {
-         if (contactRun) {
+        if (contactRun) {
             contactRun = false;
             run = true;
             return true;
-           } else {
-            return contactRun; }
-         }
+        } 
+        else {
+            return contactRun;
+        }
+    }
     
     public void createBatchNumber(Id id) {
-        String batchNumber = '';
+        String batchNumber = '',state='',stateCode ='',districtCode='',cityCode = '',wardCode = '',schoolCode ='',batchCodeString ='',district,city,ward,school,batcheString,numberOfStudentPending;
+        Integer batchCode,pending,facilitated=0,counselled=0,numberOfStudents = 0;
+        List<Batch__c> batchData = new List<Batch__c>();
+        List<Account> schoolData = new List<Account>();
+        List<State_Govt_Body_Level__c> stateData = new List<State_Govt_Body_Level__c>();
+        List<District_Master__c> districtData = new List<District_Master__c>();
+        List<City_Master__c> cityData = new List<City_Master__c>();
+        List<Ward_Master__c> wardData =  new List<Ward_Master__c>();
+        List<Batch__c> batchList = new List<Batch__c>();
+        List<Account> schoolData1 = new List<Account>();
+        List<Batch__c> batchListNew = new List<Batch__c>();
+        Batch__c batch;
+        Account account;
+        State_Govt_Body_Level__c stateGOV;
+        District_Master__c districtMaster;
+        City_Master__c cityMaster;
+        Ward_Master__c wardMaster;
+        Account school1;
         
         /* get school name from batch*/
-        List<Batch__c> batchData = [select School_Name__c,Batch_Number__c,Number_of_students_facilitated__c,Number_of_students_counselled__c from Batch__c where Batch__c.id=: + id ];
-        Batch__c batch=batchData.get(0);
-     
-        /* get School detail based on school name*/
-        List<Account> schoolData = [select State__c, City__c, Ward__c , District__c,School_Code__c from Account where Account.Id=: + batch.School_Name__c];
-        Account account=schoolData.get(0);
+        batchData = [select School_Name__c,Number_of_students_facilitated__c,Number_of_students_counselled__c from Batch__c where Batch__c.id=: + id ];
+        batch = batchData.get(0);
         
-        /* get State Code based on State id*/
-        List<State_Govt_Body_Level__c> stateData = [select State_Code__c from State_Govt_Body_Level__c where State_Govt_Body_Level__c.Id=: + account.State__c];
-        State_Govt_Body_Level__c stateGOV = stateData.get(0);
-        String state='';String stateCode ='';
-        if(stateGOV.State_Code__c !=null){
-        state=stateGOV.State_Code__c;
-        if (state.length() == 1) {
-            stateCode += '0'+ state;
-        } else if (state.length() == 2) {
-            stateCode += state;}
+        /* get School detail based on school name*/
+        schoolData = [select State__c, City__c, Ward__c , District__c from Account where Account.Id=: + batch.School_Name__c];
+        account=schoolData.get(0);
+   
+        /* count of batch from Batch__c*/
+        batchList = [select School_Name__c from Batch__c Where School_Name__c =: batch.School_Name__c];
+        if (batchList.size()>0){
+            batchCode = batchList.size();
+            batcheString = String.valueOf(batchCode);
+            if (batcheString.length() == 1){
+                batchCodeString += '0'+batcheString;
+            } 
+            else if (batcheString.length() == 2){
+                batchCodeString += batcheString;
+            } 
+            else{
+                batchCodeString += batcheString.substring(batcheString.length()-2, batcheString.length());} 
         }
-        /* get District Code based on District id*/
-        List<District_Master__c> districtData = [select District_Code__c from District_Master__c where District_Master__c.Id=: + account.District__c];
-        District_Master__c districtMaster=districtData.get(0); 
-        String district; String districtCode='';
-        if(districtMaster.District_Code__c!=null){
-        district=districtMaster.District_Code__c;
-        if (district.length() == 1) {
-            districtCode +='0'+ district;
-        } else if (district.length() == 2) {
-            districtCode += district;}
+        
+        /* calculating Number of students pending counselling */
+        
+        if (batch.Number_of_students_facilitated__c != null){
+            facilitated=Integer.valueOf(batch.Number_of_students_facilitated__c);
         }
-        /* get City Code based on City id*/
-        List<City_Master__c> cityData = [select City_Code__c from City_Master__c where City_Master__c.Id=: + account.City__c];
-        City_Master__c cityMaster=cityData.get(0);
-        String cityCode = '';String city;
-        if(cityMaster.City_Code__c!=null){
-        city = cityMaster.City_Code__c;
-        if (city.length() == 1) {
-            cityCode +='0'+ city;
-        } else if (city.length() == 2) {
-            cityCode += city;}
+        if (batch.Number_of_students_counselled__c != null){
+            counselled=Integer.valueOf(batch.Number_of_students_counselled__c);
         }
-       /* get Ward Code based on ward  id*/
-        List<Ward_Master__c> wardData = [select Ward_Code__c from Ward_Master__c where Ward_Master__c.Id=: + account.Ward__c];
-        Ward_Master__c wardMaster = wardData.get(0); 
-         String ward;String wardCode = '';
-        if(wardMaster.Ward_Code__c!=null){
-        ward = wardMaster.Ward_Code__c;
-        if (ward.length() == 1) {
-            wardCode += '0'+ ward;
-        } else if(ward.length() == 2) {
-            wardCode += ward; }
-        }
-       /* get School Code based school details*/
-        String school; String schoolCode ='';
-        if(account.School_Code__c!=null){
-        school = account.School_Code__c;
-        if (school.length() == 1) {
-            schoolCode +='0'+school;
-        } else if(school.length() == 2) {
-            schoolCode += school;
-        } else {
-            schoolCode += school.substring(school.length()-2, school.length());} 
-        }
-       /* count of batch from Batch__c*/
-        List<Batch__c> batchList = [select School_Name__c from Batch__c Where School_Name__c =: batch.School_Name__c];
-        String batcheString; String batchCodeString ='';
-        if(batchList.size()>0){
-        Integer batchCode = batchList.size();
-        batcheString = String.valueOf(batchCode);
-        if (batcheString.length() == 1){
-            batchCodeString += '0'+batcheString;
-        } else if(batcheString.length() == 2){
-            batchCodeString += batcheString;
-        } else{
-            batchCodeString += batcheString.substring(batcheString.length()-2, batcheString.length());} 
-        }
-        /* create batch number based on state,district,city,ward and school code*/
-        if(batch.Batch_Number__c != null && schoolCheck == false){
-        batchNumber += stateCode + districtCode + cityCode + wardCode + schoolCode + batchCodeString;
-        batch.Batch_Number__c = batchNumber;
-       }else if(batch.Batch_Number__c == null){
-        batchNumber += stateCode + districtCode + cityCode + wardCode + schoolCode + batchCodeString;
-        batch.Batch_Number__c = batchNumber;
-       }
-       /* calculating Number of students pending counselling */
-        Integer facilitated=0;
-        Integer counselled=0;
-        if(batch.Number_of_students_facilitated__c != null){
-        facilitated=Integer.valueOf(batch.Number_of_students_facilitated__c);
-       }
-        if(batch.Number_of_students_counselled__c != null){
-        counselled=Integer.valueOf(batch.Number_of_students_counselled__c);
-        }
-        Integer pending = facilitated - counselled;
-        String numberOfStudentPending=String.valueOf(pending);
+        pending = facilitated - counselled;
+        numberOfStudentPending=String.valueOf(pending);
         batch.Number_of_students_pending_counselling__c=numberOfStudentPending;
         update batch;
         
         /* Calculation for number of students in school*/
         
-        List<Account> schoolData1 = [select name, Number_of_students__c  from Account where Account.Id=: batch.School_Name__c];
-        Account school1=schoolData1.get(0);
-        List<Batch__c> batchListNew = [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  batch.School_Name__c ];
-        Integer numberOfStudents = 0;
-        for(Integer i=0;i < batchListNew.size();i++) {   
+        schoolData1 = [select name, Number_of_students__c  from Account where Account.Id=: batch.School_Name__c];
+        school1=schoolData1.get(0);
+        batchListNew= [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  batch.School_Name__c ];
+        
+        for (Integer i=0;i < batchListNew.size();i++) {   
             Batch__c batchNew= batchListNew.get(i);
-            if(batchNew.Number_of_students_facilitated__c != null){
-              numberOfStudents = numberOfStudents + Integer.valueOf(batchNew.Number_of_students_facilitated__c);
-            }else{
+            if (batchNew.Number_of_students_facilitated__c != null){
+                numberOfStudents = numberOfStudents + Integer.valueOf(batchNew.Number_of_students_facilitated__c);
+            }
+            else {
                 numberOfStudents = numberOfStudents + 0; }
         }
         school1.Number_of_students__c= String.valueOf(numberOfStudents);
         update school1;
         
-  }
+    }
     
     public  void calculateNumberOfBatches(Id id) {
+        String donarName,trainerName;
+        Integer count,countTrainer; 
+        List<Batch__c> batchData = new List<Batch__c> ();
+        List<Batch__c> batchList = new List<Batch__c> ();
+        List<Batch__c> batchListTrainer = new List<Batch__c> ();
+        List<Contact> trainerData = new List<Contact> ();
+        List<Account> donarData = new List<Account> ();
+        Batch__c batch;
+        Account donar;
+        Contact trainer;
         /* get Donar name   */
-        List<Batch__c> batchData = [select Donor_Name__c,Trainer_Name__c from Batch__c where Batch__c.id=: + id];
-        if(batchData.size()>0)
-        {
-        Batch__c batch = batchData.get(0);
-        String donarName = batch.Donor_Name__c;
-        String trainerName = batch.Trainer_Name__c;
-        
-        /* get List of batches based on donar name*/
-        List<Batch__c> batchList = [select id from Batch__c where Batch__c.Donor_Name__c=: + batch.Donor_Name__c];
-        Integer count = batchList.size();
-        
-        /* get List of batches based on Trainer name*/
-        List<Batch__c> batchListTrainer = [select id from Batch__c where Batch__c.Trainer_Name__c=: + batch.Trainer_Name__c];
-        Integer countTrainer = batchListTrainer.size();
+        batchData = [select Donor_Name__c,Trainer_Name__c from Batch__c where Batch__c.id=: + id];
+        if (batchData.size()>0) {
+            batch= batchData.get(0);
+            donarName = batch.Donor_Name__c;
+            trainerName = batch.Trainer_Name__c;
+            
+            /* get List of batches based on donar name*/
+            batchList = [select id from Batch__c where Batch__c.Donor_Name__c=: + batch.Donor_Name__c];
+            count = batchList.size();
+            
+            /* get List of batches based on Trainer name*/
+            batchListTrainer = [select id from Batch__c where Batch__c.Trainer_Name__c=: + batch.Trainer_Name__c];
+            countTrainer = batchListTrainer.size();
             
             
-        /* get data of donar from account object*/
-        if(donarName!=null){
-        List<Account> donarData = [select id,Number_of_batches_allocated__c from Account where Account.id=: + donarName];
-        Account donar = donarData.get(0);
-        if (count == 0) {
-            donar.Number_of_batches_funded__c = 0;
-        } else {
-            donar.Number_of_batches_funded__c = count;}   
-        if(donar.Number_of_batches_allocated__c ==null){
-            donar.Number_of_batches_allocated__c = 0;
-        }
-        donar.Number_of_batches_pending__c = donar.Number_of_batches_allocated__c - count;
-         update donar;
-        }
-       
-          /* get data of Trainer from contact object*/    
-          if(trainerName!=null){
-          List<Contact> trainerData = [select id,Number_Of_Batches__c from Contact where Contact.id=: + trainerName];
-          Contact trainer = trainerData.get(0);
-        if (countTrainer == 0) {
-            trainer.Number_Of_Batches__c = 0;
-        } else {
-            trainer.Number_Of_Batches__c = countTrainer;}   
-          if(trainer.Number_Of_Batches__c ==null){
-                trainer.Number_Of_Batches__c = 0;
-        }
-           update trainer;
-        }
+            /* get data of donar from account object*/
+            if (donarName!=null) {
+                donarData = [select id,Number_of_batches_allocated__c from Account where Account.id=: + donarName];
+                donar= donarData.get(0);
+                if (count == 0) {
+                    donar.Number_of_batches_funded__c = 0;
+                } 
+                else {
+                    donar.Number_of_batches_funded__c = count;}   
+                if (donar.Number_of_batches_allocated__c ==null) {
+                    donar.Number_of_batches_allocated__c = 0;
+                }
+                donar.Number_of_batches_pending__c = donar.Number_of_batches_allocated__c - count;
+                update donar;
+            }
+            
+            /* get data of Trainer from contact object*/    
+            if (trainerName!=null) {
+                trainerData = [select id,Number_Of_Batches__c from Contact where Contact.id=: + trainerName];
+                trainer = trainerData.get(0);
+                if (countTrainer == 0) {
+                    trainer.Number_Of_Batches__c = 0;
+                } 
+                else {
+                    trainer.Number_Of_Batches__c = countTrainer;}   
+                if (trainer.Number_Of_Batches__c ==null) {
+                    trainer.Number_Of_Batches__c = 0;
+                }
+                update trainer;
+            } 
         }
     }
     
-     public  void calculateNumberOfBatches(Id id,Id donorId) {
-          if(donorId == null){
-          List<Batch__c> donarId = [select Donor_Name__c from Batch__c where Batch__c.id=: + id];
-          donorId = donarId.get(0).Donor_Name__c;
-         }
-            
-        List<Account> donorDataNew = [select id,Number_of_batches_allocated__c,Number_of_batches_pending__c from Account where Account.id=: + donorId];
-        Account donorNew = donorDataNew.get(0);
+    public  void calculateNumberOfBatches(Id id,Id donorId) {
+        Integer countold,count;
+        String donorName;
+        List<Batch__c> donarId = new List<Batch__c>();
+        List<Account> donorDataNew = new List<Account>();
+        List<Batch__c> batchListNew = new List<Batch__c>();
+        List<Batch__c> batchData = new List<Batch__c>();
+        List<Batch__c> batchList = new List<Batch__c>();
+        List<Account> donorData = new List<Account>();
+        Account donorNew;
+        Batch__c batch;
+        Account donor;
+        
+        if (donorId == null) {
+            donarId = [select Donor_Name__c from Batch__c where Batch__c.id=: + id];
+            donorId = donarId.get(0).Donor_Name__c;
+        }
+        
+        donorDataNew = [select id,Number_of_batches_allocated__c,Number_of_batches_pending__c from Account where Account.id=: + donorId];
+        donorNew = donorDataNew.get(0);
         donorNew.Number_of_batches_pending__c =  donorNew.Number_of_batches_pending__c + 1;
-         
-        List<Batch__c> batchListNew = [select id from Batch__c where Batch__c.Donor_Name__c=: + donorId];
-        Integer countold = batchListNew.size();
-         
+        
+        batchListNew = [select id from Batch__c where Batch__c.Donor_Name__c=: + donorId];
+        countold = batchListNew.size();
+        
         donorNew.Number_of_batches_funded__c = countold;
+        update donorNew;
         
-         
-         update donorNew;
         /* get Donar name   */
-        List<Batch__c> batchData = [select Donor_Name__c from Batch__c where Batch__c.id=: + id];
-        if(batchData.size()>0)
-        {
-        Batch__c batch = batchData.get(0);
-        String donorName = batch.Donor_Name__c;
-        
-        /* get List of batches based on donar name*/
-        List<Batch__c> batchList = [select id from Batch__c where Batch__c.Donor_Name__c=: + batch.Donor_Name__c];
-        Integer count = batchList.size();
-        
-        /* get data of donar from account object*/
-        if(donorName!=null)
-        {
-        List<Account> donorData = [select id,Number_of_batches_allocated__c from Account where Account.id=: + donorName];
-        Account donor = donorData.get(0);
-        if (count == 0) {
-            donor.Number_of_batches_funded__c = 0;
-        } else {
-            donor.Number_of_batches_funded__c = count;
-        }
-          donor.Number_of_batches_pending__c = donor.Number_of_batches_allocated__c - count;
-          update donor;
-        }
-       
+        batchData = [select Donor_Name__c from Batch__c where Batch__c.id=: + id];
+        if (batchData.size()>0) {
+            batch = batchData.get(0);
+            donorName = batch.Donor_Name__c;
+            
+            /* get List of batches based on donar name*/
+            batchList = [select id from Batch__c where Batch__c.Donor_Name__c=: + batch.Donor_Name__c];
+            count = batchList.size();
+            
+            /* get data of donar from account object*/
+            if (donorName!=null) {
+                donorData = [select id,Number_of_batches_allocated__c from Account where Account.id=: + donorName];
+                donor = donorData.get(0);
+                if (count == 0) {
+                    donor.Number_of_batches_funded__c = 0;
+                }
+                else {
+                    donor.Number_of_batches_funded__c = count;
+                }
+                donor.Number_of_batches_pending__c = donor.Number_of_batches_allocated__c - count;
+                update donor;
+            }
         }
     }
-    
-    public void calculateDisrtictCode(Id id) {
-        /* get State code based from District_Master__c*/
-        LIST<District_Master__c> stateList = [select State__c from District_Master__c where District_Master__c.id=: +id];
-        District_Master__c state=stateList.get(0);
-        
-        /* get name of district which as same state code */
-        LIST<District_Master__c> districtList = [select name from District_Master__c where State__c=: state.State__c];
-        
-        /* upade District_Code__c and District_Master__c*/
-        state.District_Code__c = String.valueOf(districtList.size()); 
-        update state;
-    }
-    
-    public void calculateCityCode(Id id) {
-        /* get District code based from City_Master__c*/
-        LIST<City_Master__c> districtList = [select District__c from City_Master__c where City_Master__c.id=: +id];
-        City_Master__c city = districtList.get(0);
-        
-        /* get name of City which as same District code */
-        LIST<City_Master__c> cityList = [select name from City_Master__c where District__c=: city.District__c];
-        
-        /* upade City_Code__c and City_Master__c*/
-        city.City_Code__c = String.valueOf(cityList.size());  
-         update city;
-    }
-    
-    public void calculateWardCode(Id id) {
-        /* get City code based from Ward_Master__c*/
-        LIST<Ward_Master__c> cityList = [select City__c from Ward_Master__c where Ward_Master__c.id=: +id];
-        
-        Ward_Master__c ward = cityList.get(0);
-        
-        /* get name of City which as same District code */
-        LIST<Ward_Master__c> wardList = [select name from Ward_Master__c where city__c=: ward.city__c];
-        
-        /* upade Ward_Code__c and Ward_Master__c*/
-        ward.Ward_Code__c = String.valueOf(wardList.size());
-        update ward;
-    }
-    
-    public void calculateSchoolCode(Id id) {
-        /* get State,District,City,ward  based from Account*/
-        List<Account> schoolData = [select School_Code__c,State__c, City__c, Ward__c , District__c from Account where Account.Id=: + id];
-        
-        Account school = schoolData.get(0);
-        /* get name of City which as same District code */
-        LIST<Account> schoolList = [select name from Account where State__c=: school.State__c and District__c=: school.District__c and City__c=:school.City__c and Ward__c=:school.Ward__c];
- 		/* upade Ward_Code__c and Ward_Master__c*/
-        school.School_Code__c = String.valueOf(schoolList.size());
-        
-       update school;
-       
-    }
-    
-    
+
     public void updateNumberOfStudentFacilitated(Id id) {
-          List<Contact> studentList = [select name,Batch_Code__c from Contact where Contact.Id=: + id];
-          Contact student=studentList.get(0);
-          
-          List<Contact> batchList = [select Batch_Code__c from Contact where Contact.Batch_Code__c=: student.Batch_Code__c];
+        List<Contact> studentList = new List<Contact>();
+        List<Contact> batchList = new List<Contact>();
+        List<Batch__c> batchListNew =new List<Batch__c>();
+        Contact student;
+        Batch__c batch;
         
-          List<Batch__c> batchListNew = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: student.Batch_Code__c ];
-          Batch__c batch =new Batch__c();
-          if(batchListNew.size() > 0){
-          batch =batchListNew.get(0);
-          batch.Number_of_students_facilitated__c = batchList.size();
-          update batch;
-          }
-          
+        /* getting student details based on id*/
+        studentList = [select name,Batch_Code__c from Contact where Contact.Id=: + id];
+        student = studentList.get(0);
+        
+        /* getting List of student based on batch id*/
+        batchList = [select Batch_Code__c from Contact where Contact.Batch_Code__c=: student.Batch_Code__c];
+        
+        /* getting batch details  based on batch id*/
+        batchListNew = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: student.Batch_Code__c ];
+        batch=new Batch__c();
+        
+        /* calculating Number of students facilitated*/
+        if (batchListNew.size() > 0){
+            batch =batchListNew.get(0);
+            batch.Number_of_students_facilitated__c = batchList.size();
+            update batch;
+        }
     }
     
-      public void updateNumberOfStudentFacilitated(Id id,Id batchId) {
-          if(batchId == null){
-          List<Contact> batchIdNew = [select Batch_Code__c from Contact where Contact.id=: + id];
-          batchId = batchIdNew.get(0).Batch_Code__c;
-         }
-          List<Batch__c> batchListNew1 = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: + batchId ];
-          Batch__c batch1 =batchListNew1.get(0);
-          if(batch1.Number_of_students_facilitated__c!=null){
-          batch1.Number_of_students_facilitated__c = batch1.Number_of_students_facilitated__c - 1 ;
-          }else{
-             batch1.Number_of_students_facilitated__c = 0; 
-          }
-          List<Contact> studentList = [select name,Batch_Code__c from Contact where Contact.Id=: + id];
-          Contact student=studentList.get(0);
-          
-          List<Contact> batchList = [select Batch_Code__c from Contact where Contact.Batch_Code__c=: student.Batch_Code__c];
+    public void updateNumberOfStudentFacilitated(Id id,Id batchId) {
+        /* when user change batch from student*/
+        List<Contact> trainer = new List<Contact>();
+        List<Batch__c> batchListNew1 = new List<Batch__c>();
+        List<Contact> studentList = new List<Contact>();
+        List<Contact> StudentbatchList = new List<Contact>();
+        List<Batch__c> batchList = new List<Batch__c>();
+        Batch__c batchNew;
+        Contact student;
+        Batch__c batch;
         
-          List<Batch__c> batchListNew = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: student.Batch_Code__c ];
-          Batch__c batch =batchListNew.get(0);
-          batch.Number_of_students_facilitated__c = batchList.size();
-          update batch1;
-          TriggerCheck.run=true;
-          update batch;
-      }
+        /* checking whether the trainer is assigned or not */
+        if (batchId == null) {
+            trainer = [select Batch_Code__c from Contact where Contact.id=: + id];
+            batchId = trainer.get(0).Batch_Code__c;
+        }
+        
+        /* getting batch deatils based on batch id and calculate number of  students facilitated */
+        batchListNew1 = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: + batchId ];
+        batchNew =batchListNew1.get(0);
+        if (batchNew.Number_of_students_facilitated__c!=null) {
+            batchNew.Number_of_students_facilitated__c = batchNew.Number_of_students_facilitated__c - 1 ;
+        }
+        else {
+            batchNew.Number_of_students_facilitated__c = 0; 
+        }
+        
+        /* getting student details based on id*/
+        studentList = [select name,Batch_Code__c from Contact where Contact.Id=: + id];
+        student= studentList.get(0);
+        
+        /* getting list of contact based on batch id*/
+        StudentbatchList = [select Batch_Code__c from Contact where Contact.Batch_Code__c=: student.Batch_Code__c];
+        
+        batchList = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: student.Batch_Code__c ];
+        batch = batchList.get(0);
+        batch.Number_of_students_facilitated__c = StudentbatchList.size();
+        update batchNew;
+        
+        TriggerCheck.run=true;
+        update batch;
+    }
     
-     public void calculateNumberOfStudent(Id id,Id schoolId) {
-        List<Account> schoolData1 = [select name, Number_of_students__c  from Account where Account.Id=: schoolId];
-        Account school1=schoolData1.get(0);
-        List<Batch__c> batchListNew = [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  schoolId];
-        Integer numberOfStudents = 0;
-        for(Integer i=0;i < batchListNew.size();i++) {   
+    public void calculateNumberOfStudent(Id id,Id schoolId) {
+        /* when user change School from batch */
+        Integer numberOfStudents = 0,numberOfStudentsNew = 0;
+        List<Account> schoolData = new List<Account>();
+        List<Batch__c> batchListNew = new List<Batch__c>();
+        List<Account> schoolDataNew = new List<Account>();
+        List<Batch__c> batchList =  new List<Batch__c>();
+        Account school;
+        Account schoolNew;
+        
+        schoolData = [select name, Number_of_students__c  from Account where Account.Id=: schoolId];
+        school = schoolData.get(0);
+        
+        batchListNew= [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  schoolId];
+        
+        for (Integer i=0;i < batchListNew.size();i++) {   
             Batch__c batchNew= batchListNew.get(i);
-            if(batchNew.Number_of_students_facilitated__c != null){
-              numberOfStudents = numberOfStudents + Integer.valueOf(batchNew.Number_of_students_facilitated__c);
-            }else{
+            if (batchNew.Number_of_students_facilitated__c != null) {
+                numberOfStudents = numberOfStudents + Integer.valueOf(batchNew.Number_of_students_facilitated__c);
+            }
+            else {
                 numberOfStudents = numberOfStudents + 0; 
             }
         }
-         
-        school1.Number_of_students__c= String.valueOf(numberOfStudents);
-        update school1;
-         
-        List<Account> schoolDataNew = [select name, Number_of_students__c  from Account where Account.Id=: id];
-        Account schoolNew=schoolDataNew.get(0);
-         List<Batch__c> batchListNew1 = [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  id];
-        Integer numberOfStudentsNew = 0;
-        for(Integer i=0;i < batchListNew1.size();i++){   
-            Batch__c batchNew1= batchListNew1.get(i);
-            if(batchNew1.Number_of_students_facilitated__c != null){
-              numberOfStudentsNew = numberOfStudentsNew + Integer.valueOf(batchNew1.Number_of_students_facilitated__c);
-            }else{
+        
+        school.Number_of_students__c= String.valueOf(numberOfStudents);
+        update school;
+        
+        schoolDataNew = [select name, Number_of_students__c  from Account where Account.Id=: id];
+        schoolNew=schoolDataNew.get(0);
+        
+        batchList = [select name,Number_of_students_facilitated__c from Batch__c where Batch__c.School_Name__c=:  id];
+        
+        for (Integer i=0;i < batchList.size();i++) {   
+            Batch__c batchNew1= batchList.get(i);
+            if (batchNew1.Number_of_students_facilitated__c != null) {
+                numberOfStudentsNew = numberOfStudentsNew + Integer.valueOf(batchNew1.Number_of_students_facilitated__c);
+            } 
+            else {
                 numberOfStudentsNew = numberOfStudentsNew + 0; 
             }
         }
-         
+        
         schoolNew.Number_of_students__c= String.valueOf(numberOfStudentsNew);
-        update school1;
+        update school;
         TriggerCheck.run=true;
         update schoolNew;
-
-
     }
     
     public void updateNumberOfStudent(Id id) {
-       List<Contact> studentList = [select name,Batch_Code__c from Contact where Contact.Id=: + id];
-          Contact student=studentList.get(0);
-          List<Contact> batchList = [select Batch_Code__c from Contact where Contact.Batch_Code__c=: student.Batch_Code__c];
-          List<Batch__c> batchListNew = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: student.Batch_Code__c ];
-          Batch__c batch =batchListNew.get(0);
-          batch.Number_of_students_facilitated__c = batchList.size()-1;
-          update batch;
+        /* updating number of studnets facilitated in batch when user change batch in student*/
+        List<Contact> studentList = new List<Contact>(); 
+        List<Contact> batchList = new List<Contact>(); 
+        List<Batch__c> batchListNew = new List<Batch__c>(); 
+        Contact student;
+        Batch__c batch;
+        studentList = [select name,Batch_Code__c from Contact where Contact.Id=: + id];
+        student =studentList.get(0);
+        batchList = [select Batch_Code__c from Contact where Contact.Batch_Code__c=: student.Batch_Code__c];
+        batchListNew = [select Number_of_students_facilitated__c from Batch__c where Batch__c.Id =: student.Batch_Code__c ];
+        batch = batchListNew.get(0);
+        batch.Number_of_students_facilitated__c = batchList.size()-1;
+        update batch;
     }
     
-       public void updateDonor(Id id) {
-           List<Account> donarData = [select id,Number_of_batches_allocated__c,Number_of_batches_funded__c from Account where Account.id=: + id];
-           Account donar = donarData.get(0);
-           if(donar.Number_of_batches_funded__c != null){
-                if(donar.Number_of_batches_allocated__c ==null){
-                    donar.Number_of_batches_allocated__c=0;
-              }
-           donar.Number_of_batches_pending__c = donar.Number_of_batches_allocated__c - donar.Number_of_batches_funded__c ;
-           update donar;
-           }
+    public void updateDonor(Id id) {
+        /* updating number of batches allocated in donor after changing batch*/
+        List<Account> donarData =new List<Account>();
+        Account donar;
+        donarData = [select id,Number_of_batches_allocated__c,Number_of_batches_funded__c from Account where Account.id=: + id];
+        donar= donarData.get(0);
+        if (donar.Number_of_batches_funded__c != null) {
+            if (donar.Number_of_batches_allocated__c ==null) {
+                donar.Number_of_batches_allocated__c=0;
+            }
+            donar.Number_of_batches_pending__c = donar.Number_of_batches_allocated__c - donar.Number_of_batches_funded__c ;
+            update donar;  
         }
+    }
+    
     public  void setVariable(Boolean s) {
         run = s;
     }

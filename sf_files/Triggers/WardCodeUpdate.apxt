@@ -1,7 +1,0 @@
-/* set ward code after creating new ward*/
-trigger WardCodeUpdate on Ward_Master__c (After insert) {
-         for (Ward_Master__c ward:trigger.new) {
-            TriggerCheck triggerCheck = New TriggerCheck();
-            triggerCheck.calculateWardCode(ward.id);
-        }
-}
