@@ -1,0 +1,10 @@
+/* set school code after creating new school*/
+trigger SchoolCodeUpdate on Account (After insert) {
+    for (Account school:trigger.new){
+       Id RecordTypeIdDonor = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();   
+        if (school.RecordTypeId == RecordTypeIdDonor){
+            TriggerCheck triggerCheck = New TriggerCheck();
+            triggerCheck.updateDonor(school.id);
+        }
+    }   
+ }
