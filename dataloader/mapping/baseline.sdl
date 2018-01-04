@@ -20,5 +20,5 @@ Student\ Occupation=Student_s_Occupation__c
 Age=Age__c
 First\ Name=FirstName
 BARCODE=Bar_Code__c
-Batch\ Code=Batch_Number__c
+Batch\ Code=Batch_Code__c
 Father\ Occupation=Father_Occupation__c
