@@ -35,6 +35,7 @@ public class IARPRecommendationTestCase2 {
          
         triggerCheck.setVariable(true);
         Batch__c batch=new Batch__c();
+         
         State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
         state.Name='SSC';
         insert state;
@@ -61,9 +62,11 @@ public class IARPRecommendationTestCase2 {
         Account account=new Account();
         account.Name='Shreeram School';
         account.State__c=state.id;
+         account.District__c=distict.id;
+         account.City__c=city.id;
         account.Ward__c=ward.id;
-        account.City__c=city.id;
-        account.District__c=distict.id;
+        
+        
         Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
         account.RecordTypeId=RecordTypeIdAccount;
         insert account;
@@ -75,16 +78,18 @@ public class IARPRecommendationTestCase2 {
          contact.FirstName='Kurund12';
          contact.LastName='Jalmi';
          Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
-         contact.RecordTypeId=RecordTypeIdContact;contact.Recommedation_Status__c='Not Processed';
+         contact.RecordTypeId=RecordTypeIdContact;
+         contact.Recommedation_Status__c='Not Processed';
          insert contact;
+         
           triggerCheck.setVariable(true);
          batch.Trainer_Name__c=contact.id;
         
          Account account1=new Account();
          account1.Name='Shreeram School Donor';
          Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
-          account1.RecordTypeId=RecordTypeIdAccount1;
-          account1.Number_of_batches_funded__c=100;
+         account1.RecordTypeId=RecordTypeIdAccount1;
+         account1.Number_of_batches_funded__c=100;
          account1.Number_of_batches_allocated__c=50;
          account1.Number_of_batches_pending__c=1.0;
          insert account1;
@@ -1706,6 +1711,278 @@ public class IARPRecommendationTestCase2 {
         
         Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',
                                       RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Aspiration_3__c=iarp.id,Import_Status__c='Import Completed',Recommedation_Status__c='Not Processed',Status__c='Processed');
+        insert contact1;
+        
+        
+        Test.StartTest();
+        IARPRecommendation iar=new IARPRecommendation();
+        iar.mainMethod();
+        Test.StopTest();
+    }
+    
+    public static testMethod void test46(){
+        TriggerCheck triggerCheck=new TriggerCheck();
+        // Test.StartTest();
+        Recommendation__c recomm=new Recommendation__c();
+        recomm.Profession__c='Curriculum Developer';
+        recomm.Recommendation__c='Curriculum Developer';
+        recomm.Location__c='Pune';
+        recomm.Next_Steps__c='To be a Curriculum Developer - Students must complete graduation in any Commerce.';
+        recomm.Next_Steps_Marathi__c='Curriculum Developer(Marathi)';
+        recomm.Next_Steps_Hindi__c='Curriculum Developer(Hindi)';
+        insert recomm;
+        
+        Recommendation__c recomm1=new Recommendation__c();
+        recomm1.Profession__c='Nurse';
+        recomm1.Recommendation__c='Nurse';
+        recomm1.Location__c='Pune';
+        recomm1.Next_Steps__c='To be a Nurse - Students must complete graduation in any Commerce.';
+        recomm1.Next_Steps_Marathi__c='Nurse(Marathi)';
+        recomm1.Next_Steps_Hindi__c='Nurse(Hindi)';
+        insert recomm1;
+        
+        Recommendation__c recomm2=new Recommendation__c();
+        recomm2.Profession__c='Actor';
+        recomm2.Recommendation__c='Actor';
+        recomm2.Location__c='Pune';
+        recomm2.Next_Steps__c='To be a Actor - Students must complete graduation in any Commerce.';
+        recomm2.Next_Steps_Marathi__c='Actor(Marathi)';
+        recomm2.Next_Steps_Hindi__c='Actor(Hindi)';
+        insert recomm2;
+        
+        triggerCheck.setVariable(true);
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        triggerCheck.setVariable(true);
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        triggerCheck.setVariable(true);
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Pune'; 
+        insert city;
+        
+        triggerCheck.setVariable(true);
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Kalyan';
+        insert ward;
+        
+        triggerCheck.setVariable(true);
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        triggerCheck.setVariable(true);
+        
+        batch.School_Name__c=account.id;
+        triggerCheck.setVariable(true);
+        Contact contact=new Contact();
+        contact.FirstName='Kurund12';
+        contact.LastName='Jalmi';
+        Id RecordTypeIdContact = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Trainer').getRecordTypeId();
+        contact.RecordTypeId=RecordTypeIdContact;
+        insert contact;
+        
+        triggerCheck.setVariable(true);
+        batch.Trainer_Name__c=contact.id;
+        
+        Account account1=new Account();
+        account1.Name='Shreeram School Donor';
+        Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+        account1.RecordTypeId=RecordTypeIdAccount1;
+        account1.Number_of_batches_funded__c=100;
+        account1.Number_of_batches_allocated__c=50;
+        account1.Number_of_batches_pending__c=1.0;
+        insert account1;
+        
+        triggerCheck.setVariable(true);
+        batch.Donor_Name__c=account1.id;
+        batch.Name='Batch 7';
+        batch.Grade__c='12th';
+        batch.Preferred_Language__c='Marathi';
+        insert batch;
+        
+        triggerCheck.setVariable(true);
+        IARP_Master__c iarp3 = new IARP_Master__c(Industry_links__c='Beauty and Wellness + Hospitality and Tourism',Sector__c='Education',Aspiration_1__c='Curriculum Developer',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Curriculum Developer',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No');
+        IARP_Master__c iarp4 = new IARP_Master__c(Industry_links__c='Education + Public Services',Sector__c='Medical',Aspiration_1__c='Nurse',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Nurse',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='No',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');         
+        IARP_Master__c iarp5 = new IARP_Master__c(Industry_links__c='Sector Agnostic and Trade',Sector__c='Design',Aspiration_1__c='Actor',Interest_1__c='Conventional',Interest_2__c='Investigative',Personality_1__c='Practical',Personality_2__c='Practical',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Actor',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Reality_1__c='yes',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='yes',Reality_6__c='Yes',Reality_7__c='Yes',Reality_8__c='Yes');         
+        insert iarp3;insert iarp4;insert iarp5;
+        Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        /* interest math and aptitude is  mathch and  aspiration is not given----  IAP==2*/
+        Contact contact6 =new Contact(FirstName='Kurund6',LastName='Jalmi6',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Conventional',Interest_2__c='Investigative',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Thoughtful',
+                                      RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Thoughtful',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='Yes',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Import_Status__c='Import Completed',Recommedation_Status__c='Not Processed',Status__c='Processed');
+        insert contact6;  
+        Test.StartTest();
+        IARPRecommendation iar=new IARPRecommendation();
+        iar.mainMethod();
+        Test.StopTest();
+    }
+    
+    public static testMethod void test47() {
+        TriggerCheck triggerCheck=new TriggerCheck();
+        // Test.StartTest();
+        List<Recommendation__c> recomm=new List<Recommendation__c>{
+            new Recommendation__c(Profession__c='Accountant',Recommendation__c='Accountant',Location__c='Mumbai',Next_Steps__c='To be a Accountant - Students must complete graduation in any Commerce.',Next_Steps_Marathi__c='Accountant(Marathi)',Next_Steps_Hindi__c='Accountant(Hindi)'),
+                new Recommendation__c(Profession__c='Actor',Recommendation__c='Actor',Location__c='Mumbai',Next_Steps__c='To be a Actor - Students must complete graduation in any stream.',Next_Steps_Marathi__c='Actor(Marathi)',Next_Steps_Hindi__c='Actor(Hindi)')};
+                    insert recomm;
+        
+      List<IARP_Master__c> question =new List<IARP_Master__c>{
+            //new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+            new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Interior Designer',Interest_1__c='Artistic',Interest_2__c='Realist',Aptitude_1__c='Creative',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Impulsive',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Interior Designer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Photographer',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Thoughtful',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Photographer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                //new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Graphic Designer',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fashion/Jewellery Designer/ Tailoring',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Spatial',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Bold',Name='Fashion/Jewellery Designer/ Tailoring',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                // new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Tattoo Artist',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Spatial',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Bold',Name='Tattoo Artist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='yes',Reality_4__c='Yes',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Design',Aspiration_1__c='Fine Artist',Interest_1__c='Artistic',Interest_2__c='Realist',Aptitude_1__c='Spatial',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Bold',Name='Fine Artist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Performing Arts',Aspiration_1__c='Dancer/Choreographer',Interest_1__c='Artistic',Interest_2__c='Realist',Aptitude_1__c='Creative',Aptitude_2__c='Spatial',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Dancer/Choreographer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Performing Arts',Aspiration_1__c='Actor',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Creative',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Actor',Reality_1__c='Yes',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Performing Arts',Aspiration_1__c='Musician/ Singer',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Musician/ Singer',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Media & Communication',Aspiration_1__c='Writer',Interest_1__c='Artistic',Interest_2__c='Investigative',Aptitude_1__c='Creative',Aptitude_2__c='Verbal',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Idealist',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Writer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Media & Communication',Aspiration_1__c='Journalist',Interest_1__c='Enterprising',Interest_2__c='Artistic',Aptitude_1__c='Creative',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Structured',Personality_3__c='Idealist',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Bold',Name='Journalist',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Media & Communication',Aspiration_1__c='Event Planning',Interest_1__c='Realist',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Event Planning',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Media & Communication',Aspiration_1__c='Advertising & PR',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Creative',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Bold',Name='Advertising & PR',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Media & Communication',Aspiration_1__c='Film Making',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Film Making',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Beauty and Wellness',Aspiration_1__c='Beautician/Hair Dresser/ Make-up Artist',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Beautician/Hair Dresser/ Make-up Artist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Beauty and Wellness',Aspiration_1__c='Cosmetologist',Interest_1__c='Artistic',Interest_2__c='Social',Aptitude_1__c='Creative',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Cosmetologist',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Beauty and Wellness',Aspiration_1__c='Masseur/ist',Interest_1__c='Realist',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Masseur/ist',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Curriculum Developer',Interest_1__c='Conventional',Interest_2__c='Enterprising',Aptitude_1__c='Creative',Aptitude_2__c='Verbal',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Curriculum Developer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Education',Aspiration_1__c='Teacher',Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Teacher',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Education',Aspiration_1__c='School Administrators',Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Numerical',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='School Administrators',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sports and Fitness',Aspiration_1__c='Fitness Instructor',Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Abstract',Aptitude_2__c='Verbal',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Idealist',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Fitness Instructor',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sports and Fitness',Aspiration_1__c='Sports Coach',Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Idealist',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Sports Coach',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sports and Fitness',Aspiration_1__c='Sports management',Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Abstract',Aptitude_2__c='Verbal',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Any',Name='Sports management',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sports and Fitness',Aspiration_1__c='Sports person',Interest_1__c='Realist',Interest_2__c='Enterprising',Aptitude_1__c='Spatial',Aptitude_2__c='Creative',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Idealist',Personality_4__c='Any',Personality_5__c='Impulsive',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Sports person',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sports and Fitness',Aspiration_1__c='Nutritionist/Dietician',Interest_1__c='Social',Interest_2__c='Investigative',Aptitude_1__c='Verbal',Aptitude_2__c='Creative',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Nutritionist/Dietician',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Finance',Aspiration_1__c='Insurance Agent',Interest_1__c='Conventional',Interest_2__c='Investigative',Aptitude_1__c='Numerical',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Any',Name='Insurance Agent',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Finance',Aspiration_1__c='Accountant',Interest_1__c='Conventional',Interest_2__c='Investigative',Aptitude_1__c='Numerical',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Accountant',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Finance',Aspiration_1__c='Stock Broker',Interest_1__c='Enterprising',Interest_2__c='Investigative',Aptitude_1__c='Numerical',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Stock Broker',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Finance',Aspiration_1__c='Bank teller',Interest_1__c='Conventional',Interest_2__c='Social',Aptitude_1__c='Numerical',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='any',Name='Bank teller',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Hospitality and Tourism',Aspiration_1__c='Hotel services',Interest_1__c='Enterprising',Interest_2__c='Social',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Hotel services',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Hospitality and Tourism',Aspiration_1__c='Chef',Interest_1__c='Enterprising',Interest_2__c='Artistic',Aptitude_1__c='Abstract',Aptitude_2__c='Creative',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Chef',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Hospitality and Tourism',Aspiration_1__c='Pilot',Interest_1__c='Realist',Interest_2__c='Investigative',Aptitude_1__c='Spatial',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Pilot',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Hospitality and Tourism',Aspiration_1__c='Flight attendent',Interest_1__c='Enterprising',Interest_2__c='Social',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Any',Name='Flight attendent',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Hospitality and Tourism',Aspiration_1__c='Travel Agent',Interest_1__c='Enterprising',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Extrovert',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Any',Name='Travel Agent',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Hospitality and Tourism',Aspiration_1__c='Tour Guide',Interest_1__c='Enterprising',Interest_2__c='Social',Aptitude_1__c='Mechanical',Aptitude_2__c='Verbal',Personality_1__c='Extrovert',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Tour Guide',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Doctor',Interest_1__c='Investigative',Interest_2__c='Enterprising',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Bold',Name='Doctor',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Pharmacist',Interest_1__c='Investigative',Interest_2__c='Conventional',Aptitude_1__c='Abstract',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Any',Name='Pharmacist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Medical Laboratory Technician',Interest_1__c='Investigative',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='any',Name='Medical Laboratory Technician',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Physiotherapist',Interest_1__c='Investigative',Interest_2__c='Realist',Aptitude_1__c='Mechanical',Aptitude_2__c='Verbal',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Physiotherapist',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Dentist',Interest_1__c='Investigative',Interest_2__c='Artistic',Aptitude_1__c='Mechanical',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Dentist',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Medical Researcher',Interest_1__c='Investigative',Interest_2__c='Realist',Aptitude_1__c='Numerical',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Medical Researcher',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Paramedical',Interest_1__c='Investigative',Interest_2__c='Realist',Aptitude_1__c='Mechanical',Aptitude_2__c='Verbal',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Paramedical',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Psychologist',Interest_1__c='Social',Interest_2__c='Investigative',Aptitude_1__c='Abstract',Aptitude_2__c='Verbal',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Any',Name='Psychologist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Medical',Aspiration_1__c='Nurse',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Verbal',Personality_1__c='Extrovert',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Any',Name='Nurse',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Public Services',Aspiration_1__c='Politician',Interest_1__c='Enterprising',Interest_2__c='Social',Aptitude_1__c='Verbal',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Politician',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Public Services',Aspiration_1__c='Firefighter',Interest_1__c='Realist',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Impulsive',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Bold',Name='Firefighter',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Public Services',Aspiration_1__c='Social Worker',Interest_1__c='Investigative',Interest_2__c='Realist',Aptitude_1__c='Creative',Aptitude_2__c='Verbal',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Social Worker',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Public Services',Aspiration_1__c='Police Service',Interest_1__c='Social',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Bold',Name='Police Service',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Public Services',Aspiration_1__c='Armed forces',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Armed forces',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Public Services',Aspiration_1__c='Naval services',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Naval services',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Public Services',Aspiration_1__c='Government Services',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Numerical',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Government Services',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Engineering and Technologies',Aspiration_1__c='Computer Operator',Interest_1__c='Conventional',Interest_2__c='Realist',Aptitude_1__c='Mechanical',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Computer Operator',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Engineering and Technologies',Aspiration_1__c='Computer engineer',Interest_1__c='Investigative',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Computer engineer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Engineering and Technologies',Aspiration_1__c='Mechanical engineer',Interest_1__c='Investigative',Interest_2__c='Realist',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Mechanical engineer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Engineering and Technologies',Aspiration_1__c='Electrical engineer',Interest_1__c='Investigative',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Electrical Engineer',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Engineering and Technologies',Aspiration_1__c='Civil Engineer',Interest_1__c='Investigative',Interest_2__c='Realist',Aptitude_1__c='Spatial',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Civil Engineer',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sector Agnostic Roles',Aspiration_1__c='Office Administration',Interest_1__c='Enterprising',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Numerical',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Bold',Name='Office Administration',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sector Agnostic Roles',Aspiration_1__c='Sales',Interest_1__c='Conventional',Interest_2__c='Social',Aptitude_1__c='Verbal',Aptitude_2__c='Creative',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Bold',Name='Sales',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sector Agnostic Roles',Aspiration_1__c='Marketing',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Creative',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Any',Name='Marketing',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sector Agnostic Roles',Aspiration_1__c='Customer Services',Interest_1__c='Social',Interest_2__c='Conventional',Aptitude_1__c='Verbal',Aptitude_2__c='Abstract',Personality_1__c='Extrovert',Personality_2__c='Structured',Personality_3__c='Practical',Personality_4__c='Realist',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Talkative',Personality_8__c='Any',Name='Customer services',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Sector Agnostic Roles',Aspiration_1__c='Business/Entrepreneur',Interest_1__c='Enterprising',Interest_2__c='Artistic',Aptitude_1__c='Verbal',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Adventourous',Personality_7__c='Any',Personality_8__c='Bold',Name='Business/Entrepreneur',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Professions',Aspiration_1__c='Lawyer/Judge',Interest_1__c='Enterprising',Interest_2__c='Investigative',Aptitude_1__c='Verbal',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Idealist',Personality_4__c='Realist',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Bold',Name='Lawyer/Judge',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Trades',Aspiration_1__c='Plumber',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Plumber',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Trades',Aspiration_1__c='Electrician',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Electrician',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Trades',Aspiration_1__c='Mechanic',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Mechanic',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Trades',Aspiration_1__c='Carpenter',Interest_1__c='Realist',Interest_2__c='Conventional',Aptitude_1__c='Mechanical',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Structured',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Conservative',Personality_7__c='Any',Personality_8__c='Any',Name='Carpenter',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Enviromental and Biological Sciences',Aspiration_1__c='Agricultularist',Interest_1__c='Realist',Interest_2__c='Investigative',Aptitude_1__c='Mechanical',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Any',Personality_4__c='Dreamer',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Agricultularist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Enviromental and Biological Sciences',Aspiration_1__c='Enviromentalist',Interest_1__c='Realist',Interest_2__c='Investigative',Aptitude_1__c='Creative',Aptitude_2__c='Abstract',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Enviromentalist',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Enviromental and Biological Sciences',Aspiration_1__c='Fishery',Interest_1__c='Enterprising',Interest_2__c='Realist',Aptitude_1__c='Abstract',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fishery',Reality_1__c='Any',Reality_2__c='Yes',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any'),
+                new IARP_Master__c(Sector__c='Enviromental and Biological Sciences',Aspiration_1__c='Horticulturalist',Interest_1__c='Enterprising',Interest_2__c='Social',Aptitude_1__c='Spatial',Aptitude_2__c='Mechanical',Personality_1__c='Any',Personality_2__c='Creative',Personality_3__c='Any',Personality_4__c='Dreamer',Personality_5__c='Thoughtful',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Horticulturalist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any')
+                };
+                    //insert question;
+       
+        Batch__c batch=new Batch__c();
+        State_Govt_Body_Level__c state=new State_Govt_Body_Level__c();
+        state.Name='SSC';
+        insert state;
+        
+        triggerCheck.setVariable(true);
+        District_Master__c distict=new District_Master__c();
+        distict.State__c=state.id;
+        distict.Name='Pune';
+        insert distict;
+        
+        triggerCheck.setVariable(true);
+        City_Master__c city =new City_Master__c();
+        city.District__c=distict.id;
+        city.Name='Mumbai'; 
+        insert city;
+        
+        triggerCheck.setVariable(true);
+        Ward_Master__c ward=new Ward_Master__c();
+        ward.City__c=city.id;
+        ward.Name='West Mumbai';
+        insert ward;
+        
+        triggerCheck.setVariable(true);
+        Account account=new Account();
+        account.Name='Shreeram School';
+        account.State__c=state.id;
+        account.Ward__c=ward.id;
+        account.City__c=city.id;
+        account.District__c=distict.id;
+        Id RecordTypeIdAccount = Schema.SObjectType.Account.getRecordTypeInfosByName().get('School').getRecordTypeId();
+        account.RecordTypeId=RecordTypeIdAccount;
+        insert account;
+        
+        triggerCheck.setVariable(true);
+        batch.School_Name__c=account.id;
+        Account account1=new Account();
+        account1.Name='Shreeram School Donor';
+        Id RecordTypeIdAccount1 = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Donor').getRecordTypeId();
+        account1.RecordTypeId=RecordTypeIdAccount1;  
+        account1.Number_of_batches_funded__c=100;
+        account1.Number_of_batches_allocated__c=50;
+        account1.Number_of_batches_pending__c=1.0;
+        insert account1;
+        
+        triggerCheck.setVariable(true);
+        batch.Donor_Name__c=account1.id;
+        batch.Name='Batch 7';
+        batch.Grade__c='12th';
+        batch.Preferred_Language__c='Hindi';
+        insert batch;
+        triggerCheck.setVariable(true);
+        
+        Id RecordTypeIdStudent = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Student').getRecordTypeId();
+        
+        IARP_Master__c iarp1 = new IARP_Master__c(Industry_links__c='Beauty and Wellness + Hospitality and Tourism',Sector__c='Education',Aspiration_1__c='Graphic Designer',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Bold',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Graphic Designer',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Any',Reality_4__c='Any',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any');
+        insert iarp1;
+        
+        IARP_Master__c iarp = new IARP_Master__c(Industry_links__c='Sector Agnostic and Trade',Sector__c='Design',Aspiration_1__c='Architect',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Spatial',Personality_1__c='Any',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Architect',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any');
+        insert iarp;
+        
+        IARP_Master__c iarp3 = new IARP_Master__c(Industry_links__c='Finance + Engineering and Technologies',Sector__c='Education',Aspiration_1__c='Fine Artist',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Spatial',Personality_1__c='Bold',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Fine Artist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='Yes',Reality_4__c='yes',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any');
+        insert iarp3;
+        
+        IARP_Master__c iarp2 = new IARP_Master__c(Industry_links__c='Finance + Engineering and Technologies',Sector__c='Education',Aspiration_1__c='Tattoo Artist',Interest_1__c='Artistic',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Abstract',Personality_1__c='Bold',Personality_2__c='Any',Personality_3__c='Any',Personality_4__c='Any',Personality_5__c='Any',Personality_6__c='Any',Personality_7__c='Any',Personality_8__c='Any',Name='Tattoo Artist',Reality_1__c='Any',Reality_2__c='Any',Reality_3__c='yes',Reality_4__c='Yes',Reality_5__c='Any',Reality_6__c='Any',Reality_7__c='Any',Reality_8__c='Any');
+        insert iarp2;
+        
+        Contact contact1 =new Contact(FirstName='Kurund1',LastName='Jalmi1',Batch_Code__c=batch.id,Current_Aspiration__c='SELF EMPLOYED',Age__c=25,Interest_1__c='Social',Interest_2__c='Enterprising',Aptitude_1__c='Verbal',Aptitude_2__c='Mechanical',Personality_1__c='Extrovert',Personality_2__c='Any',
+                                      RecordTypeId=RecordTypeIdStudent,Personality_3__c='Practical',Personality_4__c='Any',Personality_5__c='Thoughtful',Personality_6__c='Conservative',Personality_7__c='Talkative',Personality_8__c='Bold',Reality_1__c='No',Reality_2__c='No',Reality_3__c='No',Reality_4__c='No',Reality_5__c='No',Reality_6__c='No',Reality_7__c='No',Reality_8__c='No',Aspiration_1__c=iarp.id,Aspiration_2__c=iarp1.id,Import_Status__c='Import Completed',Recommedation_Status__c='Not Processed',Status__c='Processed');
         insert contact1;
         
         

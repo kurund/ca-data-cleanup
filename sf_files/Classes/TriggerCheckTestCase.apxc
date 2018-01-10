@@ -65,8 +65,8 @@ public class TriggerCheckTestCase {
         insert batch;
         triggerCheck.setVariable(true);
     
-        Batch__c batchData=[select name,Batch_Number__c from Batch__c];
-        System.assert(batchData.Batch_Number__c != null);
+       Batch__c batchData=[select name,Batch_Number__c from Batch__c];
+       System.assert(batchData.Batch_Number__c != null);
      }
     
       public static testMethod void test1(){

@@ -169,7 +169,7 @@ Public class StudentIARPInformation implements Schedulable{
             aptitute.put('Spatial', count);
             correctAns.clear();
             ans.clear();
-            
+            System.debug('Spatial ' + count);
             /* aptitute 'Numerical'  */
             correctAns =[select Category__c,Name from Question_Bank__c where Category1__c ='Numerical' order by Name];
             ans.add(con.X21_46__c);
@@ -192,7 +192,7 @@ Public class StudentIARPInformation implements Schedulable{
             aptitute.put('Numerical', count);
             correctAns.clear();
             ans.clear();
-            
+            System.debug('Numerical ' + count);
             /* aptitute 'Abstract Reasoning'  */
             correctAns =[select Category__c from Question_Bank__c where Category1__c =:'Abstract'];
             ans.add(con.Abstract_Reasoning__c);
@@ -279,6 +279,8 @@ Public class StudentIARPInformation implements Schedulable{
             correctAns.clear();
             ans.clear();
             System.debug('Verbal '+ count);
+            System.debug('aptitute '+ aptitute);
+            
             List<String> highestApti = new List<String>();
             for (Integer k = 0; k < 2; k++) {
                 String maxKey = aptitute.isEmpty() ? null : new List<String>(aptitute.keyset())[0];

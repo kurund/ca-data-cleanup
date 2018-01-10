@@ -328,6 +328,7 @@ public class IARPRecommendationTestCase {
         City_Master__c city =new City_Master__c();
         city.District__c=distict.id;
         city.Name='Mumbai'; 
+        city.Recommendation_Location__c='Mumbai';
         insert city;
         
         // triggerCheck.setVariable(true);
@@ -551,6 +552,7 @@ public class IARPRecommendationTestCase {
         City_Master__c city =new City_Master__c();
         city.District__c=distict.id;
         city.Name='Mumbai'; 
+        city.Recommendation_Location__c='Mumbai';
         insert city;
         
         // triggerCheck.setVariable(true);
@@ -770,6 +772,7 @@ public class IARPRecommendationTestCase {
         City_Master__c city =new City_Master__c();
         city.District__c=distict.id;
         city.Name='Mumbai'; 
+        city.Recommendation_Location__c='Mumbai';
         insert city;
         
         triggerCheck.setVariable(true);
@@ -986,6 +989,7 @@ public class IARPRecommendationTestCase {
         City_Master__c city =new City_Master__c();
         city.District__c=distict.id;
         city.Name='Mumbai'; 
+        city.Recommendation_Location__c='Mumbai';
         insert city;
         
         triggerCheck.setVariable(true); 
@@ -4117,8 +4121,16 @@ public class IARPRecommendationTestCase {
         IARPRecommendationTestCase2 irp=new IARPRecommendationTestCase2();
         IARPRecommendationTestCase2.test44();        
     }
-       public static testMethod void test45() {
+    public static testMethod void test45() {
         IARPRecommendationTestCase2 irp=new IARPRecommendationTestCase2();
         IARPRecommendationTestCase2.test45();        
+    }
+    public static testMethod void test46() {
+        IARPRecommendationTestCase2 irp=new IARPRecommendationTestCase2();
+        IARPRecommendationTestCase2.test46();        
+    }
+     public static testMethod void test47() {
+        IARPRecommendationTestCase2 irp=new IARPRecommendationTestCase2();
+        IARPRecommendationTestCase2.test47();        
     }
     }

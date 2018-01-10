@@ -36,7 +36,7 @@ public class RecommendationController {
     
     public RecommendationController(ApexPages.StandardController controller){
         this.con = (Contact)controller.getRecord();
-        /* removed Batch_Number__c from this for logic change*/
+        /* removed Batch_Number__c from this for logic change  */
         List<Contact> contactList = [select id,name,Current_Aspiration__c,Age__c,Batch_Code__c,Interest_1__c,Interest_2__c,
                                      Batch_Code__r.Batch_Number__c,Batch_Code__r.Grade__c,Batch_Code__r.Trainer_Name__r.Name,
                                      Batch_Code__r.School_Name__r.Name,
@@ -47,7 +47,7 @@ public class RecommendationController {
                                      from Contact where Contact.id=: + con.id];
         contact = contactList.get(0);
         
-        /* get batch name based on batch id 
+        /* get batch name based on batch id */
         if (contact.Batch_Code__c != null){  
             batchNumber = contact.Batch_Code__r.Batch_Number__c;
             grade = contact.Batch_Code__r.Grade__c;

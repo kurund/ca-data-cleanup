@@ -17,7 +17,7 @@ global class IARPRecommendation implements Schedulable {
     static List<Account> conDataLocation=new List<Account>();
     static List<City_Master__c> conDataCityName=new List<City_Master__c>();
     static List<Account> accData= [select City__c,School_Name__c from Account];
-    static List<City_Master__c> cityData= [select name from City_Master__c] ;
+    static List<City_Master__c> cityData= [select name,Recommendation_Location__c from City_Master__c] ;
     
     static List<Batch__c> batchData= [select Preferred_Language__c,School_Name__c from Batch__c ];
     static List<IARP_Master__c> commonSectorlist=new List<IARP_Master__c>();
@@ -52,7 +52,7 @@ global class IARPRecommendation implements Schedulable {
             
 			if(conDataCityName.size()>0) // check City present or not
             {
-            	Location=conDataCityName.get(0).name;
+            	Location=conDataCityName.get(0).Recommendation_Location__c; // Now used Recommendation_Location__c(from picklist)instead of name
             }
             
             if (conData.get(i).Interest_1__c !=null || conData.get(i).Interest_2__c!=null || conData.get(i).Aptitude_1__c!=null || conData.get(i).Aptitude_2__c!=null || conData.get(i).Reality_1__c!=null || conData.get(i).Reality_2__c!=null || conData.get(i).Reality_3__c!=null || conData.get(i).Reality_4__c!=null || conData.get(i).Reality_5__c!=null || conData.get(i).Reality_6__c!=null || conData.get(i).Reality_7__c!=null || conData.get(i).Reality_8__c!=null){
@@ -269,6 +269,10 @@ global class IARPRecommendation implements Schedulable {
             
         }
         IAR=listtocheck;
+        System.debug('FilteredwithPrevMethod '+ FilteredwithPrevMethod.size());
+         for (Integer k=0;k<=FilteredwithPrevMethod.size()-1;k++){
+              System.debug('FilteredwithPrevMethod '+ FilteredwithPrevMethod.get(k).name);
+         }
         if (FilteredwithPrevMethod.size()==2)
         {   
             studObj.Profession_1__c=callQuery(FilteredwithPrevMethod.get(0).Name+'').id;
@@ -341,6 +345,7 @@ global class IARPRecommendation implements Schedulable {
                     upsert studObj;setStatus();
                 }
                 else if (EAMatch.size()==1)  {
+                    System.debug('EA Match '+ EAMatch.size());
                     studObj.Profession_1__c=callQuery(EAMatch.get(0).Name+'').id;
                     upsert studObj;
                     for (Integer i=0;i < FilteredwithPrevMethod.size();i++) {
@@ -353,7 +358,7 @@ global class IARPRecommendation implements Schedulable {
                 else {
                     System.debug('thirdMethod 0 match');
                     System.debug('studObj '+studObj.Profession_1__c);
-                   System.debug('FilteredwithPrevMethod '+FilteredwithPrevMethod.size());
+                    System.debug('FilteredwithPrevMethod '+FilteredwithPrevMethod.size());
                     thirdMethod(studObj,'both',FilteredwithPrevMethod);
                 }
                 
@@ -419,11 +424,59 @@ global class IARPRecommendation implements Schedulable {
                             }
                         }
                         if (count==1){
-                            if(FilteredwithPrevMethod.size()>0){
+                            /*if(FilteredwithPrevMethod.size()>0){
                             	studObj.Profession_1__c=callQuery(FilteredwithPrevMethod.get(0).Name+'').id;
                             	studObj.Recommendation_Type__c='Exact Match';
                             	upsert studObj;setStatus();  
-                           }
+                           }*/
+                            
+                            if (FilteredwithPrevMethod.size()>=2){
+                                Double randomNumber = Math.round(Math.random());
+                                Integer arraySize = FilteredwithPrevMethod.size();
+                                Integer randomIndex = (randomNumber *(arraySize-1)).intValue();
+                                Integer countR=2;
+                                for (IARP_Master__c str : FilteredwithPrevMethod){
+                                    if (randomIndex == 0){randomNumber = Math.round(Math.random());
+                                                          arraySize = IAR.size();
+                                                          randomIndex = (randomNumber *(arraySize-1)).intValue();continue;
+                                                         }
+                                    while(countR>0){
+                                        Integer index= randomIndex--;
+                                        if (countR==1){
+                                            if (studObj.Profession_1__c == null) {
+                                                studObj.Profession_1__c=callQuery(FilteredwithPrevMethod.get(index).Name+'').id;
+                                                FilteredwithPrevMethod.remove(index);
+                                            }
+                                        }
+                                        else if (countR==2){
+                                            if (studObj.Profession_2__c == null) {
+                                                studObj.Profession_2__c=callQuery(FilteredwithPrevMethod.get(index).Name+'').id;
+                                                FilteredwithPrevMethod.remove(index);
+                                            }
+                                        }
+                                        countR=countR-1;
+                                    }
+                                    if (countR==0){
+                                        break;
+                                    }
+                                }
+                                studObj.Recommendation_Type__c='Random Match';
+                                List<String> templist = new List<String>();
+                                for (Integer z=0;z<FilteredwithPrevMethod.size();z++){
+                                    if (StudObj.Profession_1__c != FilteredwithPrevMethod.get(z).id)
+                                        templist.add(FilteredwithPrevMethod.get(z).Name);
+                                }
+                                string allstring = string.join(templist,',');
+                                studObj.All_Recommendation__c=allstring;
+                                upsert studObj;
+                                setStatus();
+                            }
+                            else{ // IAR size is 1
+                                studObj.Profession_1__c=callQuery(FilteredwithPrevMethod.get(0).Name+'').id;
+                                studObj.Recommendation_Type__c='Exact Match';
+                                studObj.All_Recommendation__c='';
+                                upsert studObj;setStatus();  
+                            }
                         }     
                     }
                 } 
@@ -496,13 +549,59 @@ global class IARPRecommendation implements Schedulable {
                             }  
                         }
                         if (count==1){
-                            if(IAR.size()>0){
+                            /*if(IAR.size()>0){
                                 studObj.Profession_1__c=callQuery(IAR.get(0).Name+'').id;
                                 studObj.Recommendation_Type__c='Exact Match';
                                 upsert studObj;setStatus();  
+                                }*/
+                            if (IAR.size()>=2){
+                                Double randomNumber = Math.round(Math.random());
+                                Integer arraySize = IAR.size();
+                                Integer randomIndex = (randomNumber *(arraySize-1)).intValue();
+                                Integer countR=2;
+                                for (IARP_Master__c str : IAR){
+                                    if (randomIndex == 0){randomNumber = Math.round(Math.random());
+                                                          arraySize = IAR.size();
+                                                          randomIndex = (randomNumber *(arraySize-1)).intValue();continue;
+                                                         }
+                                    while(countR>0){
+                                        Integer index= randomIndex--;
+                                        if (countR==1){
+                                            if (studObj.Profession_1__c == null) {
+                                                studObj.Profession_1__c=callQuery(IAR.get(index).Name+'').id;
+                                                IAR.remove(index);
+                                            }
+                                        }
+                                        else if (countR==2){
+                                            if (studObj.Profession_2__c == null) {
+                                                studObj.Profession_2__c=callQuery(IAR.get(index).Name+'').id;
+                                                IAR.remove(index);
+                                            }
+                                        }
+                                        countR=countR-1;
+                                    }
+                                    if (countR==0){
+                                        break;
+                                    }
+                                }
+                                studObj.Recommendation_Type__c='Random Match';
+                                List<String> templist = new List<String>();
+                                for (Integer z=0;z<IAR.size();z++){
+                                    if (StudObj.Profession_1__c != IAR.get(z).id)
+                                        templist.add(IAR.get(z).Name);
+                                }
+                                string allstring = string.join(templist,',');
+                                studObj.All_Recommendation__c=allstring;
+                                upsert studObj;
+                                setStatus();
+                            }
+                            else{ // IAR size is 1
+                                studObj.Profession_1__c=callQuery(IAR.get(0).Name+'').id;
+                                studObj.Recommendation_Type__c='Exact Match';
+                                studObj.All_Recommendation__c='';
+                                upsert studObj;setStatus();  
                             }
                         }
-                        
                     }
                 } 
             }
@@ -515,7 +614,7 @@ global class IARPRecommendation implements Schedulable {
         List<IARP_Master__c> EA2=new List<IARP_Master__c>();
         List<IARP_Master__c> EA3=new List<IARP_Master__c>();
         String sector='';
-        System.debug('filterPrevMethod '+ filterPrevMethod.size());
+        System.debug('filterPrevMethod '+ filterPrevMethod);
         for (Integer i=0;i<=IARPMaster.size()-1;i++){ 
             if (studObj.Aspiration_1__c !=null && studObj.Aspiration_1__c == IARPMaster.get(i).id){
                 sector=IARPMaster.get(i).Sector__c;
@@ -603,8 +702,12 @@ global class IARPRecommendation implements Schedulable {
         }else {
             if (EA1.size()==1 || EA1.size()==0){
                 if (EA1.size()==1) {
-                    if (studObj.Profession_1__c == null)
+                    if (studObj.Profession_1__c == null){
                         studObj.Profession_1__c=callQuery(EA1.get(0).Name+'').id;
+                    }
+                    else if (studObj.Profession_1__c != null && studObj.Profession_2__c == null){
+                        studObj.Profession_2__c=callQuery(EA1.get(0).Name+'').id;
+                    }
                 }
                 if (EA2.size()>=2)
                 {
@@ -662,8 +765,12 @@ global class IARPRecommendation implements Schedulable {
                 else {
                     if (EA2.size()==1 || EA2.size()==0){
                         if (EA2.size()==1){
-                            if (studObj.Profession_1__c == null)
+                            if (studObj.Profession_1__c == null) {
                                 studObj.Profession_1__c=callQuery(EA2.get(0).Name+'').id;
+                            }
+                            else if (studObj.Profession_1__c != null && studObj.Profession_2__c == null){
+                            studObj.Profession_2__c=callQuery(EA2.get(0).Name+'').id;
+                      }
                             
                         }
                         if (EA3.size()>=2){
@@ -722,8 +829,12 @@ global class IARPRecommendation implements Schedulable {
                             if (EA3.size()==1 || EA3.size()==0){
                                 if (EA3.size()==1) {
                                     System.debug(studObj.Profession_1__c);
-                                    if (studObj.Profession_1__c == null)
+                                    if (studObj.Profession_1__c == null) {
                                         studObj.Profession_1__c=callQuery(EA3.get(0).Name+'').id;
+                                    }
+                                    else if (studObj.Profession_1__c != null && studObj.Profession_2__c == null){
+                                      studObj.Profession_2__c=callQuery(EA3.get(0).Name+'').id;
+                               }
                                     	upsert studObj;
                                 }
                                 EA1.clear();EA2.clear();EA3.clear();sector='';
@@ -757,6 +868,9 @@ global class IARPRecommendation implements Schedulable {
                                         
                                     }
                                 }
+                                System.debug('Industry Match 1 '+ EA1.size());
+                                System.debug('Industry Match 2 '+ EA2.size());
+                                System.debug('Industry Match 3 '+ EA3.size());
                                 if (EA1.size()>=2)
                                 {
                                     
@@ -812,8 +926,12 @@ global class IARPRecommendation implements Schedulable {
                                     System.debug(''+studObj.Profession_1__c+' '+studObj.Profession_2__c);
                                     if (EA1.size()==1 || EA1.size()==0){
                                         if (EA1.size()==1) {
-                                            if (studObj.Profession_1__c == null)
+                                            if (studObj.Profession_1__c == null) {
                                                 studObj.Profession_1__c=callQuery(EA1.get(0).Name+'').id;
+                                            }
+                                            else if (studObj.Profession_1__c != null && studObj.Profession_2__c == null){
+                                           studObj.Profession_2__c=callQuery(EA1.get(0).Name+'').id;
+                                             }
                                             
                                         }
                                         if (EA2.size()>=2) {
@@ -868,8 +986,12 @@ global class IARPRecommendation implements Schedulable {
                                         else {
                                             if (EA2.size()==1 || EA2.size()==0) {
                                                 if (EA2.size()==1) {
-                                                    if (studObj.Profession_1__c == null)
+                                                    if (studObj.Profession_1__c == null) {
                                                         studObj.Profession_1__c=callQuery(EA2.get(0).Name+'').id;
+                                                    }
+                                                    else if (studObj.Profession_1__c != null && studObj.Profession_2__c == null){
+                                                        studObj.Profession_2__c=callQuery(EA2.get(0).Name+'').id;
+                                                    }
                                                 }
                                                 System.debug(' ea3 '+EA3.size());
                                                 System.debug(''+studObj.Profession_1__c+' '+studObj.Profession_2__c);
@@ -922,13 +1044,18 @@ global class IARPRecommendation implements Schedulable {
                                                     upsert studObj;setStatus(); 
                                                 }
                                                 else {
+                                                   System.debug(' EA3  ' + EA3.size());                                                        
                                                     if (EA3.size()==1 || EA3.size()==0){
                                                         if (EA3.size()==1) {
-                                                            if (studObj.Profession_1__c == null)
+                                                            System.debug('EA3.get(0).Name '+ EA3.get(0).Name);
+                                                            if (studObj.Profession_1__c == null){
                                                                 studObj.Profession_1__c=callQuery(EA3.get(0).Name+'').id;
+                                                             }
+                                                            else if (studObj.Profession_1__c != null && studObj.Profession_2__c == null){
+                                                                studObj.Profession_2__c=callQuery(EA3.get(0).Name+'').id;
+                                                            }
                                                             
                                                         }
-                                                        
                                                         Integer count=1; 
                                                         for (Integer i=0;i<=filterPrevMethod.size()-1;i++){
                                                             for (Integer k=i+1;k<=filterPrevMethod.size()-1;k++){
@@ -947,7 +1074,12 @@ global class IARPRecommendation implements Schedulable {
                                                                     List<String> templist = new List<String>();
                                                                     for (Integer z=0;z<filterPrevMethod.size();z++){
                                                                         if (StudObj.Profession_1__c != filterPrevMethod.get(z).id)
+                                                                        {
+                                                                            if(StudObj.Profession_2__c != filterPrevMethod.get(z).id)
                                                                             templist.add(filterPrevMethod.get(z).Name);
+                                                                        }
+                                                                        
+                                                                          
                                                                     }
                                                                     string allstring = string.join(templist,',');
                                                                     studObj.All_Recommendation__c=allstring;
@@ -960,12 +1092,68 @@ global class IARPRecommendation implements Schedulable {
                                                             }
                                                         }
                                                         if (count==1){
+                                                           /* System.debug('Count is  1');
                                                             if (studObj.Profession_1__c == null && filterPrevMethod.size() > 0){
                                                                 studObj.Profession_1__c=callQuery(filterPrevMethod.get(0).Name+'').id;
                                                             }
                                                             studObj.Recommendation_Type__c='Exact Match';
                                                             studObj.All_Recommendation__c='';
-                                                            upsert studObj;setStatus();        
+                                                            upsert studObj;setStatus(); */
+                                                            
+                                                            //////
+                                                            if (filterPrevMethod.size()>=2){
+                                                                Double randomNumber = Math.round(Math.random());
+                                                                Integer arraySize = filterPrevMethod.size();
+                                                                Integer randomIndex = (randomNumber *(arraySize-1)).intValue();
+                                                                Integer countR=2;
+                                                                for (IARP_Master__c str : filterPrevMethod){
+                                                                    if (randomIndex == 0){randomNumber = Math.round(Math.random());
+                                                                                          arraySize = filterPrevMethod.size();
+                                                                                          randomIndex = (randomNumber *(arraySize-1)).intValue();continue;
+                                                                                         }
+                                                                    while(countR>0){
+                                                                        Integer index= randomIndex--;
+                                                                        if (countR==1){
+                                                                            if (studObj.Profession_1__c == null) {
+                                                                                studObj.Profession_1__c=callQuery(filterPrevMethod.get(index).Name+'').id;
+                                                                                filterPrevMethod.remove(index);
+                                                                            }
+                                                                        }
+                                                                        else if (countR==2){
+                                                                            if (studObj.Profession_2__c == null) {
+                                                                                studObj.Profession_2__c=callQuery(filterPrevMethod.get(index).Name+'').id;
+                                                                                filterPrevMethod.remove(index);
+                                                                            }
+                                                                        }
+                                                                        countR=countR-1;
+                                                                    }
+                                                                    if (countR==0){
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                studObj.Recommendation_Type__c='Random Match';
+                                                                List<String> templist = new List<String>();
+                                                                for (Integer z=0;z<filterPrevMethod.size();z++){
+                                                                    if (StudObj.Profession_1__c != filterPrevMethod.get(z).id)
+                                                                        templist.add(filterPrevMethod.get(z).Name);
+                                                                }
+                                                                string allstring = string.join(templist,',');
+                                                                studObj.All_Recommendation__c=allstring;
+                                                                upsert studObj;
+                                                                setStatus();
+                                                            }
+                                                            else{ // Size is 1
+                                                                if (studObj.Profession_1__c == null && filterPrevMethod.size() > 0){
+                                                                    studObj.Profession_1__c=callQuery(filterPrevMethod.get(0).Name+'').id;
+                                                                }
+                                                                else if(studObj.Profession_1__c != null && studObj.Profession_2__c == null && filterPrevMethod.size() > 0){
+                                                                    studObj.Profession_2__c=callQuery(filterPrevMethod.get(0).Name+'').id;
+                                                                }
+                                                                studObj.Recommendation_Type__c='Exact Match';
+                                                                studObj.All_Recommendation__c='';
+                                                                upsert studObj;setStatus();
+                                                            }
+                                                            //////
                                                         }                                             
                                                     }
                                                 }     

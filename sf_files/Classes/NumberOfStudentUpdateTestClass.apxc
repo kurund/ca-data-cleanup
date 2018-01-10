@@ -164,5 +164,7 @@ public class NumberOfStudentUpdateTestClass {
         Contact condata=[select Batch_Code__c from Contact];
         System.assert(condata.Batch_Code__c == batchNew.id);
         
+        delete con;
+        
    }
 }
