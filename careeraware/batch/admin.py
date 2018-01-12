@@ -407,6 +407,8 @@ class BatchAdmin(admin.ModelAdmin):
     def absentpresent_helper(self, value):
         if value == 'AbsentPresent':
             value = 'Present'
+        elif value == 'PresentAbsent':
+            value = 'Present'
         return value
 
     def yesno_helper(self, value):
