@@ -277,9 +277,9 @@ class BatchAdmin(admin.ModelAdmin):
                                    self.singlevalueonly_helper(row[75])])
 
                 if row[77]:
-                    row_values.append(row[77])
+                    row_values.append(self.validenline_helper(row[77]))
                 else:
-                    row_values.append(row[76])
+                    row_values.append(self.validenline_helper(row[76]))
 
                 row_values.append(self.yesno_helper(row[78]))
 
@@ -424,9 +424,12 @@ class BatchAdmin(admin.ModelAdmin):
             return value
 
     def agreedisagree_helper(self, value):
-        if value == 'AgreeDisagree':
-            value = ''
-        return value
+        if value == 'Agree':
+            return value
+        elif value == 'Disagree':
+            return value
+        else:
+            return ''
 
     def multivalue_formatter(self, value):
         options = list(value)
@@ -452,5 +455,13 @@ class BatchAdmin(admin.ModelAdmin):
                 or value == '12 TH' or value == 'OTHER':
             return value
         return ''
+
+    def validenline_helper(self, value):
+        if not value:
+            return value
+        elif int(value) > 0 and int(value) < 10:
+            return value
+        else:
+            return ''
 
 admin.site.register(Batch, BatchAdmin)
