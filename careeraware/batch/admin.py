@@ -137,7 +137,7 @@ class BatchAdmin(admin.ModelAdmin):
                 dob = ''
                 # make sure date has more than 4 digits
                 year = row[21]
-                if len(year) < 4 or int(year.replace(" ", "")) < 1900:
+                if len(year) != 4 or int(year.replace(" ", "")) < 1900:
                     year = ''
 
                 if row[19] and row[20] and year:
