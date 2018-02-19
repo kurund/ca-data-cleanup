@@ -140,12 +140,20 @@ class BatchAdmin(admin.ModelAdmin):
                 if len(year) != 4 or int(year.replace(" ", "")) < 1900:
                     year = ''
 
-                if row[19] and row[20] and year:
-                    dob = '/' .join([row[20],row[19],year])
+                day = row[19]
+                if len(day) > 2:
+                    day = ''
+
+                month = row[20]
+                if len(month) > 2:
+                    month = ''
+
+                if day and month and year:
+                    dob = '/' .join([month,day,year])
 
                 # set blank value to dob for invalid date
                 try:
-                    datetime.datetime(int(year), int(row[20]), int(row[19]))
+                    datetime.datetime(int(year), int(month), int(day))
                 except ValueError:
                     dob = ''
 
