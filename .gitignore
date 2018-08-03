@@ -1,3 +1,4 @@
+.DS_Store
 .idea
 env
 careeraware/careeraware/settings.py
