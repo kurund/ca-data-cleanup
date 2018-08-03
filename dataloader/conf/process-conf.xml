@@ -1,8 +1,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-    <bean id="Baseline" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
-        <description>Push Baseline data to Salesforce.</description>
-        <property name="name" value="Baseline"/>
+    <bean id="Baseline1" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+        <description>Push Baseline 1 data to Salesforce.</description>
+        <property name="name" value="Baseline1"/>
         <property name="configOverrideMap">
             <map>
                 <entry key="sfdc.timeoutSecs" value="600"/>
@@ -12,8 +12,26 @@
                 <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
                 <entry key="sfdc.entity" value="Contact"/>
                 <entry key="process.operation" value="upsert"/>
-                <entry key="process.mappingFile" value="mapping/baseline.sdl"/>
-                <entry key="dataAccess.name" value="data/baseline.csv"/>
+                <entry key="process.mappingFile" value="mapping/baseline_1.sdl"/>
+                <entry key="dataAccess.name" value="data/baseline_1.csv"/>
+                <entry key="dataAccess.type" value="csvRead"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="Baseline2" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+        <description>Push Baseline 2 data to Salesforce.</description>
+        <property name="name" value="Baseline2"/>
+        <property name="configOverrideMap">
+            <map>
+                <entry key="sfdc.timeoutSecs" value="600"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
+                <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
+                <entry key="sfdc.entity" value="Contact"/>
+                <entry key="process.operation" value="upsert"/>
+                <entry key="process.mappingFile" value="mapping/baseline_2.sdl"/>
+                <entry key="dataAccess.name" value="data/baseline_2.csv"/>
                 <entry key="dataAccess.type" value="csvRead"/>
             </map>
         </property>
@@ -68,6 +86,24 @@
                 <entry key="process.operation" value="upsert"/>
                 <entry key="process.mappingFile" value="mapping/self_awareness.sdl"/>
                 <entry key="dataAccess.name" value="data/self_awareness.csv"/>
+                <entry key="dataAccess.type" value="csvRead"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="CounsellingAndFeedback" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+        <description>Push Self Awareness data to Salesforce.</description>
+        <property name="name" value="CounsellingAndFeedback"/>
+        <property name="configOverrideMap">
+            <map>
+                <entry key="sfdc.timeoutSecs" value="600"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
+                <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
+                <entry key="sfdc.entity" value="Contact"/>
+                <entry key="process.operation" value="upsert"/>
+                <entry key="process.mappingFile" value="mapping/counselling_and_feedback.sdl"/>
+                <entry key="dataAccess.name" value="data/counselling_and_feedback.csv"/>
                 <entry key="dataAccess.type" value="csvRead"/>
             </map>
         </property>

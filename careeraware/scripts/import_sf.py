@@ -3,7 +3,7 @@ from batch.models import Batch
 from django.conf import settings
 
 # get the batch list that needs to be processed
-batches_to_process = Batch.objects.filter(status=5)
+batches_to_process = Batch.objects.filter(status=7)
 
 # if there are batches, then copy the files to process location
 if batches_to_process.exists():
@@ -16,7 +16,7 @@ if batches_to_process.exists():
         if os.path.exists(batch_dir):
             call(["cp", '-R', batch_dir, settings.PROCESS_FILES_PATH])
 
-        # update the batch status to 6 [6 is 'Transformation Completed']
-        batch.status = 6
+        # update the batch status to 8 [8 is 'Transformation Completed']
+        batch.status = 8
         batch.save()
 

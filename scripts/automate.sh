@@ -41,14 +41,18 @@ for d in */ ; do
     # call data loader to push data to SF
     pushd ../../dataloader/ > /dev/null
 
-    bin/process.sh Baseline
-    echo "Baseline done."
+    bin/process.sh Baseline1
+    echo "Baseline 1 done."
+    bin/process.sh Baseline1
+    echo "Baseline 2 done."
     bin/process.sh CareerAwareness
     echo "Career Awareness done."
     bin/process.sh CareerPlanning
     echo "Career Planning done."
     bin/process.sh SelfAwareness
     echo "Self Awareness done."
+    bin/process.sh CounsellingAndFeedback
+    echo "Counselling and Feedback done."
 
     popd > /dev/null
 
