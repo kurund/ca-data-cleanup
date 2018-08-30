@@ -3,7 +3,8 @@ from batch.models import Batch
 from django.conf import settings
 
 # get the batch list that needs to be processed
-batches_to_process = Batch.objects.filter(status=7)
+# Status: self awareness processed - 6, counselling and feedback - 7
+batches_to_process = Batch.objects.filter(status=[6,7])
 
 # if there are batches, then copy the files to process location
 if batches_to_process.exists():

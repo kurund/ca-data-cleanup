@@ -50,7 +50,7 @@ class BatchAdmin(admin.ModelAdmin):
         #process baseline 1 csv
         student_barcodes = self.process_baseline_1(request, obj, batch_name, batch_dir)
 
-        # process baseline 1 csv
+        # process baseline 2 csv
         self.process_baseline_2(request, obj, batch_name, batch_dir, student_barcodes)
 
         # process career awareness csv
@@ -87,9 +87,9 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['BARCODE', 'First Name', 'Last Name', 'DOB', 'Age', 'Contact Number',
+            csv_output.writerow(['BARCODE', 'First Name', 'Last Name', 'Age', 'Contact Number',
                                  'Gender', 'Currently Working', 'Computer Literate', 'Father Occupation',
-                                 'Mother Occupation', 'Contact Type', 'Import Status'])
+                                 'Mother Occupation', 'DOB', 'Contact Type', 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -122,20 +122,29 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values.append(first_name)
                 row_values.append(last_name)
 
+                # process other baseline fields
+                for i in range(3,10):
+                    if i == 6 or i == 7:
+                        row_values.append(self.yesno_helper(row[i]))
+                    elif i == 5:
+                        row_values.append(self.gender_helper(row[i]))
+                    else:
+                        row_values.append(row[i])
+
                 # calculate date of birth
                 dob = ''
-                # make sure date has more than 4 digits
-                year = row[3]
-                if len(year) != 4 or int(year.replace(" ", "")) < 1900:
-                    year = ''
-
-                day = row[4]
+                day = row[10]
                 if len(day) > 2:
                     day = ''
 
-                month = row[5]
+                month = row[11]
                 if len(month) > 2:
                     month = ''
+
+                # make sure date has more than 4 digits
+                year = row[12]
+                if len(year) != 4 or int(year.replace(" ", "")) < 1900:
+                    year = ''
 
                 if day and month and year:
                     dob = '/' .join([month,day,year])
@@ -147,15 +156,6 @@ class BatchAdmin(admin.ModelAdmin):
                     dob = ''
 
                 row_values.append(dob)
-
-                # process other baseline fields
-                for i in range(6,13):
-                    if i == 9 or i == 10:
-                        row_values.append(self.yesno_helper(row[i]))
-                    elif i == 8:
-                        row_values.append(self.gender_helper(row[i]))
-                    else:
-                        row_values.append(row[i])
 
                 row_values.extend(['Student', 'Baseline 1 Imported'])
 
@@ -184,14 +184,15 @@ class BatchAdmin(admin.ModelAdmin):
         # set output file
         output_file = batch_dir + '/baseline_2.csv'
 
-        student_barcodes = []
         with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['BARCODE', 'Current Aspiration', 'Batch Code', 'Current Education',
-                                 'Day-1', 'Day-2', 'Day-3', 'Day-4', 'Day-5', 'Import Status'])
+            csv_output.writerow(['BARCODE', 'Current Aspiration 1', 'Current Aspiration 2',
+                                 'Current Aspiration 3', 'Current Aspiration 4','Batch Code',
+                                 'Current Education', 'Day-1', 'Day-2', 'Day-3', 'Day-4',
+                                 'Day-5', 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -206,12 +207,12 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values = [row[1]]
 
                 # process other baseline fields
-                for i in range(3,10):
-                    if i == 5 or i == 6 or i == 7 or i == 8 or i == 9:
+                for i in range(2,13):
+                    if i >= 8 and i <= 12:
                         # process attendance fields
-                        # row 5 - 9 format using absentpresent_
+                        # row 8 - 12 format using absentpresent_
                         row_values.append(self.absentpresent_helper(row[i]))
-                    elif i == 4:
+                    elif i == 7:
                         row_values.append(self.currenteducation_helper(row[i]))
                     else:
                         row_values.append(row[i])
@@ -248,7 +249,7 @@ class BatchAdmin(admin.ModelAdmin):
             # set custom header
             csv_output.writerow(['BARCODE', 'Industry Agnostic', 'Arts and Design', 'Media and Entertainment',
                                  'Finance', 'Healthcare', 'Tourism and Hospitality', 'Retail',
-                                 'Wellness and Fitness', 'Education', 'Public Service',
+                                 'Wellness and Fitness', 'Education', 'Public Services',
                                  'Environment and Bioscience', 'Trades', 'Import Status'])
 
             # skip header as we set custom header
@@ -273,7 +274,7 @@ class BatchAdmin(admin.ModelAdmin):
                 csv_output.writerow(row_values)
 
         # update status
-        obj.status = 3 # 3 is 'Career Awareness Processed'
+        obj.status = 4 # 4 is 'Career Awareness Processed'
 
         # set the processed file path
         obj.proc_career_aware = settings.DATA_FOLDER + '/' + batch_name + '/career_awareness.csv'
@@ -338,15 +339,15 @@ class BatchAdmin(admin.ModelAdmin):
                             second_preference = i - 1
 
                 row_values.extend([first_preference, second_preference, third_preference,
-                                   self.singlevalueonly_helper(row[73]), self.singlevalueonly_helper(row[74]),
-                                   self.singlevalueonly_helper(row[75])])
+                                   self.singlevalueonly_helper(row[61]), self.singlevalueonly_helper(row[62]),
+                                   self.singlevalueonly_helper(row[63])])
 
-                if row[77]:
-                    row_values.append(self.validenline_helper(row[77]))
+                if row[65]:
+                    row_values.append(self.validenline_helper(row[65]))
                 else:
-                    row_values.append(self.validenline_helper(row[76]))
+                    row_values.append(self.validenline_helper(row[64]))
 
-                row_values.append(self.yesno_helper(row[78]))
+                row_values.append(self.yesno_helper(row[66]))
 
                 # add the import status
                 row_values.append('Career Planning Imported')
@@ -444,7 +445,7 @@ class BatchAdmin(admin.ModelAdmin):
                 # process personality fields
                 # row 98 - 101
                 for j in range(98, 102):
-                    row_values.append(self.agreedisagree_helper(row[j]))
+                    row_values.append(row[j])
 
                 # process reality fields
                 # row 102 - 111 format using yesno_helper
@@ -455,7 +456,7 @@ class BatchAdmin(admin.ModelAdmin):
                         row_values.append(self.yesno_helper(row[i]))
 
                 # add the import status
-                row_values.append('Import Completed')
+                row_values.append('Self Awareness Imported')
 
                 # write to csv file
                 csv_output.writerow(row_values)
@@ -470,8 +471,10 @@ class BatchAdmin(admin.ModelAdmin):
 
     # method to handle counselling and feedback csv transformation
     def process_counselling_and_feedback(self, request, obj, batch_name, batch_dir, student_barcodes):
-        # return if counselling and feedback is processed
-        if obj.status > 7:
+        # always process counselling and feedback as this activity will be done later on
+
+        # if file is not uploaded skip it
+        if not obj.omr_counselling_feedback:
             return
 
         # fetch counselling and feedback csv file
@@ -490,7 +493,7 @@ class BatchAdmin(admin.ModelAdmin):
                                  'Was the Program useful and helpful for you',
                                  'Did you learn something new about yourself',
                                  'Did you learn about some new Careers',
-                                 'Was the teacher’s way of teaching easy to understand and follow?',
+                                 "Was the teacher's way of teaching easy to understand and follow?",
                                  'Did the teacher clear all your doubts?',
                                  'Were you able to understand the workbook easily?',
                                  'Would you recommend the CareerAware program to other students?'
@@ -535,15 +538,15 @@ class BatchAdmin(admin.ModelAdmin):
         obj.save()
 
     def absentpresent_helper(self, value):
-        if value == 'AbsentPresent':
-            value = 'Present'
-        elif value == 'PresentAbsent':
-            value = 'Present'
+        if value.lower() == 'absentpresent':
+            value = 'PRESENT'
+        elif value.lower() == 'presentabsent':
+            value = 'PRESENT'
         return value
 
     def yesno_helper(self, value):
-        if value == 'YesNo':
-            value = 'No'
+        if value.lower() == 'yesno':
+            value = 'NO'
         return value
 
     def singlevalue_helper(self, value):
@@ -552,14 +555,6 @@ class BatchAdmin(admin.ModelAdmin):
             return option[0]
         else:
             return value
-
-    def agreedisagree_helper(self, value):
-        if value == 'Agree':
-            return value
-        elif value == 'Disagree':
-            return value
-        else:
-            return ''
 
     def multivalue_formatter(self, value):
         options = list(value)
@@ -576,13 +571,13 @@ class BatchAdmin(admin.ModelAdmin):
             return value
 
     def gender_helper(self, value):
-        if value == 'Male' or value == 'Female' or value == 'Other':
+        if value.lower() == 'male' or value.lower() == 'female' or value.lower() == 'other':
             return value
         return ''
 
     def currenteducation_helper(self, value):
-        if value == '8 TH' or value == '9 TH' or value == '10 TH' or value == '11 TH' \
-                or value == '12 TH' or value == 'OTHER':
+        if value.lower() == '8th' or value.lower() == '9th' or value.lower() == '10th' \
+            or value.lower() == '11th' or value.lower() == '12th' or value.lower() == 'other':
             return value
         return ''
 

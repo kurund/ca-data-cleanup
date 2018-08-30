@@ -57,6 +57,7 @@ class Batch(models.Model):
     omr_counselling_feedback = models.FileField(
         upload_to='uploads/%Y/%m/%d/',
         verbose_name='Counselling and Student Feedback',
+        blank=True,
         default='',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
     )

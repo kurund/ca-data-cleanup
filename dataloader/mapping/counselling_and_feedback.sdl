@@ -1,0 +1,15 @@
+#Mapping values
+#Wed Aug 16 14:20:16 IST 2017
+BARCODE=Bar_Code__c
+Attendance=Student_Attendance__c
+Guardian\ Attendance=Guardian_Attendance__c
+I\ agree\ with\ the\ reccomendation=I_agree_with_the_recommendation__c
+I\ am\ clear\ about\ what\ I\ need\ to\ do\ after\ class 10=I_am_clear_about_what_I_need_to_do_after__c
+Was\ the\ Program\ useful\ and\ helpful\ for\ you=Was_the_Program_useful_and_helpful_for_y__c
+Did\ you\ learn\ something\ new\ about\ yourself=Did_you_learn_something_new_about_yourse__c
+Did\ you\ learn\ about\ some\ new\ Careers=Did_you_learn_about_some_new_Careers__c
+Was\ the\ teacher''s\ way\ of\ teaching\ easy\ to\ understand\ and\ follow?=Was_the_teacher_s_way_of_teaching_easy_t__c
+Did\ the\ teacher\ clear\ all\ your\ doubts?=Did_the_teacher_clear_all_your_doubts__c
+Were\ you\ able\ to\ understand\ the\ workbook\ easily?=Were_you_able_to_understand_the_workbook__c
+Would\ you\ recommend\ the\ CareerAware\ program\ to\ other\ students?\=Would_you_recommend_the_CareerAware_prog__c
+Import\ Status=Import_Status__c

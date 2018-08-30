@@ -43,7 +43,7 @@ for d in */ ; do
 
     bin/process.sh Baseline1
     echo "Baseline 1 done."
-    bin/process.sh Baseline1
+    bin/process.sh Baseline2
     echo "Baseline 2 done."
     bin/process.sh CareerAwareness
     echo "Career Awareness done."

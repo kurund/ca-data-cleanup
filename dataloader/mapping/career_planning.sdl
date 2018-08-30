@@ -1,12 +1,12 @@
 #Mapping values
 #Mon Sep 04 11:09:44 IST 2017
+BARCODE=Bar_Code__c
 Possible\ Careers\ 3=Possible_Careers_3__r\:Profession_Code__c
 Possible\ Careers\ 2=Possible_Careers_2__r\:Profession_Code__c
 Possible\ Careers\ 1=Possible_Careers_1__r\:Profession_Code__c
-Import\ Status=Import_Status__c
-Endline=EndLine__c
-Study\ till\ 18=Study_till_18__c
-BARCODE=Bar_Code__c
 CCP\ 3=CCP_3__c
 CCP\ 2=CCP_2__c
 CCP\ 1=CCP_1__c
+Endline=EndLine__c
+Study\ till\ 18=Study_till_18__c
+Import\ Status=Import_Status__c

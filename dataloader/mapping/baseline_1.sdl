@@ -1,0 +1,15 @@
+#Mapping values
+#Wed Aug 16 13:34:19 IST 2017
+BARCODE=Bar_Code__c
+First\ Name=FirstName
+Last\ Name=LastName
+Age=Age__c
+Contact\ Number=Phone
+Gender=Gender__c
+Currently\ Working=Currently_Working__c
+Computer\ Literate=Computer_Literate__c
+Father\ Occupation=Father_Occupation__c
+Mother\ Occupation=Mother_Occupation__c
+DOB=Birthdate
+Contact\ Type=Contact_Type__c
+Import\ Status=Import_Status__c
