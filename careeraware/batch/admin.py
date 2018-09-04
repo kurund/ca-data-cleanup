@@ -20,12 +20,12 @@ class BatchAdmin(admin.ModelAdmin):
         }),
         ('OMR data', {
             'fields': ('omr_baseline_1', 'omr_baseline_2', 'omr_career_aware', 'omr_career_planning',
-                        'omr_self_aware', 'omr_counselling_feedback', 'comment')
+                        'omr_self_aware', 'omr_counselling_feedback', 'comment', 'status')
         }),
         ('Transformed data', {
             'classes': ('collapse',),
             'fields': ('proc_baseline_1', 'proc_baseline_2', 'proc_career_aware', 'proc_career_planning',
-                        'proc_self_aware', 'proc_counselling_feedback', 'status'),
+                        'proc_self_aware', 'proc_counselling_feedback'),
         }),
         ('Errors', {
             'classes': ('collapse',),
@@ -455,7 +455,14 @@ class BatchAdmin(admin.ModelAdmin):
                 # process personality fields
                 # row 98 - 101
                 for j in range(98, 102):
-                    row_values.append(row[j])
+                    if j == 98:
+                        row_values.append(self.personality_helper(row[j], 'introvert', 'extrovert'))
+                    elif j == 99:
+                        row_values.append(self.personality_helper(row[j], 'sensing', 'intuition'))
+                    elif j == 100:
+                        row_values.append(self.personality_helper(row[j], 'thinking', 'feeling'))
+                    elif j == 101:
+                        row_values.append(self.personality_helper(row[j], 'judging', 'perceiving'))
 
                 # process reality fields
                 # row 102 - 111 format using yesno_helper
@@ -506,7 +513,7 @@ class BatchAdmin(admin.ModelAdmin):
                                  "Was the teacher's way of teaching easy to understand and follow?",
                                  'Did the teacher clear all your doubts?',
                                  'Were you able to understand the workbook easily?',
-                                 'Would you recommend the CareerAware program to other students?'
+                                 'Would you recommend the CareerAware program to other students?',
                                  'Import Status'])
 
             # skip header as we set custom header
@@ -595,6 +602,12 @@ class BatchAdmin(admin.ModelAdmin):
         if not value:
             return value
         elif int(value) > 0 and int(value) < 10:
+            return value
+        else:
+            return ''
+
+    def personality_helper(self, value, expected_value_1, expected_value_2):
+        if value.lower() == expected_value_1 or value.lower() == expected_value_2:
             return value
         else:
             return ''
