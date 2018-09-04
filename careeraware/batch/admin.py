@@ -189,10 +189,8 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['BARCODE', 'Current Aspiration 1', 'Current Aspiration 2',
-                                 'Current Aspiration 3', 'Current Aspiration 4','Batch Code',
-                                 'Current Education', 'Day-1', 'Day-2', 'Day-3', 'Day-4',
-                                 'Day-5', 'Import Status'])
+            csv_output.writerow(['BARCODE', 'Current Aspiration','Batch Code', 'Current Education',
+                                 'Day-1', 'Day-2', 'Day-3', 'Day-4', 'Day-5', 'Import Status'])
 
             # skip header as we set custom header
             next(csv_input)
@@ -206,8 +204,20 @@ class BatchAdmin(admin.ModelAdmin):
 
                 row_values = [row[1]]
 
+                # current aspiration 2, 3, 4, 5
+                ca_count = 0
+                for i in range(2,6):
+                    if row[i]:
+                        ca = row[i]
+                        ca_count = ca_count + 1
+
+                if ca_count > 1:
+                    ca = ''
+
+                row_values.append(ca)
+
                 # process other baseline fields
-                for i in range(2,13):
+                for i in range(6,13):
                     if i >= 8 and i <= 12:
                         # process attendance fields
                         # row 8 - 12 format using absentpresent_
