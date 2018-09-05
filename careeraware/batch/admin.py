@@ -63,7 +63,7 @@ class BatchAdmin(admin.ModelAdmin):
         self.process_self_awareness(request, obj, batch_name, batch_dir, student_barcodes)
 
         # process counselling and feedback csv
-        self.process_counselling_and_feedback(request, obj, batch_name, batch_dir, student_barcodes)
+        self.process_counselling_and_feedback(request, obj, batch_name, batch_dir)
 
         # save error log file
         obj.error_log = settings.DATA_FOLDER + '/' + batch_name + '/errors.log'
@@ -487,8 +487,10 @@ class BatchAdmin(admin.ModelAdmin):
         obj.save()
 
     # method to handle counselling and feedback csv transformation
-    def process_counselling_and_feedback(self, request, obj, batch_name, batch_dir, student_barcodes):
+    def process_counselling_and_feedback(self, request, obj, batch_name, batch_dir):
         # always process counselling and feedback as this activity will be done later on
+        if obj.status != 7:
+            return
 
         # if file is not uploaded skip it
         if not obj.omr_counselling_feedback:
@@ -520,11 +522,6 @@ class BatchAdmin(admin.ModelAdmin):
             next(csv_input)
 
             for row in csv_input:
-                # skip the record if student is missing in baseline 1
-                if row[1] not in student_barcodes:
-                    logging.debug('Missing from Baseline: Barcode "' + row[1] + '" is skipped from counselling and feedback CSV.')
-                    continue
-
                 row_values = [row[1]]
 
                 # row 2 - 3 format using absentpresent_helper
