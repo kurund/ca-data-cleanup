@@ -206,6 +206,7 @@ class BatchAdmin(admin.ModelAdmin):
 
                 # current aspiration 2, 3, 4, 5
                 ca_count = 0
+                ca = ''
                 for i in range(2,6):
                     if row[i]:
                         ca = row[i]
