@@ -82,7 +82,7 @@ class BatchAdmin(admin.ModelAdmin):
         output_file = batch_dir + '/baseline_1.csv'
 
         student_barcodes = []
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
 
@@ -184,7 +184,7 @@ class BatchAdmin(admin.ModelAdmin):
         # set output file
         output_file = batch_dir + '/baseline_2.csv'
 
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
 
@@ -253,7 +253,7 @@ class BatchAdmin(admin.ModelAdmin):
         # set output file
         output_file = batch_dir + '/career_awareness.csv'
 
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
 
@@ -304,7 +304,7 @@ class BatchAdmin(admin.ModelAdmin):
         # set output file
         output_file = batch_dir + '/career_planning.csv'
 
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
 
@@ -387,7 +387,7 @@ class BatchAdmin(admin.ModelAdmin):
         # set output file
         output_file = batch_dir + '/self_awareness.csv'
 
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
 
@@ -503,7 +503,7 @@ class BatchAdmin(admin.ModelAdmin):
         # set output file
         output_file = batch_dir + '/counselling_and_feedback.csv'
 
-        with open(input_file, newline='\n') as f_input, open(output_file, 'w', newline='\n') as f_output:
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
             csv_input = csv.reader(f_input)
             csv_output = csv.writer(f_output)
 
