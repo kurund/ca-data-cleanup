@@ -513,7 +513,7 @@ class BatchAdmin(admin.ModelAdmin):
                                  'Was the Program useful and helpful for you',
                                  'Did you learn something new about yourself',
                                  'Did you learn about some new Careers',
-                                 "Was the teachers way of teaching easy to understand and follow:",
+                                 'Was the teachers way of teaching easy to understand and follow',
                                  'Did the teacher clear all your doubts?',
                                  'Were you able to understand the workbook easily?',
                                  'Would you recommend the Career aware program to other students?',
