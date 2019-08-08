@@ -2,6 +2,9 @@ from django.contrib import admin
 from django.conf import settings
 import csv, os
 import logging, datetime
+from subprocess import call
+import time
+from django.utils import timezone
 
 # Register your models here.
 from .models import Batch
@@ -11,7 +14,7 @@ admin.site.site_title = 'Career Aware: administration'
 
 class BatchAdmin(admin.ModelAdmin):
     # controls what's displayed in the batch listing
-    list_display = ('name', 'batch_date', 'status')
+    list_display = ('name', 'batch_date', 'status', 'created_at', 'modified_at')
 
     # grouping of fields on the batch form
     fieldsets = (
@@ -20,12 +23,12 @@ class BatchAdmin(admin.ModelAdmin):
         }),
         ('OMR data', {
             'fields': ('omr_baseline_1', 'omr_baseline_2', 'omr_career_aware', 'omr_career_planning',
-                        'omr_self_aware', 'omr_counselling_feedback', 'comment', 'status')
+                        'omr_self_aware', 'omr_counselling_feedback', 'omr_follow_up_1_data', 'omr_follow_up_2_data', 'comment', 'status')
         }),
         ('Transformed data', {
             'classes': ('collapse',),
             'fields': ('proc_baseline_1', 'proc_baseline_2', 'proc_career_aware', 'proc_career_planning',
-                        'proc_self_aware', 'proc_counselling_feedback'),
+                        'proc_self_aware', 'proc_counselling_feedback', 'proc_follow_up_1_data', 'proc_follow_up_2_data'),
         }),
         ('Errors', {
             'classes': ('collapse',),
@@ -37,6 +40,16 @@ class BatchAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
 
+
+
+        __original_name = None
+
+        def __init__(self, *args, **kwargs):
+            super(Batch, self).__init__(*args, **kwargs)
+            self.__original_name = self.name
+
+
+
         # check if batch directory exists, else create one
         batch_name = 'batch-' + str(obj.id)
         batch_dir = settings.DATA_FILES_PATH + '/' + batch_name
@@ -46,6 +59,8 @@ class BatchAdmin(admin.ModelAdmin):
         # set log file
         log_file = batch_dir + '/errors.log'
         logging.basicConfig(filename=log_file, level=logging.DEBUG)
+        
+        initial_status = obj.status
 
         #process baseline 1 csv
         student_barcodes = self.process_baseline_1(request, obj, batch_name, batch_dir)
@@ -65,18 +80,37 @@ class BatchAdmin(admin.ModelAdmin):
         # process counselling and feedback csv
         self.process_counselling_and_feedback(request, obj, batch_name, batch_dir)
 
+        # process follow up 1 csv
+        self.process_follow_up_1(request, obj, batch_name, batch_dir)
+
+        # process follow up 2 csv
+        self.process_follow_up_2(request, obj, batch_name, batch_dir)
+
         # save error log file
+        # print(obj.status)
+        if change == False:
+            call(["cp", '-R', batch_dir, settings.PROCESS_FILES_PATH])
+        # if (change == True) & (initial_status == 1):
+            # call(["cp", '-R', batch_dir, settings.PROCESS_FILES_PATH])
+
         obj.error_log = settings.DATA_FOLDER + '/' + batch_name + '/errors.log'
+        obj.modified_at = timezone.now()
         obj.save()
+
+
 
     # method to handle baseline 1 csv transformation
     def process_baseline_1(self, request, obj, batch_name, batch_dir):
         # return if baseline 1 is processed
+        print('process_baseline_1 start')
         if obj.status > 1:
+            print('process_baseline_1 return')
+
             return
 
         # fetch baseline csv file
         input_file  = obj.omr_baseline_1.path
+        print('obj 1:' + str(obj.omr_baseline_1))
 
         # set output file
         output_file = batch_dir + '/baseline_1.csv'
@@ -175,7 +209,14 @@ class BatchAdmin(admin.ModelAdmin):
     # method to handle baseline 2 csv transformation
     def process_baseline_2(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if baseline 2 is processed
+        print('process_baseline_2 start')
+
         if obj.status > 3:
+            print('process_baseline_2 return')
+
+            return
+
+        if not student_barcodes:
             return
 
         # fetch baseline 2 csv file
@@ -244,7 +285,13 @@ class BatchAdmin(admin.ModelAdmin):
     # method to handle career awareness csv transformation
     def process_career_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if career awareness is processed
+        print('process_career_awareness start')
+
         if obj.status > 4:
+            print('process_career_awareness return')
+
+            return
+        if not student_barcodes:
             return
 
         # fetch career awareness csv file
@@ -295,9 +342,15 @@ class BatchAdmin(admin.ModelAdmin):
     # method to handle career planning csv transformation
     def process_career_planning(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if career planning is processed
-        if obj.status > 5:
-            return
+        print('process_career_planning start')
 
+        if obj.status > 5:
+            print('process_career_planning return')
+
+            return
+        
+        if not student_barcodes:
+            return
         # fetch career awareness csv file
         input_file  = obj.omr_career_planning.path
 
@@ -378,7 +431,12 @@ class BatchAdmin(admin.ModelAdmin):
     # method to handle self awareness csv transformation
     def process_self_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
         # return if self awareness is processed
+        print('process_self_awareness start')
+
         if obj.status > 6:
+            print('process_self_awareness return')
+            return
+        if not student_barcodes:
             return
 
         # fetch self awareness csv file
@@ -490,7 +548,11 @@ class BatchAdmin(admin.ModelAdmin):
     # method to handle counselling and feedback csv transformation
     def process_counselling_and_feedback(self, request, obj, batch_name, batch_dir):
         # always process counselling and feedback as this activity will be done later on
+        print('process_counselling_and_feedback start')
+
         if obj.status != 7:
+            print('process_counselling_and_feedback return')
+
             return
 
         # if file is not uploaded skip it
@@ -609,5 +671,132 @@ class BatchAdmin(admin.ModelAdmin):
             return value
         else:
             return ''
+
+    # method to handle followup 1 csv transformation
+    def process_follow_up_1(self, request, obj, batch_name, batch_dir):
+        print("process_follow_up_1 start")
+
+
+        # return if followup 1 is processed
+        if obj.status != 8:
+            print("process_follow_up_1 return")
+
+            return
+
+        # if file is not uploaded skip it
+        if not obj.omr_follow_up_1_data:
+            return
+
+        # fetch baseline csv file
+        input_file  = obj.omr_follow_up_1_data.path
+
+        # set output file
+        output_file = batch_dir + '/follow_up_1.csv'
+        print("followup 1 file" + output_file)
+
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
+            csv_input = csv.reader(f_input)
+            csv_output = csv.writer(f_output)
+
+            # set custom header
+            csv_output.writerow(['Bar_Code__c','Followup_1_Baseline_1__c', 'Followup_1_Baseline_2__c',
+                                 'Followup_1_Baseline_3__c', 'Followup_1_Baseline_4__c', 'Followup_1_Baseline_5__c', 
+                                 'Followup_1_Baseline_6__c', 'Followup_1_Baseline_7__c', 'Followup_1_Endline_1__c', 
+                                 'Followup_1_Endline_2__c', 'Followup_1_Endline_3__c', 'Followup_1_Endline_4__c', 'Followup_1_Endline_5__c', 
+                                 'Followup_1_Endline_6__c', 'Followup_1_Endline_7__c', 'Followup_1_Endline_8__c', 'Followup_1_Aspiration__c', 'Import Status'])
+
+            # skip header as we set custom header
+            next(csv_input)
+
+            for row in csv_input:
+                row_values = [row[1].replace(" ", ""), row[2].upper(), row[3].upper(), row[4].upper(), row[5].upper(), row[6].upper(), row[7].upper(), row[8].upper(), row[9].upper(), row[10].upper(), row[11].upper(), row[12].upper(), 
+                    row[13].upper(), row[14].upper(), row[15].upper(), row[16].upper()]
+
+                aspiration = ""
+                #populating filds
+                for i in range(17, 21):
+                    if row[i] != '':
+                        aspiration = aspiration + str(row[i]) + ', '
+                
+                #remove last space and comma
+                aspiration = aspiration[:-2]
+                #append populated filds
+                row_values.append(aspiration)
+                #append Import Status
+                print("followup 1 imported")
+                row_values.append('Followup 1 Imported')
+                csv_output.writerow(row_values)
+
+        # update status
+        obj.status = 8 # 8 is 'Follow up 1 Data Processed'
+        print("followup 1 change status")
+
+        # # set the processed file path
+        obj.proc_follow_up_1_data = settings.DATA_FOLDER + '/' + batch_name + '/follow_up_1.csv'
+
+        obj.save()
+        print("followup 1 save")
+
+
+    # method to handle followup 2 csv transformation
+    def process_follow_up_2(self, request, obj, batch_name, batch_dir):
+            # return if followup 1 is processed    
+            print("process_follow_up_2 start")
+                    
+            if obj.status != 9:
+                print("process_follow_up_2 return")
+
+                return
+            
+            # if file is not uploaded skip it
+            if not obj.omr_follow_up_2_data:
+                return
+
+            # fetch baseline csv file
+            input_file  = obj.omr_follow_up_2_data.path
+
+            # set output file
+            output_file = batch_dir + '/follow_up_2.csv'
+
+            with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
+                csv_input = csv.reader(f_input)
+                csv_output = csv.writer(f_output)
+
+                # set custom header
+                csv_output.writerow(['Bar_Code__c','Followup_2_Baseline_1__c', 'Followup_2_Baseline_2__c',
+                                    'Followup_2_Baseline_3__c', 'Followup_2_Baseline_4__c', 'Followup_2_Baseline_5__c', 
+                                    'Followup_2_Baseline_6__c', 'Followup_2_Baseline_7__c', 'Followup_2_Endline_1__c', 
+                                    'Followup_2_Endline_2__c', 'Followup_2_Endline_3__c', 'Followup_2_Endline_4__c', 'Followup_2_Endline_5__c', 
+                                    'Followup_2_Endline_6__c', 'Followup_2_Endline_7__c', 'Followup_2_Endline_8__c', 'Followup_2_Aspiration__c', 'Import Status'])
+
+                # skip header as we set custom header
+                next(csv_input)
+
+                for row in csv_input:
+                    row_values = [row[1].replace(" ", ""), row[2].upper(), row[3].upper(), row[4].upper(), row[5].upper(), row[6].upper(), row[7].upper(), row[8].upper(), row[9].upper(), row[10].upper(), row[11].upper(), row[12].upper(), 
+                    row[13].upper(), row[14].upper(), row[15].upper(), row[16].upper()]
+
+                    aspiration = ""
+                    #populating fields
+                    for i in range(17, 21):
+                        if row[i] != '':
+                            aspiration = aspiration + str(row[i]) + ', '
+                    #remove last space and comma
+                    aspiration = aspiration[:-2]
+                    row_values.append(aspiration)
+                    #Add Import Status
+                    row_values.append('Followup 2 Imported')
+                    csv_output.writerow(row_values)
+                    print(row_values)
+
+            # # update status
+            obj.status = 9 # 9 is 'Follow up 2 Data Processed'
+
+            # # set the processed file path
+            obj.proc_follow_up_2_data = settings.DATA_FOLDER + '/' + batch_name + '/follow_up_2.csv'
+
+            obj.save()
+            # obj.status = 10 # 9 is 'Follow up 2 Data Processed'
+
 
 admin.site.register(Batch, BatchAdmin)

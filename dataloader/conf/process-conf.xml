@@ -91,7 +91,7 @@
         </property>
     </bean>
     <bean id="CounsellingAndFeedback" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
-        <description>Push Self Awareness data to Salesforce.</description>
+        <description>Push Counselling and Feedback data to Salesforce.</description>
         <property name="name" value="CounsellingAndFeedback"/>
         <property name="configOverrideMap">
             <map>
@@ -104,6 +104,42 @@
                 <entry key="process.operation" value="upsert"/>
                 <entry key="process.mappingFile" value="mapping/counselling_and_feedback.sdl"/>
                 <entry key="dataAccess.name" value="data/counselling_and_feedback.csv"/>
+                <entry key="dataAccess.type" value="csvRead"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="FollowUp1" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+        <description>Push Follow Up 1 data to Salesforce.</description>
+        <property name="name" value="FollowUp1"/>
+        <property name="configOverrideMap">
+            <map>
+                <entry key="sfdc.timeoutSecs" value="600"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
+                <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
+                <entry key="sfdc.entity" value="Contact"/>
+                <entry key="process.operation" value="upsert"/>
+                <entry key="process.mappingFile" value="mapping/follow_up_1.sdl"/>
+                <entry key="dataAccess.name" value="data/follow_up_1.csv"/>
+                <entry key="dataAccess.type" value="csvRead"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="FollowUp2" class="com.salesforce.dataloader.process.ProcessRunner" singleton="false">
+        <description>Push Follow Up 2 data to Salesforce.</description>
+        <property name="name" value="FollowUp2"/>
+        <property name="configOverrideMap">
+            <map>
+                <entry key="sfdc.timeoutSecs" value="600"/>
+                <entry key="sfdc.loadBatchSize" value="10"/>
+                <entry key="sfdc.useBulkApi" value="true"/>
+                <entry key="sfdc.bulkApiSerialMode" value="true"/>
+                <entry key="sfdc.externalIdField" value="Bar_Code__c"/>
+                <entry key="sfdc.entity" value="Contact"/>
+                <entry key="process.operation" value="upsert"/>
+                <entry key="process.mappingFile" value="mapping/follow_up_2.sdl"/>
+                <entry key="dataAccess.name" value="data/follow_up_2.csv"/>
                 <entry key="dataAccess.type" value="csvRead"/>
             </map>
         </property>

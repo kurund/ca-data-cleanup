@@ -13,16 +13,24 @@
 #		    * Delete files from to-process folder
 
 # python script related actions
+# for server
+cd /data/careeraware.afdatabase.in/scripts/
 source ../env/bin/activate
 cd ../careeraware/
 echo 'Identify batches to process.'
 python manage.py shell < scripts/import_sf.py
 
+# for local
+# source ../env/bin/activate
+# cd ../careeraware/
+# echo 'Identify batches to process.'
+# python manage.py shell < scripts/import_sf.py
+
 DIR=to-process
 
 # check for batches to process
 if [ "$(ls -A $DIR)" ]; then
-     echo 'Batches are ready for processing.'
+    echo 'Batches are ready for processing.'
 else
     echo "No batches to process."
     exit
@@ -53,6 +61,10 @@ for d in */ ; do
     echo "Self Awareness done."
     bin/process.sh CounsellingAndFeedback
     echo "Counselling and Feedback done."
+    bin/process.sh FollowUp1
+    echo "Follow up 1 done."
+    bin/process.sh FollowUp2
+    echo "Follow up 2 done."
 
     popd > /dev/null
 

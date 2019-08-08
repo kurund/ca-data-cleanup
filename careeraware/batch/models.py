@@ -12,7 +12,9 @@ class Batch(models.Model):
         (5, 'Career Planning Processed'),
         (6, 'Self Awareness Processed'),
         (7, 'Counselling and Student Feedback Processed'),
-        (8, 'Transformation Completed'),
+        (8, 'Follow up 1 Data Processed'),
+        (9, 'Follow up 2 Data Processed'),
+        (10, 'Transformation Completed'),
     )
 
     name = models.CharField(max_length=200)
@@ -24,6 +26,9 @@ class Batch(models.Model):
         verbose_name='Baseline 1',
         default='',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+
+        blank=True,
+
     )
 
     omr_baseline_2 = models.FileField(
@@ -31,6 +36,9 @@ class Batch(models.Model):
         verbose_name='Baseline 2',
         default='',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+
+        blank=True,
+
     )
 
     omr_self_aware = models.FileField(
@@ -38,6 +46,9 @@ class Batch(models.Model):
         verbose_name='Self Awareness',
         default='',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+
+        blank=True,
+
     )
 
     omr_career_aware = models.FileField(
@@ -45,6 +56,9 @@ class Batch(models.Model):
         verbose_name='Career Awareness',
         default='',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+
+        blank=True,
+
     )
 
     omr_career_planning = models.FileField(
@@ -52,11 +66,30 @@ class Batch(models.Model):
         verbose_name='Career Planning',
         default='',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+
+        blank=True,
+
     )
 
     omr_counselling_feedback = models.FileField(
         upload_to='uploads/%Y/%m/%d/',
         verbose_name='Counselling and Student Feedback',
+        blank=True,
+        default='',
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+    )
+
+    omr_follow_up_1_data = models.FileField(
+        upload_to='uploads/%Y/%m/%d/',
+        verbose_name='Follow up 1 Data',
+        blank=True,
+        default='',
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+    )
+
+    omr_follow_up_2_data = models.FileField(
+        upload_to='uploads/%Y/%m/%d/',
+        verbose_name='Follow up 2 Data',
         blank=True,
         default='',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
@@ -116,8 +149,24 @@ class Batch(models.Model):
     )
 
     proc_counselling_feedback = models.FileField(
-        upload_to='uploads/%Y/%m/%d/',
+        upload_to='data/',
         verbose_name='Counselling and Student Feedback',
+        blank=True,
+        help_text='Do not upload. This field will be auto updated.',
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+    )
+
+    proc_follow_up_1_data = models.FileField(
+        upload_to='data/',
+        verbose_name='Follow up 1 Data',
+        blank=True,
+        help_text='Do not upload. This field will be auto updated.',
+        validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
+    )
+
+    proc_follow_up_2_data = models.FileField(
+        upload_to='data/',
+        verbose_name='Follow up 2 Data',
         blank=True,
         help_text='Do not upload. This field will be auto updated.',
         validators=[FileExtensionValidator(['csv'], 'Please upload valid CSV file')],
@@ -128,6 +177,10 @@ class Batch(models.Model):
         default=1,
         help_text='Do not change. This field will be auto updated.',
     )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    
 
     def __str__(self):
         return self.name
