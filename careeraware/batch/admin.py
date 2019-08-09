@@ -93,8 +93,6 @@ class BatchAdmin(admin.ModelAdmin):
         obj.modified_at = timezone.now()
         obj.save()
 
-
-
     # method to handle baseline 1 csv transformation
     def process_baseline_1(self, request, obj, batch_name, batch_dir):
         # return if baseline 1 is processed
