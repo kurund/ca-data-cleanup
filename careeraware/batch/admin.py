@@ -249,13 +249,12 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values = [row[1]]
 
                 # process baseline 2 fields
-                # row 2 and 3 format using education_
+                # row 2 and 3 education
                 row_values.append(row[2])
                 row_values.append(row[3])
 
-                # format using careerguide_
-                row_values.append(row[4])
-                #row_values.append(self.currenteducation_helper(row[i]))
+                # format using multivalue
+                row_values.append(self.multivalue_formatter(row[4]))
 
                 # current aspiration 5, 6, 7
                 ca_count = 0
