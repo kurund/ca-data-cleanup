@@ -40,15 +40,11 @@ class BatchAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
 
-
-
         __original_name = None
 
         def __init__(self, *args, **kwargs):
             super(Batch, self).__init__(*args, **kwargs)
             self.__original_name = self.name
-
-
 
         # check if batch directory exists, else create one
         batch_name = 'batch-' + str(obj.id)
@@ -105,7 +101,6 @@ class BatchAdmin(admin.ModelAdmin):
         print('process_baseline_1 start')
         if obj.status > 1:
             print('process_baseline_1 return')
-
             return
 
         # fetch baseline csv file
@@ -121,9 +116,11 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['BARCODE', 'First Name', 'Last Name', 'Age', 'Contact Number',
-                                 'Gender', 'Currently Working', 'Computer Literate', 'Father Occupation',
-                                 'Mother Occupation', 'DOB', 'Contact Type', 'Import Status'])
+            csv_output.writerow([
+                'BARCODE', 'First Name', 'Last Name', 'Age', 'Contact Number',
+                'Current Education', 'Gender', 'Batch Code', 'Day-1', 'Day-2',
+                'Day-3', 'Day-4', 'Day-5', 'DOB', 'Contact Type', 'Import Status'
+                ])
 
             # skip header as we set custom header
             next(csv_input)
@@ -157,26 +154,30 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values.append(last_name)
 
                 # process other baseline fields
-                for i in range(3,10):
-                    if i == 6 or i == 7:
-                        row_values.append(self.yesno_helper(row[i]))
+                for i in range(3,13):
+                    if i >= 8 and i <= 12:
+                        # process attendance fields
+                        # row 8 - 12 format using absentpresent_
+                        row_values.append(self.absentpresent_helper(row[i]))
                     elif i == 5:
+                        row_values.append(self.currenteducation_helper(row[i]))
+                    elif i == 6:
                         row_values.append(self.gender_helper(row[i]))
                     else:
                         row_values.append(row[i])
 
                 # calculate date of birth
                 dob = ''
-                day = row[10]
+                day = row[13]
                 if len(day) > 2:
                     day = ''
 
-                month = row[11]
+                month = row[14]
                 if len(month) > 2:
                     month = ''
 
                 # make sure date has more than 4 digits
-                year = row[12]
+                year = row[15]
                 if len(year) != 4 or int(year.replace(" ", "")) < 1900:
                     year = ''
 
@@ -213,7 +214,6 @@ class BatchAdmin(admin.ModelAdmin):
 
         if obj.status > 3:
             print('process_baseline_2 return')
-
             return
 
         if not student_barcodes:
@@ -230,8 +230,11 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['BARCODE', 'Current Aspiration','Batch Code', 'Current Education',
-                                 'Day-1', 'Day-2', 'Day-3', 'Day-4', 'Day-5', 'Import Status'])
+            csv_output.writerow([
+                'BARCODE', 'Father Education', 'Mother Education',
+                'Who have you talked to about planning your career',
+                'Current Aspiration', 'Import Status'
+                ])
 
             # skip header as we set custom header
             next(csv_input)
@@ -239,16 +242,25 @@ class BatchAdmin(admin.ModelAdmin):
             for row in csv_input:
                 # skip the record if student is missing in baseline 1
                 if row[1] not in student_barcodes:
-                    logging.debug( 'Missing from Baseline 1: Barcode "' + row[1]
-                                   + '" is skipped from baseline 2 CSV.')
+                    logging.debug('Missing from Baseline 1: Barcode "' + row[1]
+                        + '" is skipped from baseline 2 CSV.')
                     continue
 
                 row_values = [row[1]]
 
-                # current aspiration 2, 3, 4, 5
+                # process baseline 2 fields
+                # row 2 and 3 format using education_
+                row_values.append(row[2])
+                row_values.append(row[3])
+
+                # format using careerguide_
+                row_values.append(row[4])
+                #row_values.append(self.currenteducation_helper(row[i]))
+
+                # current aspiration 5, 6, 7
                 ca_count = 0
                 ca = ''
-                for i in range(2,6):
+                for i in range(5,8):
                     if row[i]:
                         ca = row[i]
                         ca_count = ca_count + 1
@@ -257,17 +269,6 @@ class BatchAdmin(admin.ModelAdmin):
                     ca = ''
 
                 row_values.append(ca)
-
-                # process other baseline fields
-                for i in range(6,13):
-                    if i >= 8 and i <= 12:
-                        # process attendance fields
-                        # row 8 - 12 format using absentpresent_
-                        row_values.append(self.absentpresent_helper(row[i]))
-                    elif i == 7:
-                        row_values.append(self.currenteducation_helper(row[i]))
-                    else:
-                        row_values.append(row[i])
 
                 row_values.extend(['Baseline 2 Imported'])
 
@@ -289,8 +290,8 @@ class BatchAdmin(admin.ModelAdmin):
 
         if obj.status > 4:
             print('process_career_awareness return')
-
             return
+
         if not student_barcodes:
             return
 
@@ -305,10 +306,12 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['BARCODE', 'Industry Agnostic', 'Arts and Design', 'Media and Entertainment',
-                                 'Finance', 'Healthcare', 'Tourism and Hospitality', 'Retail',
-                                 'Wellness and Fitness', 'Education', 'Public Services',
-                                 'Environment and Bioscience', 'Trades', 'Import Status'])
+            csv_output.writerow([
+                'BARCODE', 'Industry Agnostic', 'Arts and Design',
+                'Media and Entertainment', 'Finance', 'Healthcare', 'Tourism and Hospitality', 
+                'Wellness and Fitness', 'Education', 'Public Services', 'Environment and Bioscience',
+                'Information Technology', 'Trades', 'Import Status'
+                ])
 
             # skip header as we set custom header
             next(csv_input)
@@ -317,10 +320,11 @@ class BatchAdmin(admin.ModelAdmin):
                 # skip the record if student is missing in baseline
                 if row[1] not in student_barcodes:
                     logging.debug( 'Missing from Baseline 1: Barcode "' + row[1]
-                                   + '" is skipped from career awareness CSV.')
+                        + '" is skipped from career awareness CSV.')
                     continue
 
                 row_values = [row[1]]
+
                 # process career awareness fields
                 for i in range(2,14):
                     row_values.append(self.multivalue_formatter(row[i]))
@@ -346,11 +350,11 @@ class BatchAdmin(admin.ModelAdmin):
 
         if obj.status > 5:
             print('process_career_planning return')
-
             return
         
         if not student_barcodes:
             return
+
         # fetch career awareness csv file
         input_file  = obj.omr_career_planning.path
 
@@ -362,8 +366,11 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['BARCODE', 'Possible Careers 1', 'Possible Careers 2', 'Possible Careers 3', 'CCP 1',
-                                 'CCP 2', 'CCP 3', 'Endline', 'Study till 18', 'Import Status'])
+            csv_output.writerow([
+                'BARCODE', 'Interest 1', 'Interest 2', 'Interest 3', 'Aptitude 1', 'Aptitude 2', 'Aptitude 3',
+                'Step 1', 'Step 2', 'Study till 18', 'Possible Careers 1', 'Possible Careers 2', 'Possible Careers 3',
+                'Import Status'
+                ])
 
             # skip header as we set custom header
             next(csv_input)
@@ -377,41 +384,43 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values = [row[1]]
 
                 # process career planning fields
+                # interest and aptitude fields
+                for i in range(2,8):
+                    row_values.append(row[i])
+
+                # Step 1 and Step 2 fields
+                row_values.append(self.singlevalue_helper(row[8]))
+                row_values.append(self.singlevalue_helper(row[9]))
+
+                # study till 18
+                row_values.append(self.yesno_helper(row[10]))
+
                 # get first, second and third preference
                 first_preference = second_preference = third_preference = ''
-                for i in range(2,61):
+                for i in range(11,55):
                     if row[i] == '1' or row[i] == '123' or row[i] == '12' or row[i] == '13':
                         if first_preference == '':
-                            first_preference = i - 1
+                            first_preference = i
                         elif second_preference == '':
-                            second_preference = i - 1
+                            second_preference = i
                         elif third_preference == '':
-                            third_preference  = i - 1
+                            third_preference  = i
                     elif row[i] == '2' or row[i] == '23':
                         if second_preference == '':
-                            second_preference = i - 1
+                            second_preference = i
                         elif first_preference == '':
-                            first_preference = i - 1
+                            first_preference = i
                         elif third_preference == '':
-                            third_preference = i - 1
+                            third_preference = i
                     elif row[i] == '3':
                         if third_preference == '':
-                            third_preference = i - 1
+                            third_preference = i
                         elif first_preference == '':
-                            first_preference = i - 1
+                            first_preference = i
                         elif second_preference == '':
-                            second_preference = i - 1
+                            second_preference = i
 
-                row_values.extend([first_preference, second_preference, third_preference,
-                                   self.singlevalueonly_helper(row[61]), self.singlevalueonly_helper(row[62]),
-                                   self.singlevalueonly_helper(row[63])])
-
-                if row[65]:
-                    row_values.append(self.validenline_helper(row[65]))
-                else:
-                    row_values.append(self.validenline_helper(row[64]))
-
-                row_values.append(self.yesno_helper(row[66]))
+                row_values.extend([first_preference, second_preference, third_preference])
 
                 # add the import status
                 row_values.append('Career Planning Imported')
@@ -426,7 +435,6 @@ class BatchAdmin(admin.ModelAdmin):
         obj.proc_career_planning = settings.DATA_FOLDER + '/' + batch_name + '/career_planning.csv'
 
         obj.save()
-
 
     # method to handle self awareness csv transformation
     def process_self_awareness(self, request, obj, batch_name, batch_dir, student_barcodes):
@@ -450,46 +458,47 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # # set custom header
-            csv_output.writerow(['BARCODE', 'Interest Test 1', 'Interest Test 2', 'Interest Test 3', 'Interest Test 4',
-                                 'Interest Test 5', 'Interest Test 6', 'Interest Test 7', 'Interest Test 8',
-                                 'Interest Test 9', 'Interest Test 10', 'Interest Test 11', 'Interest Test 12',
-                                 'Interest Test 13', 'Interest Test 14', 'Interest Test 15', 'Interest Test 16',
-                                 'Interest Test 17', 'Interest Test 18', 'Interest Test 19', 'Interest Test 20',
-                                 'Interest Test 21', 'Interest Test 22', 'Interest Test 23', 'Interest Test 24',
-                                 'Interest Test 25', 'Interest Test 26', 'Interest Test 27', 'Interest Test 28',
-                                 'Interest Test 29', 'Interest Test 30', 'Interest Test 31', 'Interest Test 32',
-                                 'Interest Test 33', 'Interest Test 34', 'Interest Test 35', 'Interest Test 36',
-                                 'Interest Test 37', 'Interest Test 38', 'Interest Test 39', 'Interest Test 40',
-                                 'Interest Test 41', 'Interest Test 42', 'Interest Test 43', 'Interest Test 44',
-                                 'Interest Test 45', 'Interest Test 46', 'Interest Test 47', 'Interest Test 48',
-                                 'Aptitude Test (Spatial) 1', 'Aptitude Test (Spatial) 2', 'Aptitude Test (Spatial) 3',
-                                 'Aptitude Test (Spatial) 4', 'Aptitude Test (Spatial) 5', 'Aptitude Test (Spatial) 6',
-                                 'Aptitude Test (Spatial) 7', 'Aptitude Test (Spatial) 8',
-                                 'Aptitude Test (Numerical Ability) 1', 'Aptitude Test (Numerical Ability) 2',
-                                 'Aptitude Test (Numerical Ability) 3', 'Aptitude Test (Numerical Ability) 4',
-                                 'Aptitude Test (Numerical Ability) 5', 'Aptitude Test (Numerical Ability) 6',
-                                 'Aptitude Test (Numerical Ability) 7', 'Aptitude Test (Numerical Ability) 8',
-                                 'Aptitude Test (Mechanical Ability) 1', 'Aptitude Test (Mechanical Ability) 2',
-                                 'Aptitude Test (Mechanical Ability) 3', 'Aptitude Test (Mechanical Ability) 4',
-                                 'Aptitude Test (Mechanical Ability) 5', 'Aptitude Test (Mechanical Ability) 6',
-                                 'Aptitude Test (Mechanical Ability) 7', 'Aptitude Test (Mechanical Ability) 8',
-                                 'Aptitude Test (Abstract Reasoning) 1', 'Aptitude Test (Abstract Reasoning) 2',
-                                 'Aptitude Test (Abstract Reasoning) 3', 'Aptitude Test (Abstract Reasoning) 4',
-                                 'Aptitude Test (Abstract Reasoning) 5', 'Aptitude Test (Abstract Reasoning) 6',
-                                 'Aptitude Test (Abstract Reasoning) 7', 'Aptitude Test (Abstract Reasoning) 8',
-                                 'Aptitude Test (Verbal Attitude Test) 1', 'Aptitude Test (Verbal Attitude Test) 2',
-                                 'Aptitude Test (Verbal Attitude Test) 3', 'Aptitude Test (Verbal Attitude Test) 4',
-                                 'Aptitude Test (Verbal Attitude Test) 5', 'Aptitude Test (Verbal Attitude Test) 6',
-                                 'Aptitude Test (Verbal Attitude Test) 7', 'Aptitude Test (Verbal Attitude Test) 8',
-                                 'Aptitude Test (Creative Ability) 1', 'Aptitude Test (Creative Ability) 2',
-                                 'Aptitude Test (Creative Ability) 3', 'Aptitude Test (Creative Ability) 4',
-                                 'Aptitude Test (Creative Ability) 5', 'Aptitude Test (Creative Ability) 6',
-                                 'Aptitude Test (Creative Ability) 7', 'Aptitude Test (Creative Ability) 8',
-                                 'Personality Test 1', 'Personality Test 2', 'Personality Test 3', 'Personality Test 4',
-                                 'Reality Test (Self) 1', 'Reality Test (Self) 2', 'Reality Test (Self) 3',
-                                 'Reality Test (Self) 4', 'Reality Test (Family) 1', 'Reality Test (Family) 2',
-                                 'Reality Test (Family) 3', 'Reality Test (Family) 4', 'Accelerator', 'Decelerator',
-                                 'Import Status'])
+            csv_output.writerow([
+                'BARCODE', 'Interest Test 1', 'Interest Test 2', 'Interest Test 3', 'Interest Test 4',
+                'Interest Test 5', 'Interest Test 6', 'Interest Test 7', 'Interest Test 8',
+                'Interest Test 9', 'Interest Test 10', 'Interest Test 11', 'Interest Test 12',
+                'Interest Test 13', 'Interest Test 14', 'Interest Test 15', 'Interest Test 16',
+                'Interest Test 17', 'Interest Test 18', 'Interest Test 19', 'Interest Test 20',
+                'Interest Test 21', 'Interest Test 22', 'Interest Test 23', 'Interest Test 24',
+                'Interest Test 25', 'Interest Test 26', 'Interest Test 27', 'Interest Test 28',
+                'Interest Test 29', 'Interest Test 30', 'Interest Test 31', 'Interest Test 32',
+                'Interest Test 33', 'Interest Test 34', 'Interest Test 35', 'Interest Test 36',
+                'Interest Test 37', 'Interest Test 38', 'Interest Test 39', 'Interest Test 40',
+                'Interest Test 41', 'Interest Test 42', 'Interest Test 43', 'Interest Test 44',
+                'Interest Test 45', 'Interest Test 46', 'Interest Test 47', 'Interest Test 48',
+                'Aptitude Test (Spatial) 1', 'Aptitude Test (Spatial) 2', 'Aptitude Test (Spatial) 3',
+                'Aptitude Test (Spatial) 4', 'Aptitude Test (Spatial) 5', 'Aptitude Test (Spatial) 6',
+                'Aptitude Test (Spatial) 7', 'Aptitude Test (Spatial) 8',
+                'Aptitude Test (Numerical Ability) 1', 'Aptitude Test (Numerical Ability) 2',
+                'Aptitude Test (Numerical Ability) 3', 'Aptitude Test (Numerical Ability) 4',
+                'Aptitude Test (Numerical Ability) 5', 'Aptitude Test (Numerical Ability) 6',
+                'Aptitude Test (Numerical Ability) 7', 'Aptitude Test (Numerical Ability) 8',
+                'Aptitude Test (Mechanical Ability) 1', 'Aptitude Test (Mechanical Ability) 2',
+                'Aptitude Test (Mechanical Ability) 3', 'Aptitude Test (Mechanical Ability) 4',
+                'Aptitude Test (Mechanical Ability) 5', 'Aptitude Test (Mechanical Ability) 6',
+                'Aptitude Test (Mechanical Ability) 7', 'Aptitude Test (Mechanical Ability) 8',
+                'Aptitude Test (Abstract Reasoning) 1', 'Aptitude Test (Abstract Reasoning) 2',
+                'Aptitude Test (Abstract Reasoning) 3', 'Aptitude Test (Abstract Reasoning) 4',
+                'Aptitude Test (Abstract Reasoning) 5', 'Aptitude Test (Abstract Reasoning) 6',
+                'Aptitude Test (Abstract Reasoning) 7', 'Aptitude Test (Abstract Reasoning) 8',
+                'Aptitude Test (Verbal Attitude Test) 1', 'Aptitude Test (Verbal Attitude Test) 2',
+                'Aptitude Test (Verbal Attitude Test) 3', 'Aptitude Test (Verbal Attitude Test) 4',
+                'Aptitude Test (Verbal Attitude Test) 5', 'Aptitude Test (Verbal Attitude Test) 6',
+                'Aptitude Test (Verbal Attitude Test) 7', 'Aptitude Test (Verbal Attitude Test) 8',
+                'Aptitude Test (Creative Ability) 1', 'Aptitude Test (Creative Ability) 2',
+                'Aptitude Test (Creative Ability) 3', 'Aptitude Test (Creative Ability) 4',
+                'Aptitude Test (Creative Ability) 5', 'Aptitude Test (Creative Ability) 6',
+                'Aptitude Test (Creative Ability) 7', 'Aptitude Test (Creative Ability) 8',
+                'Personality Test 1', 'Personality Test 2', 'Personality Test 3', 'Personality Test 4',
+                'Reality Test (Self) 1', 'Reality Test (Self) 2', 'Reality Test (Self) 3',
+                'Reality Test (Self) 4', 'Reality Test (Family) 1', 'Reality Test (Family) 2',
+                'Reality Test (Family) 3', 'Reality Test (Family) 4', 'Import Status'
+                ])
 
             # skip header as we set custom header
             next(csv_input)
@@ -506,7 +515,7 @@ class BatchAdmin(admin.ModelAdmin):
                 for i in range(2,50):
                     row_values.append(self.yesno_helper(row[i]))
 
-                # process aptitude fields
+                # process aptitude and other fields
                 # row 50 - 97
                 for j in range(50,98):
                     row_values.append(self.singlevalue_helper(row[j]))
@@ -524,8 +533,8 @@ class BatchAdmin(admin.ModelAdmin):
                         row_values.append(self.personality_helper(row[j], 'judging', 'perceiving'))
 
                 # process reality fields
-                # row 102 - 111 format using yesno_helper
-                for i in range(102,112):
+                # row 102 - 110 format using yesno_helper
+                for i in range(102,110):
                     if i == 105 or i == 109:
                         row_values.append(row[i])
                     else:
@@ -570,16 +579,18 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # # set custom header
-            csv_output.writerow(['BARCODE', 'Attendance', 'Guardian Attendance', 'I agree with the reccomendation',
-                                 'I am Clear About what I need to do after Class 10',
-                                 'Was the Program useful and helpful for you',
-                                 'Did you learn something new about yourself',
-                                 'Did you learn about some new Careers',
-                                 'Was the teachers way of teaching easy to understand and follow',
-                                 'Did the teacher clear all your doubts?',
-                                 'Were you able to understand the workbook easily?',
-                                 'Would you recommend the Career aware program to other students?',
-                                 'Import Status'])
+            csv_output.writerow([
+                'BARCODE', 'Guardian Attendance', 'I agree with the reccomendation',
+                'I am Clear About what I need to do after Class 10',
+                'Was the Program useful and helpful for you',
+                'Did you learn something new about yourself',
+                'Did you learn about some new Careers',
+                'Was the teachers way of teaching easy to understand and follow',
+                'Did the teacher clear all your doubts?',
+                'Were you able to understand the workbook easily?',
+                'Would you recommend the Career aware program to other students?',
+                'Import Status'
+                ])
 
             # skip header as we set custom header
             next(csv_input)
@@ -587,16 +598,11 @@ class BatchAdmin(admin.ModelAdmin):
             for row in csv_input:
                 row_values = [row[1]]
 
-                # row 2 - 3 format using absentpresent_helper
-                for j in range(2, 4):
-                    row_values.append(self.absentpresent_helper(row[j]))
+                # row 2 format using absentpresent_helper
+                row_values.append(self.absentpresent_helper(row[2]))
 
-                # row 4 - 5 format using yesno_helper
-                for i in range(4, 6):
-                    row_values.append(self.yesno_helper(row[i]))
-
-                # row 6 - 13
-                for j in range(6, 13):
+                # row 3 - 12
+                for j in range(3, 12):
                     row_values.append(row[j])
 
                 # add the import status
@@ -676,11 +682,9 @@ class BatchAdmin(admin.ModelAdmin):
     def process_follow_up_1(self, request, obj, batch_name, batch_dir):
         print("process_follow_up_1 start")
 
-
         # return if followup 1 is processed
         if obj.status != 8:
             print("process_follow_up_1 return")
-
             return
 
         # if file is not uploaded skip it
@@ -699,11 +703,14 @@ class BatchAdmin(admin.ModelAdmin):
             csv_output = csv.writer(f_output)
 
             # set custom header
-            csv_output.writerow(['Bar_Code__c','Followup_1_Baseline_1__c', 'Followup_1_Baseline_2__c',
-                                 'Followup_1_Baseline_3__c', 'Followup_1_Baseline_4__c', 'Followup_1_Baseline_5__c', 
-                                 'Followup_1_Baseline_6__c', 'Followup_1_Baseline_7__c', 'Followup_1_Endline_1__c', 
-                                 'Followup_1_Endline_2__c', 'Followup_1_Endline_3__c', 'Followup_1_Endline_4__c', 'Followup_1_Endline_5__c', 
-                                 'Followup_1_Endline_6__c', 'Followup_1_Endline_7__c', 'Followup_1_Endline_8__c', 'Followup_1_Aspiration__c', 'Import Status'])
+            csv_output.writerow([
+                'Bar_Code__c','Followup_1_Baseline_1__c', 'Followup_1_Baseline_2__c',
+                'Followup_1_Baseline_3__c', 'Followup_1_Baseline_4__c', 'Followup_1_Baseline_5__c', 
+                'Followup_1_Baseline_6__c', 'Followup_1_Baseline_7__c', 'Followup_1_Endline_1__c', 
+                'Followup_1_Endline_2__c', 'Followup_1_Endline_3__c', 'Followup_1_Endline_4__c', 'Followup_1_Endline_5__c', 
+                'Followup_1_Endline_6__c', 'Followup_1_Endline_7__c', 'Followup_1_Endline_8__c', 'Followup_1_Aspiration__c',
+                'Import Status'
+                ])
 
             # skip header as we set custom header
             next(csv_input)
@@ -737,7 +744,6 @@ class BatchAdmin(admin.ModelAdmin):
         obj.save()
         print("followup 1 save")
 
-
     # method to handle followup 2 csv transformation
     def process_follow_up_2(self, request, obj, batch_name, batch_dir):
             # return if followup 1 is processed    
@@ -745,7 +751,6 @@ class BatchAdmin(admin.ModelAdmin):
                     
             if obj.status != 9:
                 print("process_follow_up_2 return")
-
                 return
             
             # if file is not uploaded skip it
@@ -763,11 +768,14 @@ class BatchAdmin(admin.ModelAdmin):
                 csv_output = csv.writer(f_output)
 
                 # set custom header
-                csv_output.writerow(['Bar_Code__c','Followup_2_Baseline_1__c', 'Followup_2_Baseline_2__c',
-                                    'Followup_2_Baseline_3__c', 'Followup_2_Baseline_4__c', 'Followup_2_Baseline_5__c', 
-                                    'Followup_2_Baseline_6__c', 'Followup_2_Baseline_7__c', 'Followup_2_Endline_1__c', 
-                                    'Followup_2_Endline_2__c', 'Followup_2_Endline_3__c', 'Followup_2_Endline_4__c', 'Followup_2_Endline_5__c', 
-                                    'Followup_2_Endline_6__c', 'Followup_2_Endline_7__c', 'Followup_2_Endline_8__c', 'Followup_2_Aspiration__c', 'Import Status'])
+                csv_output.writerow([
+                    'Bar_Code__c','Followup_2_Baseline_1__c', 'Followup_2_Baseline_2__c',
+                    'Followup_2_Baseline_3__c', 'Followup_2_Baseline_4__c', 'Followup_2_Baseline_5__c', 
+                    'Followup_2_Baseline_6__c', 'Followup_2_Baseline_7__c', 'Followup_2_Endline_1__c', 
+                    'Followup_2_Endline_2__c', 'Followup_2_Endline_3__c', 'Followup_2_Endline_4__c',
+                    'Followup_2_Endline_5__c', 'Followup_2_Endline_6__c', 'Followup_2_Endline_7__c',
+                    'Followup_2_Endline_8__c', 'Followup_2_Aspiration__c', 'Import Status'
+                    ])
 
                 # skip header as we set custom header
                 next(csv_input)
@@ -787,7 +795,6 @@ class BatchAdmin(admin.ModelAdmin):
                     #Add Import Status
                     row_values.append('Followup 2 Imported')
                     csv_output.writerow(row_values)
-                    print(row_values)
 
             # # update status
             obj.status = 9 # 9 is 'Follow up 2 Data Processed'
@@ -797,6 +804,5 @@ class BatchAdmin(admin.ModelAdmin):
 
             obj.save()
             # obj.status = 10 # 9 is 'Follow up 2 Data Processed'
-
 
 admin.site.register(Batch, BatchAdmin)

@@ -1,7 +1,6 @@
 #Mapping values
-#Wed Aug 16 14:20:16 IST 2017
+#Fri Aug 9 14:06:09 IST 2019
 BARCODE=Bar_Code__c
-Attendance=Student_Attendance__c
 Guardian\ Attendance=Guardian_Attendance__c
 I\ agree\ with\ the\ reccomendation=I_agree_with_the_recommendation__c
 I\ am\ Clear\ About\ what\ I\ need\ to\ do\ after\ Class\ 10=I_am_clear_about_what_I_need_to_do_after__c

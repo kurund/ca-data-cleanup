@@ -1,5 +1,5 @@
 #Mapping values
-#Wed Aug 16 14:20:16 IST 2017
+#Fri Aug 9 14:06:09 IST 2019
 BARCODE=Bar_Code__c
 Interest\ Test\ 9=I_like_to_do_puzzles_like_sudoku__c
 Interest\ Test\ 8=I_like_to_grow_plants__c
@@ -109,6 +109,4 @@ Reality\ Test\ (Family)\ 4=Reality4Family__c
 Reality\ Test\ (Family)\ 3=Reality3Family__c
 Reality\ Test\ (Family)\ 2=Reality2Family__c
 Reality\ Test\ (Family)\ 1=Reality1Family__c
-Accelerator=Do_I_have_any_accelerator__c
-Decelerator=Do_I_have_any_decelerator__c
 Import\ Status=Import_Status__c

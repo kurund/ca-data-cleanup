@@ -1,12 +1,8 @@
 #Mapping values
-#Wed Aug 16 13:34:19 IST 2017
+#Fri Aug 9 13:34:19 IST 2019
 BARCODE=Bar_Code__c
+Father\ Education=Father_Education__c
+Mother\ Education=Mother_Education__c
+Who\ have\ you\ talked\ to\ about\ planning\ your\ career\=Who_have_you_talked_about_career_plan__c
 Current\ Aspiration=Current_Aspiration__c
-Batch\ Code=Batch_Code__r\:Batch_Number__c
-Current\ Education=Current_Education__c
-Day-5=Day_5__c
-Day-4=Day_4__c
-Day-3=Day_3__c
-Day-2=Day_2__c
-Day-1=Day_1__c
 Import\ Status=Import_Status__c

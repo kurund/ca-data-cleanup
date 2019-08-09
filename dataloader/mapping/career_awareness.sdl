@@ -1,5 +1,5 @@
 #Mapping values
-#Wed Aug 16 14:06:09 IST 2017
+#Fri Aug 9 14:06:09 IST 2019
 BARCODE=Bar_Code__c
 Industry\ Agnostic=Industry_Agnostic__c
 Arts\ and\ Design=Performance_Arts__c
@@ -7,10 +7,10 @@ Media\ and\ Entertainment=Media_Communication__c
 Finance=Finance__c
 Healthcare=Healthcare__c
 Tourism\ and\ Hospitality=Hospitality_Tourism__c
-Retail=Retail__c
 Wellness\ and\ Fitness=Beauty_Wellness__c
 Education=Education__c
 Public\ Services=Public_Services__c
-Enviroment\ and\ Biological\ Science=Enviomental_and_Biological_Sciences__c
+Enviroment\ and\ Bioscience=Enviomental_and_Biological_Sciences__c
+Information\ Technology=Information_Technology__c
 Trades=Trades__c
 Import\ Status=Import_Status__c
