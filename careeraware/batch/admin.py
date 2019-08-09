@@ -253,8 +253,8 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values.append(row[2])
                 row_values.append(row[3])
 
-                # format using multivalue
-                row_values.append(self.multivalue_formatter(row[4]))
+                # row 4, career plan
+                row_values.append(row[4])
 
                 # current aspiration 5, 6, 7
                 ca_count = 0
