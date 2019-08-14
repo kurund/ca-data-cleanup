@@ -625,7 +625,7 @@ class BatchAdmin(admin.ModelAdmin):
         return value
 
     def yesno_helper(self, value):
-        if value.lower() == 'yesno':
+        if value.lower() == 'yesno' or value.lower() == 'yes no':
             value = 'NO'
         return value
 
