@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
-import csv, os
+import csv, os, re
 import logging, datetime
 from subprocess import call
 import time
@@ -252,7 +252,7 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values.append(row[3])
 
                 # row 4, career plan
-                row_values.append(row[4])
+                row_values.append(self.splitbyuppercase_formatter(row[4]))
 
                 # current aspiration 5, 6, 7
                 ca_count = 0
@@ -441,6 +441,7 @@ class BatchAdmin(admin.ModelAdmin):
         if obj.status > 6:
             print('process_self_awareness return')
             return
+
         if not student_barcodes:
             return
 
@@ -515,7 +516,7 @@ class BatchAdmin(admin.ModelAdmin):
                 # process aptitude and other fields
                 # row 50 - 97
                 for j in range(50,98):
-                    row_values.append(self.singlevalue_helper(row[j]))
+                    row_values.append(self.singlevalueonly_helper(row[j]))
 
                 # process personality fields
                 # row 98 - 101
@@ -532,8 +533,10 @@ class BatchAdmin(admin.ModelAdmin):
                 # process reality fields
                 # row 102 - 110 format using yesno_helper
                 for i in range(102,110):
-                    if i == 105 or i == 109:
-                        row_values.append(row[i])
+                    if i == 105:
+                        row_values.append(self.score_helper(row[i]))
+                    elif i == 109:
+                        row_values.append(self.income_helper(row[i]))
                     else:
                         row_values.append(self.yesno_helper(row[i]))
 
@@ -617,64 +620,6 @@ class BatchAdmin(admin.ModelAdmin):
 
         obj.save()
 
-    def absentpresent_helper(self, value):
-        if value.lower() == 'absentpresent':
-            value = 'PRESENT'
-        elif value.lower() == 'presentabsent':
-            value = 'PRESENT'
-        return value
-
-    def yesno_helper(self, value):
-        if value.lower() == 'yesno' or value.lower() == 'yes no':
-            value = 'NO'
-        return value
-
-    def singlevalue_helper(self, value):
-        option = list(value)
-        if len(option) > 1:
-            return option[0]
-        else:
-            return value
-
-    def multivalue_formatter(self, value):
-        options = list(value)
-        if len(options) > 1:
-            return ';'.join(options)
-        else:
-            return value
-
-    def singlevalueonly_helper(self, value):
-        option = list(value)
-        if len(option) > 1:
-            return ''
-        else:
-            return value
-
-    def gender_helper(self, value):
-        if value.lower() == 'male' or value.lower() == 'female' or value.lower() == 'other':
-            return value
-        return ''
-
-    def currenteducation_helper(self, value):
-        if value.lower() == '8th' or value.lower() == '9th' or value.lower() == '10th' \
-            or value.lower() == '11th' or value.lower() == '12th' or value.lower() == 'other':
-            return value
-        return ''
-
-    def validenline_helper(self, value):
-        if not value:
-            return value
-        elif int(value) > 0 and int(value) < 10:
-            return value
-        else:
-            return ''
-
-    def personality_helper(self, value, expected_value_1, expected_value_2):
-        if value.lower() == expected_value_1 or value.lower() == expected_value_2:
-            return value
-        else:
-            return ''
-
     # method to handle followup 1 csv transformation
     def process_follow_up_1(self, request, obj, batch_name, batch_dir):
         print("process_follow_up_1 start")
@@ -743,63 +688,139 @@ class BatchAdmin(admin.ModelAdmin):
 
     # method to handle followup 2 csv transformation
     def process_follow_up_2(self, request, obj, batch_name, batch_dir):
-            # return if followup 1 is processed    
-            print("process_follow_up_2 start")
-                    
-            if obj.status != 9:
-                print("process_follow_up_2 return")
-                return
-            
-            # if file is not uploaded skip it
-            if not obj.omr_follow_up_2_data:
-                return
+        # return if followup 1 is processed    
+        print("process_follow_up_2 start")
+                
+        if obj.status != 9:
+            print("process_follow_up_2 return")
+            return
+        
+        # if file is not uploaded skip it
+        if not obj.omr_follow_up_2_data:
+            return
 
-            # fetch baseline csv file
-            input_file  = obj.omr_follow_up_2_data.path
+        # fetch baseline csv file
+        input_file  = obj.omr_follow_up_2_data.path
 
-            # set output file
-            output_file = batch_dir + '/follow_up_2.csv'
+        # set output file
+        output_file = batch_dir + '/follow_up_2.csv'
 
-            with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
-                csv_input = csv.reader(f_input)
-                csv_output = csv.writer(f_output)
+        with open(input_file, encoding='latin1', newline='\n') as f_input, open(output_file, 'w', encoding='latin1', newline='\n') as f_output:
+            csv_input = csv.reader(f_input)
+            csv_output = csv.writer(f_output)
 
-                # set custom header
-                csv_output.writerow([
-                    'Bar_Code__c','Followup_2_Baseline_1__c', 'Followup_2_Baseline_2__c',
-                    'Followup_2_Baseline_3__c', 'Followup_2_Baseline_4__c', 'Followup_2_Baseline_5__c', 
-                    'Followup_2_Baseline_6__c', 'Followup_2_Baseline_7__c', 'Followup_2_Endline_1__c', 
-                    'Followup_2_Endline_2__c', 'Followup_2_Endline_3__c', 'Followup_2_Endline_4__c',
-                    'Followup_2_Endline_5__c', 'Followup_2_Endline_6__c', 'Followup_2_Endline_7__c',
-                    'Followup_2_Endline_8__c', 'Followup_2_Aspiration__c', 'Import Status'
-                    ])
+            # set custom header
+            csv_output.writerow([
+                'Bar_Code__c','Followup_2_Baseline_1__c', 'Followup_2_Baseline_2__c',
+                'Followup_2_Baseline_3__c', 'Followup_2_Baseline_4__c', 'Followup_2_Baseline_5__c', 
+                'Followup_2_Baseline_6__c', 'Followup_2_Baseline_7__c', 'Followup_2_Endline_1__c', 
+                'Followup_2_Endline_2__c', 'Followup_2_Endline_3__c', 'Followup_2_Endline_4__c',
+                'Followup_2_Endline_5__c', 'Followup_2_Endline_6__c', 'Followup_2_Endline_7__c',
+                'Followup_2_Endline_8__c', 'Followup_2_Aspiration__c', 'Import Status'
+                ])
 
-                # skip header as we set custom header
-                next(csv_input)
+            # skip header as we set custom header
+            next(csv_input)
 
-                for row in csv_input:
-                    row_values = [row[1].replace(" ", ""), row[2].upper(), row[3].upper(), row[4].upper(), row[5].upper(), row[6].upper(), row[7].upper(), row[8].upper(), row[9].upper(), row[10].upper(), row[11].upper(), row[12].upper(), 
-                    row[13].upper(), row[14].upper(), row[15].upper(), row[16].upper()]
+            for row in csv_input:
+                row_values = [row[1].replace(" ", ""), row[2].upper(), row[3].upper(), row[4].upper(), row[5].upper(), row[6].upper(), row[7].upper(), row[8].upper(), row[9].upper(), row[10].upper(), row[11].upper(), row[12].upper(), 
+                row[13].upper(), row[14].upper(), row[15].upper(), row[16].upper()]
 
-                    aspiration = ""
-                    #populating fields
-                    for i in range(17, 21):
-                        if row[i] != '':
-                            aspiration = aspiration + str(row[i]) + ', '
-                    #remove last space and comma
-                    aspiration = aspiration[:-2]
-                    row_values.append(aspiration)
-                    #Add Import Status
-                    row_values.append('Followup 2 Imported')
-                    csv_output.writerow(row_values)
+                aspiration = ""
+                #populating fields
+                for i in range(17, 21):
+                    if row[i] != '':
+                        aspiration = aspiration + str(row[i]) + ', '
+                #remove last space and comma
+                aspiration = aspiration[:-2]
+                row_values.append(aspiration)
+                #Add Import Status
+                row_values.append('Followup 2 Imported')
+                csv_output.writerow(row_values)
 
-            # # update status
-            obj.status = 9 # 9 is 'Follow up 2 Data Processed'
+        # # update status
+        obj.status = 9 # 9 is 'Follow up 2 Data Processed'
 
-            # # set the processed file path
-            obj.proc_follow_up_2_data = settings.DATA_FOLDER + '/' + batch_name + '/follow_up_2.csv'
+        # # set the processed file path
+        obj.proc_follow_up_2_data = settings.DATA_FOLDER + '/' + batch_name + '/follow_up_2.csv'
 
-            obj.save()
-            # obj.status = 10 # 9 is 'Follow up 2 Data Processed'
+        obj.save()
+        # obj.status = 10 # 9 is 'Follow up 2 Data Processed'
+
+
+    def absentpresent_helper(self, value):
+        if value.lower() == 'absentpresent':
+            value = 'PRESENT'
+        elif value.lower() == 'presentabsent':
+            value = 'PRESENT'
+        return value
+
+    def yesno_helper(self, value):
+        if value.lower() == 'yesno' or value.lower() == 'yes no':
+            value = 'NO'
+        return value
+
+    def singlevalue_helper(self, value):
+        option = list(value)
+        if len(option) > 1:
+            return option[0]
+        else:
+            return value
+
+    def multivalue_formatter(self, value):
+        options = list(value)
+        if len(options) > 1:
+            return ';'.join(options)
+        else:
+            return value
+
+    def singlevalueonly_helper(self, value):
+        option = list(value)
+        if len(option) > 1:
+            return ''
+        else:
+            return value
+
+    def gender_helper(self, value):
+        if value.lower() == 'male' or value.lower() == 'female' or value.lower() == 'other':
+            return value
+        return ''
+
+    def currenteducation_helper(self, value):
+        if value.lower() == '8th' or value.lower() == '9th' or value.lower() == '10th' \
+            or value.lower() == '11th' or value.lower() == '12th' or value.lower() == 'other':
+            return value
+        return ''
+
+    def validenline_helper(self, value):
+        if not value:
+            return value
+        elif int(value) > 0 and int(value) < 10:
+            return value
+        else:
+            return ''
+
+    def personality_helper(self, value, expected_value_1, expected_value_2):
+        if value.lower() == expected_value_1 or value.lower() == expected_value_2:
+            return value
+        else:
+            return ''
+
+    def splitbyuppercase_formatter(self, value):
+        options = re.findall('[A-Z][^A-Z]*', value)
+        if len(options) > 1:
+            return ';'.join(options)
+        else:
+            return value
+
+    def score_helper(self, value):
+        if value.lower() == 'below 50%' or value.lower() == '50% - 80%' or value.lower() == 'above 80%':
+            return value
+        return ''
+
+    def income_helper(self, value):
+        if value.lower() == 'below 10,000' or value.lower() == '10,000 - 20,000' or value.lower() == '20,000+':
+            return value
+        return ''
 
 admin.site.register(Batch, BatchAdmin)
