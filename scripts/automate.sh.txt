@@ -21,10 +21,10 @@ echo 'Identify batches to process.'
 python manage.py shell < scripts/import_sf.py
 
 # for local
-# source ../env/bin/activate
-# cd ../careeraware/
-# echo 'Identify batches to process.'
-# python manage.py shell < scripts/import_sf.py
+#source ../env/bin/activate
+#cd ../careeraware/
+#echo 'Identify batches to process.'
+#python manage.py shell < scripts/import_sf.py
 
 DIR=to-process
 
