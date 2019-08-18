@@ -11,6 +11,7 @@ dataloader/conf/config.properties
 dataloader/conf/private.key
 dataloader/data/*.csv
 dataloader/status/*.csv
+scripts/automate.sh
 *.log
 *.pot
 *.pyc
