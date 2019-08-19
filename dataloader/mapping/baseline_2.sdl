@@ -3,6 +3,6 @@
 BARCODE=Bar_Code__c
 Father\ Education=Father_Education__c
 Mother\ Education=Mother_Education__c
-Who\ have\ you\ talked\ to\ about\ planning\ your\ career\=Who_have_you_talked_about_career_plan__c
+Who\ have\ you\ talked\ to\ about\ planning\ your\ career=Who_have_you_talked_about_career_plan__c
 Current\ Aspiration=Current_Aspiration__c
 Import\ Status=Import_Status__c
