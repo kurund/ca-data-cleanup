@@ -818,7 +818,7 @@ class BatchAdmin(admin.ModelAdmin):
         return ''
 
     def income_helper(self, value):
-        if value.lower() == 'below rs. 10-000' or value.lower() == 'rs. 10-000 - rs. 20-000' or value.lower() == 'above rs. 20-000' or value.lower() == 'I do not know':
+        if value.lower() == 'below rs. 10-000' or value.lower() == 'rs.10-000 - rs.20-000' or value.lower() == 'above rs.20-000' or value.lower() == 'I do not know':
             return value
         return ''
 
