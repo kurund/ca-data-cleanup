@@ -137,12 +137,12 @@ class BatchAdmin(admin.ModelAdmin):
                 # split name field into first name and last name
                 name = row[2].split()
                 first_name = last_name = ''
-                if len(name) > 0:
-                    first_name = name[0]
                 if len(name) > 1:
-                    last_name = name[1]
+                    first_name = name.pop(0)
+                    last_name = ' '.join(name)
                 else:
-                    last_name = 'Last Name'
+                    first_name = ''
+                    last_name = ' '.join(name)
 
                 # restrict the characters for first name and last name
                 first_name = first_name[:40]
