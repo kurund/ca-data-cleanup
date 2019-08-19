@@ -747,7 +747,6 @@ class BatchAdmin(admin.ModelAdmin):
         obj.save()
         # obj.status = 10 # 9 is 'Follow up 2 Data Processed'
 
-
     def absentpresent_helper(self, value):
         if value.lower() == 'absentpresent':
             value = 'PRESENT'

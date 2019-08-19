@@ -14,7 +14,7 @@
 
 # python script related actions
 # for server
-cd /data/careeraware.afdatabase.in/scripts/
+cd /home/antarang/public_html/areeraware.afdatabase.in/scripts/
 source ../env/bin/activate
 cd ../careeraware/
 echo 'Identify batches to process.'
