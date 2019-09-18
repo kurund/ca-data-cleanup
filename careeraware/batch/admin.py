@@ -381,16 +381,20 @@ class BatchAdmin(admin.ModelAdmin):
                 row_values = [row[1]]
 
                 # process career planning fields
-                # interest and aptitude fields
-                for i in range(2,8):
-                    row_values.append(row[i])
+                # interest fields
+                for i in range(2,5):
+                    row_values.append(self.validate_field(row[i], 'Interest'))
+
+                # aptitude fields
+                for i in range(5,8):
+                    row_values.append(self.validate_field(row[i], 'Aptitude'))
 
                 # Step 1 and Step 2 fields
-                row_values.append(self.singlevalue_helper(row[8]))
-                row_values.append(self.singlevalue_helper(row[9]))
+                row_values.append(self.singlevalueonly_helper(row[8]))
+                row_values.append(self.singlevalueonly_helper(row[9]))
 
                 # study till 18
-                row_values.append(self.yesno_helper(row[10]))
+                row_values.append(self.yesno_helper(row[10], False))
 
                 # get first, second and third preference
                 first_preference = second_preference = third_preference = ''
@@ -754,9 +758,12 @@ class BatchAdmin(admin.ModelAdmin):
             value = 'PRESENT'
         return value
 
-    def yesno_helper(self, value):
+    def yesno_helper(self, value, onlyyesno = True):
         if value.lower() == 'yesno' or value.lower() == 'yes no':
-            value = 'NO'
+            if onlyyesno:
+                value = 'NO'
+            else :
+                value = ''
         return value
 
     def singlevalue_helper(self, value):
@@ -821,5 +828,17 @@ class BatchAdmin(admin.ModelAdmin):
         if value.lower() == 'below 10-000' or value.lower() == '10-000 - 20-000' or value.lower() == '20-000+' or value.lower() == 'i do not know':
             return value
         return ''
+
+    def validate_field(self, value, field_name):
+        if field_name == 'Interest':
+            field_values = ['Artistic', 'Conventional', 'Creative', 'Enterprising', 'Investigative', 'Realist', 'Social']
+
+        elif field_name == 'Aptitude':
+            field_values = ['Abstract', 'Creative', 'Introvert', 'Mechanical', 'Numerical', 'Spatial', 'Verbal', 'Vocabulary']
+
+        if value in field_values:
+            return value
+        else:
+            return ''
 
 admin.site.register(Batch, BatchAdmin)
