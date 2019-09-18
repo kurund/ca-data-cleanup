@@ -762,7 +762,7 @@ class BatchAdmin(admin.ModelAdmin):
         if value.lower() == 'yesno' or value.lower() == 'yes no':
             if onlyyesno:
                 value = 'NO'
-            else :
+            else:
                 value = ''
         return value
 
