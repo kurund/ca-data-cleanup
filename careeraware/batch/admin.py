@@ -398,7 +398,7 @@ class BatchAdmin(admin.ModelAdmin):
 
                 # get first, second and third preference
                 first_preference = second_preference = third_preference = ''
-                for i in range(11,55):
+                for i in range(11,56):
                     if row[i] == '1' or row[i] == '123' or row[i] == '12' or row[i] == '13':
                         if first_preference == '':
                             first_preference = i
