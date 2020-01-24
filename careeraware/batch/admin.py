@@ -611,7 +611,7 @@ class BatchAdmin(admin.ModelAdmin):
 
                 # row 3 - 12
                 for j in range(3, 12):
-                    row_values.append(row[j])
+                    row_values.append(self.singlevalueonly_helper(row[j]))
 
                 # add the import status
                 row_values.append('Import Completed')
